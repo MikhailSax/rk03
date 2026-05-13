@@ -1,0 +1,5 @@
+services:
+  app:
+    command: >
+      sh -c "composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction --prefer-dist --no-progress --no-scripts
+      && php-fpm"

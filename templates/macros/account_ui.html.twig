@@ -1,0 +1,24 @@
+{# Единые классы для форм входа, регистрации и кабинета (стиль сайта / OOH-корпоратив) #}
+{% macro input_class() -%}
+    block w-full rounded-lg border border-gray-300 bg-white px-4 py-3.5 text-base text-gray-900 shadow-sm transition placeholder:text-gray-400 focus:border-[#05299E] focus:outline-none focus:ring-2 focus:ring-[#05299E]/20
+{%- endmacro %}
+
+{% macro label_class() -%}
+    mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-gray-600
+{%- endmacro %}
+
+{% macro btn_primary_full() -%}
+    flex w-full items-center justify-center rounded-lg border border-transparent bg-[#05299E] px-6 py-3.5 text-sm font-semibold uppercase tracking-[0.12em] text-white shadow-sm transition hover:bg-[#041d6b] focus:outline-none focus:ring-2 focus:ring-[#05299E]/35 focus:ring-offset-2
+{%- endmacro %}
+
+{% macro link_accent_class() -%}
+    font-semibold text-[#e85d4c] transition hover:text-[#d64d3d]
+{%- endmacro %}
+
+{% macro auth_title_class() -%}
+    home-display text-2xl font-bold uppercase tracking-tight text-gray-900 sm:text-[1.65rem]
+{%- endmacro %}
+
+{% macro auth_subtitle_class() -%}
+    mt-2 text-sm text-gray-600
+{%- endmacro %}

@@ -1,0 +1,29 @@
+{# Один полноширинный фоновый блок главной #}
+{% set mime = mosaic.image ends with '.png' ? 'image/png' : 'image/jpeg' %}
+{% set tag = mosaic.heading_level ? 'h' ~ mosaic.heading_level : 'h2' %}
+{% if mosaic.eager %}
+    {% if mosaic.has_webp and mosaic.webp_path %}
+        {% set bg_decl = "background-image: image-set(url('" ~ asset(mosaic.webp_path)|e('css') ~ "') type('image/webp'), url('" ~ asset(mosaic.image)|e('css') ~ "') type('" ~ mime ~ "'));" %}
+    {% else %}
+        {% set bg_decl = "background-image: url('" ~ asset(mosaic.image)|e('css') ~ "');" %}
+    {% endif %}
+    {% set section_style = '--home-mosaic-ar: ' ~ mosaic.aspect_ratio ~ '; ' ~ bg_decl %}
+{% else %}
+    {% set section_style = '--home-mosaic-ar: ' ~ mosaic.aspect_ratio ~ ';' %}
+{% endif %}
+<section
+    id="{{ mosaic.id }}"
+    class="home-mosaic relative mx-auto w-full max-w-[1920px] overflow-hidden {{ mosaic.eager ? 'home-mosaic--eager bg-white' : 'home-mosaic--lazy' }}"
+    style="{{ section_style|raw }}"
+    {% if not mosaic.eager %}
+        data-home-mosaic-lazy
+        data-bg="{{ asset(mosaic.image) }}"
+        data-bg-mime="{{ mime }}"
+        {% if mosaic.has_webp and mosaic.webp_path %}data-bg-webp="{{ asset(mosaic.webp_path) }}"{% endif %}
+    {% endif %}
+    {% if mosaic.heading_id %}aria-labelledby="{{ mosaic.heading_id }}"{% else %}aria-label="Иллюстрация: наружная реклама и городской коллаж"{% endif %}
+>
+    {% if mosaic.heading_id and mosaic.heading_text %}
+        <{{ tag }} id="{{ mosaic.heading_id }}" class="sr-only">{{ mosaic.heading_text }}</{{ tag }}>
+    {% endif %}
+</section>

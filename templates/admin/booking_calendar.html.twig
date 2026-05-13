@@ -1,0 +1,64 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Календарь бронирований{% endblock %}
+
+{% block main %}
+    <form method="get" class="mb-4 d-flex gap-2 align-items-end flex-wrap">
+        <div>
+            <label class="form-label">Конструкция</label>
+            <select name="ad" class="form-select" required>
+                <option value="">Выберите конструкцию</option>
+                {% for ad in advertisements %}
+                    <option value="{{ ad.id }}" {% if selectedAdvertisement and ad.id == selectedAdvertisement.id %}selected{% endif %}>
+                        #{{ ad.id }} — {{ ad.code ?: ad.placeNumber ?: 'Без кода' }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="form-label">Сторона</label>
+            <select name="side" class="form-select">
+                <option value="">Все стороны</option>
+                {% for side in availableSides %}
+                    <option value="{{ side }}" {% if selectedSide == side %}selected{% endif %}>{{ side }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="form-label">Месяц</label>
+            <input type="month" name="month" class="form-control" value="{{ month|date('Y-m') }}">
+        </div>
+        <button class="btn btn-primary">Показать</button>
+    </form>
+
+    {% if selectedAdvertisement %}
+        <div class="mb-3">
+            <strong>Конструкция:</strong> #{{ selectedAdvertisement.id }} {{ selectedAdvertisement.address }}
+            {% if selectedSide %}
+                <span class="ms-3"><strong>Сторона:</strong> {{ selectedSide }}</span>
+            {% endif %}
+        </div>
+
+        <div class="row row-cols-7 g-2 mb-4">
+            {% for day in days %}
+                <div class="col" style="min-width: 120px;">
+                    <div class="border rounded p-2 text-center {{ day.busy ? 'bg-danger-subtle border-danger' : 'bg-success-subtle border-success' }}">
+                        <div>{{ day.date|date('d.m') }}</div>
+                        <small>{{ day.busy ? 'Занято' : 'Свободно' }}</small>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <h5>Список броней за месяц</h5>
+        <ul>
+            {% for booking in bookings %}
+                <li>
+                    [{{ booking.sideCode }}] {{ booking.clientName }}: {{ booking.startDate|date('d.m.Y') }} — {{ booking.endDate|date('d.m.Y') }}
+                </li>
+            {% else %}
+                <li>На выбранный месяц бронирований нет.</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

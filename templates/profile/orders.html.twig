@@ -1,0 +1,165 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Активность — личный кабинет{% endblock %}
+
+{% block body %}
+    {% embed 'profile/_account_frame.html.twig' with {
+        page_title: 'Активность и заказы',
+        page_subtitle: 'Заказы из личного кабинета и заявки, оставленные с карты по вашему телефону.',
+        show_verification_badge: false,
+    } %}
+        {% block account_main %}
+            <div class="space-y-8">
+                <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
+                    <h2 class="home-display text-sm font-bold uppercase tracking-[0.14em] text-[#05299E]">Мои заказы</h2>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Заказы привязаны к вашему аккаунту при оформлении на сайте.
+                    </p>
+
+                    {% if userOrders is empty %}
+                        <div class="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-5">
+                            <p class="text-sm text-gray-600">У вас пока нет заказов.</p>
+                            <div class="mt-4 flex flex-wrap gap-3">
+                                <a href="{{ path('app_map_app') }}"
+                                   class="home-display inline-flex rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.1em] text-gray-800 transition hover:border-[#05299E]/40 hover:text-[#05299E]">
+                                    Подобрать конструкции
+                                </a>
+                                <a href="{{ path('app_cart') }}"
+                                   class="home-display inline-flex rounded-xl bg-[#05299E] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.1em] text-white transition hover:bg-[#041d6b]">
+                                    Корзина
+                                </a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <p class="mt-4 text-sm text-gray-600">
+                            Всего заказов: <span class="font-semibold text-gray-900">{{ userOrders|length }}</span>
+                        </p>
+
+                        <div class="mt-6 overflow-hidden rounded-xl border border-gray-200">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                                    <thead class="bg-[#05299E] text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-white">
+                                    <tr>
+                                        <th class="px-4 py-3 font-semibold">№</th>
+                                        <th class="px-4 py-3 font-semibold">Дата</th>
+                                        <th class="px-4 py-3 font-semibold">Статус</th>
+                                        <th class="px-4 py-3 font-semibold">Позиции</th>
+                                        <th class="px-4 py-3 font-semibold">Бронь до</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100 bg-white text-gray-700">
+                                    {% for order in userOrders %}
+                                        {% set status_label =
+                                            order.status == 'paid' ? 'Оплачен'
+                                            : (order.status == 'cancelled' ? 'Отменён' : 'Ожидает оплаты')
+                                        %}
+                                        <tr class="transition hover:bg-gray-50/80">
+                                            <td class="whitespace-nowrap px-4 py-3 font-medium text-gray-900">#{{ order.id }}</td>
+                                            <td class="whitespace-nowrap px-4 py-3">{{ order.createdAt ? order.createdAt|date('d.m.Y H:i') : '—' }}</td>
+                                            <td class="px-4 py-3">
+                                                <span class="inline-flex rounded border px-2 py-0.5 text-xs font-semibold uppercase tracking-wide
+                                                    {{ order.status == 'paid' ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+                                                    : (order.status == 'cancelled' ? 'border-gray-200 bg-gray-100 text-gray-600'
+                                                    : 'border-amber-200 bg-amber-50 text-amber-900') }}">
+                                                    {{ status_label }}
+                                                </span>
+                                            </td>
+                                            <td class="px-4 py-3">{{ order.items|length }}</td>
+                                            <td class="whitespace-nowrap px-4 py-3 text-gray-600">
+                                                {% if order.status == 'pending' and order.reservedUntil %}
+                                                    {{ order.reservedUntil|date('d.m.Y H:i') }}
+                                                {% else %}
+                                                    —
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% if order.items is not empty %}
+                                            <tr class="bg-gray-50/60 text-xs text-gray-600">
+                                                <td colspan="5" class="px-4 py-3">
+                                                    <ul class="flex flex-wrap gap-x-4 gap-y-1">
+                                                        {% for item in order.items %}
+                                                            <li>
+                                                                {% set ad = item.advertisement %}
+                                                                {% if ad %}
+                                                                    <a href="{{ path('app_catalog_construction', { id: ad.id }) }}"
+                                                                       class="font-medium text-[#05299E] underline-offset-2 hover:underline">
+                                                                        {{ ad.placeNumber ?: ad.code ?: ('#' ~ ad.id) }}
+                                                                    </a>
+                                                                {% else %}
+                                                                    —
+                                                                {% endif %}
+                                                                · сторона {{ item.sideCode }}
+                                                                · {{ item.startDate ? item.startDate|date('d.m.Y') : '—' }}
+                                                                — {{ item.endDate ? item.endDate|date('d.m.Y') : '—' }}
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
+                    <h2 class="home-display text-sm font-bold uppercase tracking-[0.14em] text-[#05299E]">Заявки с карты</h2>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Заявки ищутся по номеру телефона из профиля (как при заполнении формы на карте).
+                    </p>
+
+                    {% if user.phone is empty %}
+                        <div class="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-5">
+                            <p class="text-sm text-amber-900">
+                                Добавьте телефон в профиле, чтобы мы могли найти связанные заявки.
+                            </p>
+                            <a href="{{ path('profile') }}"
+                               class="mt-3 inline-flex home-display rounded-xl border border-amber-300 bg-white px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.1em] text-amber-900 transition hover:border-amber-500">
+                                Заполнить телефон
+                            </a>
+                        </div>
+                    {% elseif userRequests is empty %}
+                        <div class="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-5">
+                            <p class="text-sm text-gray-600">По вашему номеру телефона заявок пока нет.</p>
+                            <a href="{{ path('app_map_app') }}"
+                               class="mt-3 inline-flex home-display rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.1em] text-gray-800 transition hover:border-[#05299E]/40 hover:text-[#05299E]">
+                                Открыть карту конструкций
+                            </a>
+                        </div>
+                    {% else %}
+                        <p class="mt-4 text-sm text-gray-600">Найдено заявок: <span class="font-semibold text-gray-900">{{ userRequests|length }}</span>.</p>
+
+                        <div class="mt-6 overflow-hidden rounded-xl border border-gray-200">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                                    <thead class="bg-[#05299E] text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-white">
+                                    <tr>
+                                        <th class="px-4 py-3 font-semibold">Дата</th>
+                                        <th class="px-4 py-3 font-semibold">Конструкция</th>
+                                        <th class="px-4 py-3 font-semibold">Сторона</th>
+                                        <th class="px-4 py-3 font-semibold">Комментарий</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100 bg-white text-gray-700">
+                                    {% for request in userRequests %}
+                                        <tr class="transition hover:bg-gray-50/80">
+                                            <td class="whitespace-nowrap px-4 py-3">{{ request.createdAt ? request.createdAt|date('d.m.Y H:i') : '—' }}</td>
+                                            <td class="px-4 py-3">{{ request.advertisement ? (request.advertisement.code ?: request.advertisement.placeNumber ?: ('#' ~ request.advertisement.id)) : '—' }}</td>
+                                            <td class="px-4 py-3">{{ request.sideCode ?: '—' }}</td>
+                                            <td class="px-4 py-3">{{ request.comment ?: '—' }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

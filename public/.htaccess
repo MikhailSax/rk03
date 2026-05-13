@@ -1,0 +1,22 @@
+# 1. Принудительно задаем типы файлов, чтобы стили не «слетали»
+<IfModule mod_mime.c>
+    AddType text/css .css
+    AddType application/javascript .js
+    AddType image/svg+xml .svg
+</IfModule>
+
+# 2. Основные настройки Symfony
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Если файл или папка физически существуют — отдаем их сразу
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Все остальные запросы отправляем на входную точку index.php
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# 3. Безопасность
+Options -Indexes

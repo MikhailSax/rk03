@@ -1,0 +1,207 @@
+/* Страница «Форматы» — структура в духе корпоративных OOH-каталогов, стили БМС */
+@layer components {
+    .formats-page {
+        --formats-blue: #05299e;
+        --formats-blue-dark: #041d6b;
+        --formats-coral: #e85d4c;
+    }
+
+    .formats-breadcrumb {
+        font-size: 0.6875rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgb(107 114 128);
+    }
+
+    .formats-breadcrumb a {
+        color: rgb(75 85 99);
+        transition: color 0.15s ease;
+    }
+
+    .formats-breadcrumb a:hover {
+        color: var(--formats-blue);
+    }
+
+    .formats-page-title {
+        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        font-weight: 700;
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+        color: var(--formats-blue);
+    }
+
+    .formats-lead {
+        max-width: 42rem;
+        font-size: 1.0625rem;
+        line-height: 1.55;
+        color: rgb(75 85 99);
+    }
+
+    /* Декоративные «волны» как на макетах */
+    .formats-blob {
+        position: absolute;
+        border-radius: 50%;
+        background: var(--formats-blue);
+        opacity: 0.08;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .formats-section {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .formats-grid {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        gap: 3rem;
+    }
+
+    @media (min-width: 1024px) {
+        .formats-grid {
+            gap: 4.5rem;
+        }
+    }
+
+    .formats-card {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    @media (min-width: 1024px) {
+        .formats-card {
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .formats-card--reverse {
+            direction: rtl;
+        }
+
+        .formats-card--reverse > * {
+            direction: ltr;
+        }
+    }
+
+    .formats-card__figure {
+        position: relative;
+        margin: 0;
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        background: linear-gradient(135deg, rgb(5 41 158 / 0.12), rgb(4 29 107 / 0.08));
+    }
+
+    /* Скошенные углы / «ступенька» — чередование как на референсе */
+    .formats-card__figure--a {
+        border-radius: 1.5rem 1.5rem 0 1.5rem;
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2.5rem), calc(100% - 2.5rem) 100%, 0 100%);
+    }
+
+    .formats-card__figure--b {
+        border-radius: 1.5rem 1.5rem 1.5rem 0;
+        clip-path: polygon(2.5rem 0, 100% 0, 100% 100%, 0 100%, 0 2.5rem);
+    }
+
+    .formats-card__img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .formats-card__title {
+        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        font-size: 1.125rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--formats-blue);
+    }
+
+    @media (min-width: 640px) {
+        .formats-card__title {
+            font-size: 1.25rem;
+        }
+    }
+
+    .formats-card__text {
+        margin-top: 0.75rem;
+        font-size: 0.9375rem;
+        line-height: 1.5;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--formats-blue-dark);
+    }
+
+    .formats-card__link {
+        display: inline-flex;
+        margin-top: 1.25rem;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--formats-coral);
+        transition: color 0.15s ease;
+    }
+
+    .formats-card__link:hover {
+        color: #d64d3d;
+    }
+
+    .formats-cta {
+        margin-top: 4rem;
+        border: 1px solid rgb(229 231 235);
+        background: linear-gradient(135deg, rgb(5 41 158 / 0.06), rgb(255 255 255));
+        padding: 2rem 1.5rem;
+        text-align: center;
+    }
+
+    @media (min-width: 640px) {
+        .formats-cta {
+            padding: 2.5rem 2rem;
+        }
+    }
+
+    .formats-cta__title {
+        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        font-size: 1.125rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--formats-blue);
+    }
+
+    .formats-cta__text {
+        margin-top: 0.75rem;
+        font-size: 1rem;
+        color: rgb(75 85 99);
+    }
+
+    .formats-cta__btn {
+        display: inline-flex;
+        margin-top: 1.5rem;
+        min-height: 3rem;
+        align-items: center;
+        justify-content: center;
+        background: var(--formats-blue);
+        padding: 0.75rem 2rem;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #fff;
+        transition: background 0.15s ease;
+    }
+
+    .formats-cta__btn:hover {
+        background: var(--formats-blue-dark);
+    }
+}

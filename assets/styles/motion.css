@@ -1,0 +1,233 @@
+/* Плавные появления и герой: уважаем prefers-reduced-motion */
+
+.ooh-reveal {
+    opacity: 0;
+    transform: translateY(1.75rem);
+    filter: blur(4px);
+    transition:
+        opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--ooh-delay, 0ms);
+    will-change: opacity, transform, filter;
+}
+
+.ooh-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    filter: none;
+}
+
+.ooh-reveal-line {
+    opacity: 0;
+    transform: translateY(1.35rem);
+    transition:
+        opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--ooh-delay, 0ms);
+}
+
+.home-ooh.is-booted .ooh-reveal-line {
+    opacity: 1;
+    transform: none;
+}
+
+/* Лёгкое «дыхание» градиента в герое */
+@keyframes ooh-hero-glow {
+    0%,
+    100% {
+        opacity: 0.55;
+    }
+    50% {
+        opacity: 0.85;
+    }
+}
+
+.ooh-hero-ambient {
+    animation: ooh-hero-glow 14s ease-in-out infinite;
+}
+
+/* Карточки / кнопки: чуть живее */
+.ooh-lift {
+    transition:
+        transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.45s ease;
+}
+
+.ooh-lift:hover {
+    transform: translateY(-3px);
+}
+
+.ooh-shine {
+    position: relative;
+    overflow: hidden;
+}
+
+.ooh-shine::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        105deg,
+        transparent 40%,
+        rgba(255, 255, 255, 0.12) 50%,
+        transparent 60%
+    );
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+    pointer-events: none;
+}
+
+.ooh-shine:hover::after {
+    transform: translateX(100%);
+}
+
+/* Внутренняя страница: сетка на фоне */
+.site-page-hero-grid {
+    background-image:
+        linear-gradient(rgba(5, 41, 158, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(5, 41, 158, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+}
+
+/* Прогресс скролла (для вайба “OOH/лайнера”) */
+#ooh-scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    z-index: 80;
+    pointer-events: none;
+    transform-origin: 0 0;
+    transform: scaleX(0);
+    background: linear-gradient(90deg, #e85d4c, #05299e);
+    opacity: 0.95;
+}
+
+/* Подсветка активного пункта в sticky навигации */
+.ooh-nav-active {
+    color: #05299e !important;
+    text-decoration: underline !important;
+    text-underline-offset: 8px;
+}
+
+/* Курсорный “spotlight” в герое */
+.ooh-spotlight {
+    position: relative;
+    overflow: hidden;
+}
+
+.ooh-spotlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(
+            420px circle at var(--ooh-spot-x, 50%) var(--ooh-spot-y, 50%),
+            rgba(232, 93, 76, 0.22),
+            transparent 60%
+        ),
+        radial-gradient(
+            560px circle at var(--ooh-spot-x, 50%) var(--ooh-spot-y, 50%),
+            rgba(5, 41, 158, 0.18),
+            transparent 65%
+        );
+    opacity: 0;
+    transition: opacity 180ms ease;
+    pointer-events: none;
+    mix-blend-mode: screen;
+}
+
+.ooh-spotlight.is-spotlight-on::before {
+    opacity: 1;
+}
+
+/* Parallax фоновых слоёв через CSS-переменную */
+.ooh-parallax {
+    transform: translate3d(0, var(--ooh-parallax-ty, 0px), 0);
+    will-change: transform;
+}
+
+.ooh-parallax-scale {
+    transform: translate3d(0, var(--ooh-parallax-ty, 0px), 0) scale(1.05);
+    will-change: transform;
+}
+
+/* Пульсирующий акцент-бейдж поверх hero-превью */
+@keyframes ooh-badge-pulse {
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+        box-shadow:
+            0 0 0 0 rgba(232, 93, 76, 0.28),
+            0 18px 60px rgba(5, 41, 158, 0.12);
+    }
+    50% {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow:
+            0 0 0 10px rgba(232, 93, 76, 0),
+            0 24px 80px rgba(5, 41, 158, 0.18);
+    }
+}
+
+.ooh-badge-pulse {
+    animation: ooh-badge-pulse 3.2s ease-in-out infinite;
+}
+
+@keyframes ooh-bounce-indicator {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(7px);
+    }
+}
+
+.ooh-bounce-indicator {
+    animation: ooh-bounce-indicator 1.85s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ooh-reveal,
+    .ooh-reveal-line {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        transition: none !important;
+    }
+
+    .home-ooh .ooh-reveal-line {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .ooh-hero-ambient {
+        animation: none;
+    }
+
+    .ooh-lift:hover {
+        transform: none;
+    }
+
+    .ooh-shine::after {
+        display: none;
+    }
+
+    #ooh-scroll-progress {
+        display: none;
+    }
+
+    .ooh-spotlight::before {
+        display: none;
+    }
+
+    .ooh-badge-pulse {
+        animation: none;
+    }
+
+    .ooh-bounce-indicator {
+        animation: none;
+    }
+}

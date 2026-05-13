@@ -1,0 +1,9 @@
+knpu_oauth2_client:
+    clients:
+        yandex:
+            type: generic
+            provider_class: Aego\OAuth2\Client\Provider\Yandex
+            client_id: '%env(OAUTH_YANDEX_CLIENT_ID)%'
+            client_secret: '%env(OAUTH_YANDEX_CLIENT_SECRET)%'
+            redirect_route: connect_yandex_check
+            redirect_params: { }

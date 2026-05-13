@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Конструкция №{{ id }} — каталог{% endblock %}
+
+{% block body %}
+    <div
+        id="advertisement-detail-app"
+        class="min-h-[calc(100dvh-4rem)] bg-[#ececee]"
+        data-advertisement-api-url="{{ path('api_advertisements_show', { id: id }) }}"
+        data-cart-url="{{ path('api_cart_get') }}"
+    ></div>
+{% endblock %}

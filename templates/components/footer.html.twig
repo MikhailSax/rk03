@@ -1,0 +1,53 @@
+{# Подвал по макету «Подвал.svg»: фон #000f08, колонки Навигация / Форматы / Контакты + блок бренда. #}
+<footer class="site-footer-figma mt-auto bg-[#000f08] text-[#666666]" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+    <div class="mx-auto max-w-[1440px] px-5 py-12 sm:px-8 lg:px-[4.5rem] lg:py-14 xl:px-[4.5rem]">
+        <div class="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-10 xl:gap-x-14">
+            <div class="sm:col-span-2 lg:col-span-1 lg:max-w-[22rem]">
+                <h2 class="text-[1.375rem] font-bold leading-tight text-white">Outbur</h2>
+                <p class="mt-6 text-[1.0625rem] leading-[1.45]">
+                    Размещаем наружную рекламу в городе и регионе: от подбора конструкций до отчётности по кампании.
+                </p>
+            </div>
+
+            <nav aria-label="Навигация в подвале">
+                <h3 class="text-[1.375rem] font-bold text-white">Навигация</h3>
+                <ul class="mt-6 space-y-[1.125rem] text-[1.0625rem] leading-none">
+                    <li><a href="{{ path('app_homepage') }}" class="transition hover:text-white">Главная</a></li>
+                    <li><a href="{{ path('app_map_app') }}" class="transition hover:text-white">Карта конструкций</a></li>
+                    <li><a href="{{ path('app_site_page', { path: 'about' }) }}" class="transition hover:text-white">О компании</a></li>
+                    <li><a href="{{ path('app_homepage') }}#faq" class="transition hover:text-white">FAQ</a></li>
+                </ul>
+            </nav>
+
+            <nav aria-label="Форматы рекламы">
+                <h3 class="text-[1.375rem] font-bold text-white">Форматы рекламы</h3>
+                <ul class="mt-6 space-y-[1.125rem] text-[1.0625rem] leading-none">
+                    <li><a href="{{ path('app_site_page', { path: 'formats' }) }}" class="transition hover:text-white">Форматы размещения</a></li>
+                    <li><a href="{{ path('app_site_page', { path: 'media/billboards' }) }}" class="transition hover:text-white">Билборды 6х3м</a></li>
+                    <li><a href="{{ path('app_site_page', { path: 'media/street-furniture' }) }}" class="transition hover:text-white">Сити-формат</a></li>
+                    <li><a href="{{ path('app_site_page', { path: 'formats' }) }}" class="transition hover:text-white">Digital-экраны</a></li>
+                    <li><a href="{{ path('app_site_page', { path: 'creative/studios' }) }}" class="transition hover:text-white">Брендирование фасадов</a></li>
+                </ul>
+            </nav>
+
+            <div>
+                <h3 class="text-[1.375rem] font-bold text-white">Контакты</h3>
+                <ul class="mt-6 space-y-[1.125rem] text-[1.0625rem] leading-snug">
+                    <li>
+                        <a href="tel:+73012000000" class="transition hover:text-white">+7 (3012) 00-00-00</a>
+                    </li>
+                    <li>
+                        <a href="mailto:sales@bmsbur.ru" class="transition hover:text-white">sales@bmsbur.ru</a>
+                    </li>
+                    <li class="max-w-[16rem]">г. Улан-Удэ, ул. Ленина, 35</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="border-t border-white">
+        <div class="mx-auto max-w-[1440px] px-5 py-6 text-center text-[1.0625rem] sm:px-8 lg:px-[4.5rem]">
+            © {{ 'now'|date('Y') }} Outbur. Все права защищены.
+        </div>
+    </div>
+</footer>

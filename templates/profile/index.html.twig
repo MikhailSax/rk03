@@ -1,0 +1,54 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Личный кабинет{% endblock %}
+
+{% block body %}
+    {% embed 'profile/_account_frame.html.twig' with {
+        page_title: 'Личный кабинет',
+        page_subtitle: 'Управляйте личными данными и безопасностью аккаунта.',
+        show_verification_badge: true,
+    } %}
+        {% block account_main %}
+            <div class="grid gap-6 lg:grid-cols-2">
+                <div>
+                    {% include 'profile/_form.html.twig' with { profileForm: profileForm } %}
+                </div>
+
+                <aside class="space-y-6">
+                    <article class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                        <h2 class="home-display text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Сводка аккаунта</h2>
+                        <div class="mt-4 space-y-3 text-sm text-gray-700">
+                            <p class="rounded-lg border border-gray-100 bg-[#f8f9fb] px-3 py-2"><span class="font-semibold text-gray-900">Имя:</span> {{ user.firstName ?: '—' }} {{ user.lastName ?: '' }}</p>
+                            <p class="rounded-lg border border-gray-100 bg-[#f8f9fb] px-3 py-2"><span class="font-semibold text-gray-900">Телефон:</span> {{ user.phone ?: '—' }}</p>
+                            <p>
+                                <span class="font-semibold text-gray-900">Email:</span>
+                                <span class="inline-flex rounded-full border px-2 py-0.5 text-xs font-semibold {{ user.isVerified ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-amber-200 bg-amber-50 text-amber-700' }}">
+                                    {{ user.isVerified ? 'Подтверждён' : 'Не подтверждён' }}
+                                </span>
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                        <h2 class="home-display text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Быстрые действия</h2>
+                        <div class="mt-4 flex flex-col gap-2.5">
+                            <a href="{{ path('profile.orders') }}"
+                               class="home-display rounded-xl bg-gradient-to-r from-[#05299E] to-[#041d6b] px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-[0.1em] text-white transition hover:opacity-95">
+                                Активность и заказы
+                            </a>
+                            <a href="{{ path('app_cart') }}"
+                               class="home-display rounded-xl border border-gray-200 bg-white px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-[0.1em] text-gray-800 transition hover:border-[#05299E] hover:text-[#05299E]">
+                                Корзина
+                            </a>
+                            <a href="{{ path('app_map_app') }}"
+                               class="home-display rounded-xl border border-gray-200 bg-white px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-[0.1em] text-gray-800 transition hover:border-[#05299E] hover:text-[#05299E]">
+                                Карта конструкций
+                            </a>
+                        </div>
+                    </article>
+                </aside>
+            </div>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

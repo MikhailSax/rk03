@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@layer base {
+    html {
+        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+    }
+
+    body {
+        line-height: 1.5;
+    }
+}
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
+
+@import "./components/dropdown.css";
+@import "./components/mobile-menu.css";
+@import "./components/accordion.css";
+@import "./components/menu.css";
+@import "./components/forms.css";
+@import "./components/swiper.css";
+@import "./layout/header.css";
+@import "./pages/home.css";
+@import "./pages/formats.css";
+@import "./pages/contacts.css";
+@import "./pages/company.css";
+@import "./motion.css";

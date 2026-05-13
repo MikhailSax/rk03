@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block body %}
+    <div
+        id="cart-page-app"
+        class="min-h-[calc(100dvh-4rem)] bg-[#ececee]"
+        data-cart-url="{{ path('api_cart_get') }}"
+        data-orders-url="{{ path('api_orders_create') }}"
+        data-is-authenticated="{{ app.user ? '1' : '0' }}"
+        data-user-id="{{ app.user ? app.user.id : '' }}"
+        data-user-name="{{ app.user ? (app.user.firstName ~ ' ' ~ (app.user.lastName ?? ''))|trim : '' }}"
+        data-user-phone="{{ app.user ? app.user.phone : '' }}"
+        data-user-email="{{ app.user ? app.user.userIdentifier : '' }}"
+    >
+        <div id="initial-cart-spinner" class="flex min-h-[50vh] flex-col items-center justify-center bg-[#05299E] text-white">
+            <div class="h-10 w-10 animate-spin rounded-full border-4 border-white/20 border-t-[#e85d4c]"></div>
+            <p class="site-header-font mt-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">Загрузка корзины…</p>
+        </div>
+    </div>
+{% endblock %}
+

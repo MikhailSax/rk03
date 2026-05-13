@@ -1,0 +1,76 @@
+{% extends 'layout/auth_centered.html.twig' %}
+{% import 'macros/account_ui.html.twig' as ui %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block auth_eyebrow %}Новый аккаунт{% endblock %}
+
+{% block auth_inner %}
+    <div class="text-center">
+        <h1 class="{{ ui.auth_title_class() }}">Регистрация</h1>
+        <p class="{{ ui.auth_subtitle_class() }}">
+            Размещение наружной рекламы с <span class="font-semibold text-[#05299E]">БМС</span> <span class="text-gray-600">(Бурятия Медиа Сервис)</span>
+        </p>
+    </div>
+
+    <div class="mt-8">
+        {% include 'components/_account_flashes.html.twig' with { keys: ['verify_email_error', 'success', 'error'] } only %}
+    </div>
+
+    {{ form_start(registrationForm, { attr: { class: 'mt-8 space-y-5' } }) }}
+
+    <div class="hidden" aria-hidden="true">
+        {{ form_widget(registrationForm.website) }}
+        {{ form_widget(registrationForm.formStartedAt) }}
+    </div>
+
+    <div>
+        <label class="{{ ui.label_class() }}" for="{{ registrationForm.first_name.vars.id }}">Имя</label>
+        {{ form_widget(registrationForm.first_name, { attr: { class: ui.input_class() } }) }}
+        <div class="mt-1 text-sm text-red-600">{{ form_errors(registrationForm.first_name) }}</div>
+    </div>
+
+    <div>
+        <label class="{{ ui.label_class() }}" for="{{ registrationForm.email.vars.id }}">Почта</label>
+        {{ form_widget(registrationForm.email, { attr: { class: ui.input_class() } }) }}
+        <div class="mt-1 text-sm text-red-600">{{ form_errors(registrationForm.email) }}</div>
+    </div>
+
+    <div>
+        <label class="{{ ui.label_class() }}" for="{{ registrationForm.phone.vars.id }}">Телефон</label>
+        {{ form_widget(registrationForm.phone, {
+            attr: {
+                placeholder: '+7 (___) ___-__-__',
+                class: ui.input_class(),
+            }
+        }) }}
+        <div class="mt-1 text-sm text-red-600">{{ form_errors(registrationForm.phone) }}</div>
+    </div>
+
+    <div>
+        <label class="{{ ui.label_class() }}" for="{{ registrationForm.plainPassword.vars.id }}">Пароль</label>
+        {{ form_widget(registrationForm.plainPassword, { attr: { class: ui.input_class() } }) }}
+        <div class="mt-1 text-sm text-red-600">{{ form_errors(registrationForm.plainPassword) }}</div>
+    </div>
+
+    <div class="flex items-start gap-3 pt-1">
+        {{ form_widget(registrationForm.agreeTerms, { attr: { class: 'mt-1 size-4 shrink-0 rounded border-gray-300 text-[#05299E] focus:ring-[#05299E]' } }) }}
+        <label class="text-sm leading-snug text-gray-700" for="{{ registrationForm.agreeTerms.vars.id }}">
+            Я согласен с <a href="#" class="font-medium text-[#05299E] underline-offset-2 hover:underline">условиями использования</a>
+        </label>
+    </div>
+    <div class="text-sm text-red-600">{{ form_errors(registrationForm.agreeTerms) }}</div>
+
+    <div class="pt-2">
+        <button type="submit" class="{{ ui.btn_primary_full() }}">
+            Зарегистрироваться
+        </button>
+    </div>
+
+    {{ form_end(registrationForm) }}
+
+    <p class="mt-8 text-center text-sm text-gray-600">
+        Уже есть аккаунт?
+        <a href="{{ path('app_login') }}" class="{{ ui.link_accent_class() }}">Войти</a>
+    </p>
+{% endblock %}

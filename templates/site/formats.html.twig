@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Форматы размещения — БМС{% endblock %}
+
+{% block body %}
+    {# Структура в духе каталога форматов (например russoutdoor.ru/products/outdoor): крошки → заголовок → лид → сетка карточек → CTA. Визуал — цвета и типографика сайта БМС. #}
+    <div class="formats-page bg-white">
+        <div class="formats-section border-b border-gray-100 bg-[#fafafa]">
+            <div class="formats-blob absolute -left-[20%] top-[10%] h-[min(80vw,520px)] w-[min(80vw,520px)] lg:left-[55%] lg:top-[5%]"></div>
+            <div class="formats-blob absolute left-[40%] top-[60%] h-[min(60vw,380px)] w-[min(60vw,380px)] opacity-[0.06] lg:left-[10%]"></div>
+
+            <div class="relative z-[1] mx-auto max-w-[1200px] px-4 py-10 sm:px-6 sm:py-14 lg:px-10 lg:py-16">
+                <nav class="formats-breadcrumb home-display" aria-label="Хлебные крошки">
+                    <a href="{{ path('app_homepage') }}">Главная</a>
+                    <span class="mx-2 text-gray-300" aria-hidden="true">/</span>
+                    <span class="text-gray-500">Форматы</span>
+                </nav>
+
+                <h1 class="formats-page-title home-display mt-8 max-w-3xl">
+                    Форматы размещения
+                </h1>
+                <p class="formats-lead mt-6">
+                    Подбираем наружную рекламу под задачу: от классических билбордов до digital-экранов и крупногабаритных конструкций.
+                    На карте доступны актуальные поверхности — можно сразу оценить локации и занятость.
+                </p>
+            </div>
+        </div>
+
+        <div class="formats-section">
+            <div class="formats-blob absolute -right-[15%] top-[8%] h-[min(70vw,480px)] w-[min(70vw,480px)]"></div>
+
+            <div class="relative z-[1] mx-auto max-w-[1200px] px-4 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-20">
+                <div class="formats-grid">
+                    {# 1 — суперсайты #}
+                    <article class="formats-card">
+                        <figure class="formats-card__figure formats-card__figure--a shadow-sm">
+                            <img class="formats-card__img" src="{{ asset('images/supersite.jpg') }}" alt="Крупногабаритные конструкции на трассах" width="800" height="500" loading="lazy" decoding="async">
+                        </figure>
+                        <div>
+                            <h2 class="formats-card__title home-display">Суперсайты</h2>
+                            <p class="formats-card__text home-display">
+                                Крупные конструкции на магистралях и въездах в город
+                            </p>
+                            <a href="{{ path('app_map_app') }}" class="formats-card__link home-display">
+                                Смотреть на карте
+                                <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    </article>
+
+                    {# 2 — digital #}
+                    <article class="formats-card formats-card--reverse">
+                        <figure class="formats-card__figure formats-card__figure--b shadow-sm">
+                            <img class="formats-card__img" src="{{ asset('images/home-stats-block.png') }}" alt="Digital-экраны наружной рекламы" width="800" height="500" loading="lazy" decoding="async">
+                        </figure>
+                        <div>
+                            <h2 class="formats-card__title home-display">Digital-экраны</h2>
+                            <p class="formats-card__text home-display">
+                                Динамический контент и гибкое расписание показов
+                            </p>
+                            <a href="{{ path('app_map_app') }}" class="formats-card__link home-display">
+                                Смотреть на карте
+                                <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    </article>
+
+                    {# 3 — сити-формат #}
+                    <article class="formats-card">
+                        <figure class="formats-card__figure formats-card__figure--a shadow-sm">
+                            <img class="formats-card__img" src="{{ asset('images/city-format.jpg') }}" alt="Сити-формат в городской среде" width="800" height="500" loading="lazy" decoding="async">
+                        </figure>
+                        <div>
+                            <h2 class="formats-card__title home-display">Сити-формат</h2>
+                            <p class="formats-card__text home-display">
+                                Компактные поверхности в центре и рядом с остановками
+                            </p>
+                            <a href="{{ path('app_site_page', { path: 'media/street-furniture' }) }}" class="formats-card__link home-display">
+                                Подробнее о продукте
+                                <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    </article>
+
+                    {# 4 — билборды 6×3 #}
+                    <article class="formats-card formats-card--reverse">
+                        <figure class="formats-card__figure formats-card__figure--b shadow-sm">
+                            <img class="formats-card__img" src="{{ asset('images/6x3.jpg') }}" alt="Билборды классического формата 6×3 м" width="800" height="500" loading="lazy" decoding="async">
+                        </figure>
+                        <div>
+                            <h2 class="formats-card__title home-display">Билборды 6×3 м</h2>
+                            <p class="formats-card__text home-display">
+                                Классический формат для широкого охвата и узнаваемости бренда
+                            </p>
+                            <a href="{{ path('app_site_page', { path: 'media/billboards' }) }}" class="formats-card__link home-display">
+                                Подробнее о продукте
+                                <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="formats-cta">
+                    <p class="formats-cta__title home-display">Нужна сетка под кампанию?</p>
+                    <p class="formats-cta__text">
+                        Откройте карту конструкций: фильтры по типу и району, бронирование слотов и корзина заявки.
+                    </p>
+                    <a href="{{ path('app_map_app') }}" class="formats-cta__btn home-display">Перейти к карте</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

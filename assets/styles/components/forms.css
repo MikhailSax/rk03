@@ -1,0 +1,4 @@
+input.border-red-500:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(239 68 68);
+}

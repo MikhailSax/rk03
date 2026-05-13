@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Страница не найдена{% endblock %}
+
+{% block body %}
+    <section class="relative overflow-hidden bg-gradient-to-b from-red-50 via-white to-white py-16 sm:py-20">
+        <div class="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-red-100 blur-3xl"></div>
+
+        <div class="relative mx-auto max-w-3xl px-6 text-center">
+            <span class="inline-flex rounded-full border border-red-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-red-600">Ошибка 404</span>
+            <h1 class="mt-5 text-4xl font-bold text-gray-900 sm:text-5xl">Мы не нашли эту страницу</h1>
+            <p class="mx-auto mt-4 max-w-2xl text-base text-gray-600 sm:text-lg">
+                Возможно, ссылка устарела, страница была удалена или вы ошиблись в адресе.
+                Давайте вернёмся в рабочую зону и продолжим поиск конструкций.
+            </p>
+
+            <div class="mt-9 flex flex-wrap items-center justify-center gap-3">
+                <a href="{{ path('app_homepage') }}" class="inline-flex items-center rounded-lg bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700">
+                    На главную
+                </a>
+                <a href="{{ path('app_map_app') }}" class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-5 py-3 text-sm font-semibold text-gray-700 transition hover:border-red-300 hover:text-red-600">
+                    Открыть карту
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
