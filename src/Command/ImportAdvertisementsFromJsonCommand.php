@@ -56,21 +56,22 @@ class ImportAdvertisementsFromJsonCommand extends Command
   - учитывает повторяющиеся номера конструкций и объединяет их по сторонам;
   - сохраняет фото стороны как ссылку (URL) в поле AdvertisementSide.image;
   - обновляет существующие записи, если номер конструкции уже есть в БД.
-HELP);
+HELP
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $adsPath = (string) $input->getArgument('file');
-        $typesPath = (string) $input->getOption('types-file');
+        $adsPath = (string)$input->getArgument('file');
+        $typesPath = (string)$input->getOption('types-file');
 
         if (!is_file($adsPath)) {
             $io->error(sprintf('JSON-файл не найден: %s', $adsPath));
             return Command::FAILURE;
         }
 
-        $rawAds = json_decode((string) file_get_contents($adsPath), true);
+        $rawAds = json_decode((string)file_get_contents($adsPath), true);
         if (!is_array($rawAds)) {
             $io->error(sprintf('Не удалось распарсить JSON: %s', $adsPath));
             return Command::FAILURE;
@@ -220,7 +221,7 @@ HELP);
                 if (!is_string($columnKey) || !str_starts_with($columnKey, 'column_')) {
                     continue;
                 }
-                $normalized = $this->normalizeHeader((string) $value);
+                $normalized = $this->normalizeHeader((string)$value);
                 if ($normalized !== '') {
                     $candidateMap[$normalized] = $columnKey;
                 }
@@ -280,7 +281,7 @@ HELP);
             return [];
         }
 
-        $typesJson = json_decode((string) file_get_contents($typesPath), true);
+        $typesJson = json_decode((string)file_get_contents($typesPath), true);
         if (!is_array($typesJson)) {
             $io->error(sprintf('Не удалось распарсить types JSON: %s', $typesPath));
             return [];
@@ -289,7 +290,7 @@ HELP);
         $typeIdToName = [];
         foreach ($typesJson as $t) {
             if (is_array($t) && isset($t['id'], $t['name'])) {
-                $typeIdToName[(int) $t['id']] = (string) $t['name'];
+                $typeIdToName[(int)$t['id']] = (string)$t['name'];
             }
         }
 
@@ -298,7 +299,7 @@ HELP);
             if (!is_array($row)) {
                 continue;
             }
-            $typeId = isset($row['type_id']) ? (int) $row['type_id'] : null;
+            $typeId = isset($row['type_id']) ? (int)$row['type_id'] : null;
             $typeName = $typeId !== null ? ($typeIdToName[$typeId] ?? null) : ($row['type_name'] ?? null);
             $sides = $row['sides'] ?? [];
             if (!is_array($sides)) {
@@ -306,14 +307,14 @@ HELP);
             }
             $sideCodes = [];
             foreach ($sides as $sideCodeRaw) {
-                foreach ($this->parseSideCodes((string) $sideCodeRaw) as $parsedCode) {
+                foreach ($this->parseSideCodes((string)$sideCodeRaw) as $parsedCode) {
                     $sideCodes[] = $parsedCode;
                 }
             }
             $sideCodes = array_values(array_unique($sideCodes));
 
             $coordinates = isset($row['latitude'], $row['longitude'])
-                ? sprintf('%s,%s', (string) $row['latitude'], (string) $row['longitude'])
+                ? sprintf('%s,%s', (string)$row['latitude'], (string)$row['longitude'])
                 : null;
 
             // Новый legacy-вариант: side_details с полями по конкретной стороне.
@@ -357,7 +358,7 @@ HELP);
 
             $rows[] = [
                 'place_number' => $row['place_number'] ?? null,
-                'side' => implode(',', array_map(static fn (mixed $s): string => (string) $s, $sides)),
+                'side' => implode(',', array_map(static fn(mixed $s): string => (string)$s, $sides)),
                 'address' => $row['address'] ?? null,
                 'type_name' => $typeName,
                 'image' => $row['image'] ?? null,
@@ -383,7 +384,7 @@ HELP);
                 return '';
             }
 
-            return trim((string) $value);
+            return trim((string)$value);
         }
 
         return '';
@@ -483,7 +484,7 @@ HELP);
         if ($value === null) {
             return null;
         }
-        $str = trim((string) $value);
+        $str = trim((string)$value);
         return $str === '' ? null : $str;
     }
 
@@ -531,7 +532,7 @@ HELP);
     private function toFloat(string $value): ?float
     {
         $normalized = str_replace([' ', ','], ['', '.'], $value);
-        return is_numeric($normalized) ? (float) $normalized : null;
+        return is_numeric($normalized) ? (float)$normalized : null;
     }
 
     private function parsePrice(string $value): ?string
@@ -551,6 +552,6 @@ HELP);
             $normalized = str_replace(',', '', $normalized);
         }
 
-        return is_numeric($normalized) ? number_format((float) $normalized, 2, '.', '') : null;
+        return is_numeric($normalized) ? number_format((float)$normalized, 2, '.', '') : null;
     }
 }
