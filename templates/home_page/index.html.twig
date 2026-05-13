@@ -1,13 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}БМС — наружная реклама{% endblock %}
+{% block title %}РК03 — наружная реклама{% endblock %}
 
 {% block head_extra %}
     {% if home_preload_image is defined and home_preload_image %}
         <link rel="preload" as="image" href="{{ asset(home_preload_image) }}">
     {% endif %}
     {% if home_json_ld is defined %}
-        <script type="application/ld+json">{{ home_json_ld|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
+        <script
+            type="application/ld+json">{{ home_json_ld|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
     {% endif %}
 {% endblock %}
 
@@ -20,95 +21,108 @@
         {% endfor %}
 
         {% if showEnhancements %}
-        <section class="home-proof border-t border-gray-200 bg-white py-8 sm:py-10" aria-label="Преимущества работы">
-            <div class="mx-auto grid max-w-[1400px] gap-3 px-4 sm:grid-cols-2 sm:gap-4 sm:px-8 lg:grid-cols-4 lg:px-12">
-                <article class="home-proof-card">
-                    <p class="home-proof-title">Запуск от 2 дней</p>
-                    <p class="home-proof-text">Быстрая публикация после согласования макетов.</p>
-                </article>
-                <article class="home-proof-card">
-                    <p class="home-proof-title">Фотоотчеты</p>
-                    <p class="home-proof-text">Подтверждение размещения по каждой конструкции.</p>
-                </article>
-                <article class="home-proof-card">
-                    <p class="home-proof-title">Гибкие форматы</p>
-                    <p class="home-proof-text">Билборды, сити-формат и digital-экраны.</p>
-                </article>
-                <article class="home-proof-card">
-                    <p class="home-proof-title">Один менеджер</p>
-                    <p class="home-proof-text">Планирование, запуск и сопровождение в одном окне.</p>
-                </article>
-            </div>
-        </section>
+            <section class="home-proof border-t border-gray-200 bg-white py-8 sm:py-10"
+                     aria-label="Преимущества работы">
+                <div
+                    class="mx-auto grid max-w-[1400px] gap-3 px-4 sm:grid-cols-2 sm:gap-4 sm:px-8 lg:grid-cols-4 lg:px-12">
+                    <article class="home-proof-card">
+                        <p class="home-proof-title">Запуск от 2 дней</p>
+                        <p class="home-proof-text">Быстрая публикация после согласования макетов.</p>
+                    </article>
+                    <article class="home-proof-card">
+                        <p class="home-proof-title">Фотоотчеты</p>
+                        <p class="home-proof-text">Подтверждение размещения по каждой конструкции.</p>
+                    </article>
+                    <article class="home-proof-card">
+                        <p class="home-proof-title">Гибкие форматы</p>
+                        <p class="home-proof-text">Билборды, сити-формат и digital-экраны.</p>
+                    </article>
+                    <article class="home-proof-card">
+                        <p class="home-proof-title">Один менеджер</p>
+                        <p class="home-proof-text">Планирование, запуск и сопровождение в одном окне.</p>
+                    </article>
+                </div>
+            </section>
 
-        <section class="home-mini-case border-t border-gray-200 bg-[#fafafa] py-9 sm:py-12" aria-labelledby="home-mini-case-title">
-            <div class="mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-12">
-                <h2 id="home-mini-case-title" class="home-display text-lg font-bold uppercase tracking-tight text-gray-900 sm:text-xl">
-                    Кейс: сеть супермаркетов
-                </h2>
-                <div class="mt-4 grid gap-4 sm:grid-cols-3">
-                    <div class="home-mini-case-item">
-                        <p class="home-mini-case-value">+28%</p>
-                        <p class="home-mini-case-text">Узнаваемость в целевых районах.</p>
-                    </div>
-                    <div class="home-mini-case-item">
-                        <p class="home-mini-case-value">6 недель</p>
-                        <p class="home-mini-case-text">Срок кампании от старта до отчета.</p>
-                    </div>
-                    <div class="home-mini-case-item">
-                        <p class="home-mini-case-value">1 окно</p>
-                        <p class="home-mini-case-text">Планирование, запуск и контроль.</p>
+            <section class="home-mini-case border-t border-gray-200 bg-[#fafafa] py-9 sm:py-12"
+                     aria-labelledby="home-mini-case-title">
+                <div class="mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-12">
+                    <h2 id="home-mini-case-title"
+                        class="home-display text-lg font-bold uppercase tracking-tight text-gray-900 sm:text-xl">
+                        Кейс: сеть супермаркетов
+                    </h2>
+                    <div class="mt-4 grid gap-4 sm:grid-cols-3">
+                        <div class="home-mini-case-item">
+                            <p class="home-mini-case-value">+28%</p>
+                            <p class="home-mini-case-text">Узнаваемость в целевых районах.</p>
+                        </div>
+                        <div class="home-mini-case-item">
+                            <p class="home-mini-case-value">6 недель</p>
+                            <p class="home-mini-case-text">Срок кампании от старта до отчета.</p>
+                        </div>
+                        <div class="home-mini-case-item">
+                            <p class="home-mini-case-value">1 окно</p>
+                            <p class="home-mini-case-text">Планирование, запуск и контроль.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="home-cta border-t border-gray-200 bg-[#fafafa] py-10 sm:py-12" aria-label="Действия">
-            <div class="mx-auto flex max-w-[1400px] flex-col items-center justify-center gap-4 px-4 sm:flex-row sm:gap-6 sm:px-8 lg:px-12">
-                <a href="{{ path('app_site_page', { path: 'contact' }) }}" class="home-display ooh-lift ooh-shine inline-flex min-h-[48px] min-w-[200px] items-center justify-center bg-[#05299E] px-8 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-[#041d6b]">
-                    Связаться
-                </a>
-                <a href="{{ path('app_map_app') }}" class="home-display ooh-lift inline-flex min-h-[48px] min-w-[200px] items-center justify-center border border-[#05299E] bg-white px-8 text-sm font-semibold uppercase tracking-wider text-[#05299E] transition hover:bg-[#05299E]/5">
-                    Карта конструкций
-                </a>
-                <a href="{{ path('app_register') }}" class="home-display text-sm font-semibold text-gray-600 underline-offset-4 transition hover:text-[#05299E] hover:underline">
-                    Личный кабинет
-                </a>
-            </div>
-        </section>
+            <section class="home-cta border-t border-gray-200 bg-[#fafafa] py-10 sm:py-12" aria-label="Действия">
+                <div
+                    class="mx-auto flex max-w-[1400px] flex-col items-center justify-center gap-4 px-4 sm:flex-row sm:gap-6 sm:px-8 lg:px-12">
+                    <a href="{{ path('app_site_page', { path: 'contact' }) }}"
+                       class="home-display ooh-lift ooh-shine inline-flex min-h-[48px] min-w-[200px] items-center justify-center bg-[#05299E] px-8 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-[#041d6b]">
+                        Связаться
+                    </a>
+                    <a href="{{ path('app_map_app') }}"
+                       class="home-display ooh-lift inline-flex min-h-[48px] min-w-[200px] items-center justify-center border border-[#05299E] bg-white px-8 text-sm font-semibold uppercase tracking-wider text-[#05299E] transition hover:bg-[#05299E]/5">
+                        Карта конструкций
+                    </a>
+                    <a href="{{ path('app_register') }}"
+                       class="home-display text-sm font-semibold text-gray-600 underline-offset-4 transition hover:text-[#05299E] hover:underline">
+                        Личный кабинет
+                    </a>
+                </div>
+            </section>
 
-        <section class="home-faq-mini border-t border-gray-200 bg-white py-10 sm:py-12" aria-labelledby="home-faq-title">
-            <div class="mx-auto max-w-4xl px-4 sm:px-8">
-                <h2 id="home-faq-title" class="home-display text-xl font-bold uppercase tracking-tight text-gray-900">
-                    Частые вопросы
-                </h2>
-                <div class="mt-6 space-y-2">
-                    <details class="home-faq-item">
-                        <summary>Как быстро можно запустить размещение?</summary>
-                        <p>Обычно от 2 до 5 рабочих дней, в зависимости от формата и загрузки поверхностей.</p>
-                    </details>
-                    <details class="home-faq-item">
-                        <summary>Можно ли забронировать конструкции заранее?</summary>
-                        <p>Да, бронирование доступно заранее, а занятость подтверждается менеджером.</p>
-                    </details>
-                    <details class="home-faq-item">
-                        <summary>Делаете ли вы адаптацию макетов?</summary>
-                        <p>Да, адаптируем креатив под каждый формат и требования площадок.</p>
-                    </details>
+            <section class="home-faq-mini border-t border-gray-200 bg-white py-10 sm:py-12"
+                     aria-labelledby="home-faq-title">
+                <div class="mx-auto max-w-4xl px-4 sm:px-8">
+                    <h2 id="home-faq-title"
+                        class="home-display text-xl font-bold uppercase tracking-tight text-gray-900">
+                        Частые вопросы
+                    </h2>
+                    <div class="mt-6 space-y-2">
+                        <details class="home-faq-item">
+                            <summary>Как быстро можно запустить размещение?</summary>
+                            <p>Обычно от 2 до 5 рабочих дней, в зависимости от формата и загрузки поверхностей.</p>
+                        </details>
+                        <details class="home-faq-item">
+                            <summary>Можно ли забронировать конструкции заранее?</summary>
+                            <p>Да, бронирование доступно заранее, а занятость подтверждается менеджером.</p>
+                        </details>
+                        <details class="home-faq-item">
+                            <summary>Делаете ли вы адаптацию макетов?</summary>
+                            <p>Да, адаптируем креатив под каждый формат и требования площадок.</p>
+                        </details>
+                    </div>
+                </div>
+            </section>
+
+            <div
+                class="home-sticky-cta fixed bottom-4 left-1/2 z-40 w-[calc(100%-1rem)] max-w-md -translate-x-1/2 rounded-xl border border-gray-200 bg-white/95 p-2 shadow-lg backdrop-blur md:hidden">
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="{{ path('app_site_page', { path: 'contact' }) }}"
+                       class="home-display inline-flex min-h-[42px] items-center justify-center bg-[#05299E] px-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-white">
+                        Связаться
+                    </a>
+                    <a href="{{ path('app_map_app') }}"
+                       class="home-display inline-flex min-h-[42px] items-center justify-center border border-[#05299E] bg-white px-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#05299E]">
+                        Карта
+                    </a>
                 </div>
             </div>
-        </section>
-
-        <div class="home-sticky-cta fixed bottom-4 left-1/2 z-40 w-[calc(100%-1rem)] max-w-md -translate-x-1/2 rounded-xl border border-gray-200 bg-white/95 p-2 shadow-lg backdrop-blur md:hidden">
-            <div class="grid grid-cols-2 gap-2">
-                <a href="{{ path('app_site_page', { path: 'contact' }) }}" class="home-display inline-flex min-h-[42px] items-center justify-center bg-[#05299E] px-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-white">
-                    Связаться
-                </a>
-                <a href="{{ path('app_map_app') }}" class="home-display inline-flex min-h-[42px] items-center justify-center border border-[#05299E] bg-white px-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#05299E]">
-                    Карта
-                </a>
-            </div>
-        </div>
         {% endif %}
     </div>
 {% endblock %}

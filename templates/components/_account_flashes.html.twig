@@ -4,7 +4,8 @@
     {% for key in keys %}
         {% for message in app.flashes(key) %}
             {% set is_error = key in ['error', 'verify_email_error'] %}
-            <div class="rounded-lg border px-4 py-3 text-sm {{ is_error ? 'border-red-200 bg-red-50 text-red-800' : (key == 'warning' ? 'border-amber-200 bg-amber-50 text-amber-900' : 'border-emerald-200 bg-emerald-50 text-emerald-800') }}">
+            <div
+                class="rounded-lg border px-4 py-3 text-sm {{ is_error ? 'border-red-200 bg-red-50 text-red-800' : (key == 'warning' ? 'border-amber-200 bg-amber-50 text-amber-900' : 'border-emerald-200 bg-emerald-50 text-emerald-800') }}">
                 {{ message }}
             </div>
         {% endfor %}

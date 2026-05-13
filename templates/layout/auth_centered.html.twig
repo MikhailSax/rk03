@@ -3,13 +3,16 @@
 {# Центрированная карточка для входа и регистрации #}
 {% block body %}
     <section class="relative flex min-h-[calc(100vh-5rem)] flex-col justify-center px-4 py-14 sm:px-6 lg:px-8">
-        <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#05299E]/[0.07] via-white to-[#f4f5f7]"></div>
-        <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#05299E]/20 to-transparent"></div>
+        <div
+            class="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#05299E]/[0.07] via-white to-[#f4f5f7]"></div>
+        <div
+            class="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#05299E]/20 to-transparent"></div>
         <div class="relative mx-auto w-full max-w-md">
             <p class="home-display mb-6 text-center text-[10px] font-semibold uppercase tracking-[0.28em] text-[#05299E]/80">
-                {% block auth_eyebrow %}БМС{% endblock %}
+                {% block auth_eyebrow %}РК03{% endblock %}
             </p>
-            <div class="rounded-2xl border border-gray-200/90 bg-white p-8 shadow-[0_28px_72px_-32px_rgba(5,41,158,0.28)] sm:p-10">
+            <div
+                class="rounded-2xl border border-gray-200/90 bg-white p-8 shadow-[0_28px_72px_-32px_rgba(5,41,158,0.28)] sm:p-10">
                 {% block auth_inner %}{% endblock %}
             </div>
         </div>
