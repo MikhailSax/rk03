@@ -49,7 +49,6 @@
                                     <p class="mt-1 truncate text-xs text-gray-600">{{ item.side }} • {{ item.startDate }}—{{ item.endDate }}</p>
                                 </div>
                                 <div class="flex shrink-0 flex-col items-end gap-2">
-                                    <p class="text-xs font-semibold text-[#05299E]">{{ formatPrice(item.price) }}</p>
                                     <button
                                         type="button"
                                         class="site-header-font rounded-md border border-gray-300 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-gray-700 transition hover:border-[#e85d4c] hover:text-[#e85d4c] disabled:opacity-50"
@@ -66,13 +65,6 @@
 
                 <aside class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6 lg:sticky lg:top-24 lg:h-fit">
                     <h2 class="home-display text-sm font-bold uppercase tracking-[0.16em] text-[#05299E]">Оформление заказа</h2>
-
-                    <div class="mt-4 border-b border-gray-100 pb-4">
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-600">Итого</span>
-                            <span class="text-base font-bold text-gray-900">{{ formatPrice(cartTotal) }}</span>
-                        </div>
-                    </div>
 
                     <form class="mt-4 space-y-3" @submit.prevent="submitOrder">
                         <label class="block text-sm">

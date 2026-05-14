@@ -116,8 +116,6 @@
                         <dd class="font-medium text-gray-900 sm:text-right">{{ activeSide?.code || '—' }}</dd>
                         <dt class="text-gray-500">Описание стороны</dt>
                         <dd class="text-gray-800 sm:text-right">{{ activeSide?.description || '—' }}</dd>
-                        <dt class="text-gray-500">Прайс без НДС</dt>
-                        <dd class="text-lg font-extrabold text-gray-900 sm:text-right sm:text-xl">{{ formatPrice(activeSide?.price) }}</dd>
                         <template v-if="advertisement.location && (lat != null || lng != null)">
                             <dt class="text-gray-500">Координаты</dt>
                             <dd class="font-mono text-xs text-gray-800 sm:text-right">
@@ -181,7 +179,6 @@
                             <tbody>
                                 <tr v-for="s in advertisement.side_details" :key="s.code" class="border-t border-gray-100">
                                     <td class="px-3 py-2 font-semibold">{{ s.code }}</td>
-                                    <td class="px-3 py-2">{{ formatPrice(s.price) }}</td>
                                     <td class="px-3 py-2 text-gray-600">{{ s.description || '—' }}</td>
                                     <td class="px-3 py-2">
                                         <span v-if="s.image_url || s.night_image_url" class="text-emerald-700">Есть</span>

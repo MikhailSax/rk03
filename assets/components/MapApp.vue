@@ -267,8 +267,6 @@
                             <dd class="border-b border-gray-100 pb-2 text-right text-xs text-gray-700 sm:text-sm">
                                 {{ activeSide.description || '—' }}
                             </dd>
-                            <dt class="pt-1 text-gray-500">Прайс без НДС</dt>
-                            <dd class="pt-1 text-right text-xl font-extrabold text-gray-900 sm:text-2xl">{{ formatPrice(activeSide.price) }}</dd>
                         </dl>
 
                         <section v-if="activeObject.side_details?.length" class="space-y-2 border-t border-gray-100 pt-3">
