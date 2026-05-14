@@ -8,10 +8,6 @@
                         <h1 class="home-display mt-2 text-2xl font-bold uppercase tracking-tight text-gray-900 sm:text-3xl">Корзина</h1>
                         <p class="mt-2 text-xs text-gray-600">Проверьте позиции, заполните контакты и отправьте заявку на бронь.</p>
                     </div>
-                    <div class="rounded-xl border border-[#05299E]/15 bg-[#05299E]/5 px-4 py-3 text-right">
-                        <p class="site-header-font text-[10px] font-semibold uppercase tracking-[0.14em] text-[#05299E]/70">Позиции</p>
-                        <p class="mt-1 text-xl font-bold text-[#05299E]">{{ cartItems.length }}</p>
-                    </div>
                 </div>
             </div>
 
