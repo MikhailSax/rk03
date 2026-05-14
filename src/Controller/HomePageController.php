@@ -30,7 +30,7 @@ final class HomePageController extends AbstractController
         [
             'id' => 'about',
             'aspect_ratio' => '3005 / 2943',
-            'image' => 'images/ooh-hero-collage.png',
+            'image' => 'images/ooh-hero-collage.jpg',
             'webp' => 'images/ooh-hero-collage.webp',
             'eager' => true,
             'heading_id' => null,
