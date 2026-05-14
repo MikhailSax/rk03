@@ -56,60 +56,6 @@ final class SiteSectionController extends AbstractController
      * @var array<string, array{title: string, section: string}>
      */
     private const PAGES = [
-        'formats' => ['title' => 'Форматы размещения', 'section' => 'Resources'],
-        'markets' => ['title' => 'Рынки и география', 'section' => 'Markets'],
-
-        'media/billboards' => ['title' => 'Билборды', 'section' => 'Media'],
-        'media/transit' => ['title' => 'Транзитная реклама', 'section' => 'Media'],
-        'media/street-furniture' => ['title' => 'Ситиборды и уличная мебель', 'section' => 'Media'],
-        'media/mta-network' => ['title' => 'Транспортные сети', 'section' => 'Media'],
-        'media/times-square' => ['title' => 'Премьерные локации', 'section' => 'Media'],
-        'media/place-based' => ['title' => 'Place-based', 'section' => 'Media'],
-        'media/social-ooh' => ['title' => 'Social OOH', 'section' => 'Media'],
-        'media/mobile' => ['title' => 'Мобильная связка с OOH', 'section' => 'Media'],
-
-        'resources/blog' => ['title' => 'Блог', 'section' => 'Resources'],
-        'resources/video-series' => ['title' => 'Видео-серии', 'section' => 'Resources'],
-        'resources/media-preview' => ['title' => 'Предпросмотр медиа', 'section' => 'Resources'],
-        'resources/media-kits' => ['title' => 'Медиакиты', 'section' => 'Resources'],
-        'resources/case-studies' => ['title' => 'Кейсы', 'section' => 'Resources'],
-        'resources/rates' => ['title' => 'Тарифы и ставки', 'section' => 'Resources'],
-        'resources/specs' => ['title' => 'Технические спецификации', 'section' => 'Resources'],
-        'resources/creative-best-practices' => ['title' => 'Креатив: лучшие практики', 'section' => 'Resources'],
-
-        'ad-tech/automation' => ['title' => 'Автоматизация закупки', 'section' => 'Ad Tech'],
-        'ad-tech/programmatic' => ['title' => 'Программатик', 'section' => 'Ad Tech'],
-        'ad-tech/ad-server' => ['title' => 'Ad server / прямая цифровая подача', 'section' => 'Ad Tech'],
-        'ad-tech/measurement' => ['title' => 'Измерения и отчётность', 'section' => 'Ad Tech'],
-        'ad-tech/audience-insights' => ['title' => 'Аудитории и инсайты', 'section' => 'Ad Tech'],
-        'ad-tech/outcomes' => ['title' => 'Outcomes measurement', 'section' => 'Ad Tech'],
-
-        'creative/studios' => ['title' => 'Креативные студии', 'section' => 'Creative'],
-        'creative/xlabs' => ['title' => 'Инновационная лаборатория', 'section' => 'Creative'],
-        'creative/moments' => ['title' => 'Спецпроекты и моменты', 'section' => 'Creative'],
-        'creative/advanced' => ['title' => 'Расширенные возможности', 'section' => 'Creative'],
-
-        'about' => ['title' => 'О компании', 'section' => 'About'],
-        'about/leadership' => ['title' => 'Команда и руководство', 'section' => 'About'],
-        'about/partners' => ['title' => 'Партнёры', 'section' => 'About'],
-        'about/esg' => ['title' => 'ESG и устойчивое развитие', 'section' => 'About'],
-        'about/investors' => ['title' => 'Инвесторам', 'section' => 'About'],
-        'about/real-estate' => ['title' => 'Недвижимость и площадки', 'section' => 'About'],
-
-        'careers' => ['title' => 'Карьера', 'section' => 'Careers'],
-        'contact' => ['title' => 'Контакты', 'section' => 'Contact'],
-
-        'investors/stock' => ['title' => 'Акции и котировки', 'section' => 'Investors'],
-        'investors/financials' => ['title' => 'Финансовая отчётность', 'section' => 'Investors'],
-        'investors/governance' => ['title' => 'Корпоративное управление', 'section' => 'Investors'],
-
-        'newsroom' => ['title' => 'Пресс-центр', 'section' => 'News'],
-        'newsletter' => ['title' => 'Подписка на рассылку', 'section' => 'News'],
-
-        'legal/privacy' => ['title' => 'Политика конфиденциальности', 'section' => 'Legal'],
-        'legal/cookies' => ['title' => 'Политика cookie', 'section' => 'Legal'],
-        'legal/terms' => ['title' => 'Условия использования', 'section' => 'Legal'],
-        'legal/posting' => ['title' => 'Правила размещения контента', 'section' => 'Legal'],
     ];
 
     #[Route('/site/{path}', name: 'app_site_page', requirements: ['path' => '.+'], methods: ['GET'])]
