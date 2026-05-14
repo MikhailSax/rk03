@@ -9,7 +9,7 @@
     <div class="text-center">
         <h1 class="{{ ui.auth_title_class() }}">Вход</h1>
         <p class="{{ ui.auth_subtitle_class() }}">
-            Продолжите в <span class="font-semibold text-[#05299E]">БМС</span> <span class="text-gray-600">(Бурятия Медиа Сервис)</span>
+            Продолжите в <span class="font-semibold text-[#05299E]">РК03</span> <span class="text-gray-600">(Рекламные Конструкции 03)</span>
         </p>
     </div>
 
@@ -20,7 +20,7 @@
     {% if app.user %}
         <div class="mt-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-4 text-center text-sm text-emerald-800">
             Вы уже вошли как {{ app.user.userIdentifier }},
-            <a href="{{ path('app_logout') }}" class="font-semibold text-[#05299E] underline-offset-2 hover:underline">выйти</a>
+            <a href="{{ path('app_logout') }}" class="font-semibold text-[#05299E] underline-offset-2 hover:underline">Выйти</a>
         </div>
     {% else %}
         <form class="mt-8 space-y-5" action="{{ path('app_login') }}" method="POST">

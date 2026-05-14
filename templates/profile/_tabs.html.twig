@@ -1,16 +1,17 @@
-<nav class="flex flex-row gap-2 overflow-x-auto pb-1 lg:flex-col lg:gap-2 lg:overflow-visible lg:pb-0" aria-label="Разделы кабинета">
+<nav class="flex flex-row gap-2 overflow-x-auto pb-1 lg:flex-col lg:gap-2 lg:overflow-visible lg:pb-0"
+     aria-label="Разделы кабинета">
     <a href="{{ path('profile') }}"
        class="home-display shrink-0 rounded-xl border px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-[0.12em] transition sm:min-w-0 sm:flex-1 lg:w-full lg:text-left
        {{ app.request.attributes.get('_route') == 'profile'
-          ? 'border-[#05299E] bg-gradient-to-r from-[#05299E] to-[#041d6b] text-white shadow-md'
-          : 'border-gray-200 bg-white text-gray-700 hover:border-[#05299E]/35 hover:bg-[#05299E]/5 hover:text-[#05299E]' }}">
+       ? 'border-[#05299E] bg-gradient-to-r from-[#05299E] to-[#041d6b] text-white shadow-md'
+       : 'border-gray-200 bg-white text-gray-700 hover:border-[#05299E]/35 hover:bg-[#05299E]/5 hover:text-[#05299E]' }}">
         Профиль
     </a>
     <a href="{{ path('profile.orders') }}"
        class="home-display shrink-0 rounded-xl border px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-[0.12em] transition sm:min-w-0 sm:flex-1 lg:w-full lg:text-left
        {{ app.request.attributes.get('_route') == 'profile.orders'
-          ? 'border-[#05299E] bg-gradient-to-r from-[#05299E] to-[#041d6b] text-white shadow-md'
-          : 'border-gray-200 bg-white text-gray-700 hover:border-[#05299E]/35 hover:bg-[#05299E]/5 hover:text-[#05299E]' }}">
+       ? 'border-[#05299E] bg-gradient-to-r from-[#05299E] to-[#041d6b] text-white shadow-md'
+       : 'border-gray-200 bg-white text-gray-700 hover:border-[#05299E]/35 hover:bg-[#05299E]/5 hover:text-[#05299E]' }}">
         Активность и заказы
     </a>
 </nav>

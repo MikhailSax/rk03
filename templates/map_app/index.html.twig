@@ -16,9 +16,11 @@
         data-user-phone="{{ app.user ? app.user.phone : '' }}"
         data-user-email="{{ app.user ? app.user.userIdentifier : '' }}"
     >
-        <div id="initial-spinner" class="flex min-h-[50vh] flex-col items-center justify-center bg-[#05299E] text-white">
+        <div id="initial-spinner"
+             class="flex min-h-[50vh] flex-col items-center justify-center bg-[#05299E] text-white">
             <div class="h-10 w-10 animate-spin rounded-full border-4 border-white/20 border-t-[#e85d4c]"></div>
-            <p class="site-header-font mt-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">Загрузка каталога…</p>
+            <p class="site-header-font mt-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">Загрузка
+                каталога…</p>
         </div>
     </div>
 {% endblock %}

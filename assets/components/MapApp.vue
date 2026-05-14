@@ -67,12 +67,12 @@
 
                     <div class="max-h-[46dvh] space-y-5 overflow-y-auto border-b border-gray-100 bg-[#f7f7f8] p-5 lg:max-h-none lg:overflow-visible">
                         <div>
-                            <label class="site-header-font mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.16em] text-gray-500">Тип продукции</label>
+                            <label class="site-header-font mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.16em] text-gray-500">Категория Конструкции</label>
                             <select
                                 v-model="filters.productType"
                                 class="w-full border border-gray-300 bg-white px-3 py-3 text-base focus:border-[#05299E] focus:outline-none focus:ring-2 focus:ring-[#05299E]/15"
                             >
-                                <option value="">Все типы продукции</option>
+                                <option value="">Все типы конструкций</option>
                                 <option v-for="item in productTypes" :key="item.id" :value="String(item.id)">
                                     {{ item.name }}
                                 </option>
@@ -512,10 +512,8 @@ let placemarks = new Map()
 let applyTimer = null
 
 const datePresets = [
-    { key: 'today', label: 'Сегодня' },
     { key: 'week', label: '7 дней' },
     { key: 'month', label: '30 дней' },
-    { key: 'clear', label: 'Без дат' },
 ]
 
 // --- Вычисляемые свойства ---
@@ -640,7 +638,7 @@ function getSideStatus(item, sideCode, fromDate, toDate) {
     const bookings = (item?.bookings || []).filter(b => b.side_code === sideCode)
     const from = fromDate || new Date()
     const to = toDate || from
-    
+
     const overlap = bookings.find(b => {
         const start = parseDate(b.start_date)
         const end = parseDate(b.end_date)
@@ -708,7 +706,7 @@ async function loadAdvertisements() {
         const params = new URLSearchParams()
         if (filters.productType) params.append('productType', filters.productType)
         if (filters.constrTypeId) params.append('constrTypeId', filters.constrTypeId)
-        
+
         const res = await fetch(`${props.advertisementsUrl}?${params.toString()}`)
         const data = await res.json()
         const items = Array.isArray(data) ? data : (Array.isArray(data?.items) ? data.items : [])
@@ -750,7 +748,7 @@ function syncMapPlacemarks() {
         if (!item.location?.latitude) return
         const p = new window.ymaps.Placemark(
             [item.location.latitude, item.location.longitude],
-            {}, 
+            {},
             { preset: 'islands#redCircleDotIcon' }
         )
         p.events.add('click', () => focusObject(item.id))
@@ -910,7 +908,7 @@ onMounted(async () => {
     await loadFilters()
     await loadAdvertisements()
     await loadCart()
-    
+
     if (!window.ymaps) {
         const script = document.createElement('script')
         script.src = 'https://api-maps.yandex.ru/2.1/?lang=ru_RU'
