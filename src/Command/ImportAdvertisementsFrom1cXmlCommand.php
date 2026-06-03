@@ -41,6 +41,8 @@ class ImportAdvertisementsFrom1cXmlCommand extends Command
         $this
             ->addArgument('file', InputArgument::OPTIONAL, 'Путь к XML-файлу 1С', 'MessageFor_ST0000000007.xml')
             ->addOption('batch-size', null, InputOption::VALUE_REQUIRED, 'Количество конструкций до промежуточного flush()', '100')
+            ->addOption('images-dir', null, InputOption::VALUE_REQUIRED, 'Папка с файлами изображений из 1С; найденные файлы будут скопированы в uploads')
+            ->addOption('image-upload-dir', null, InputOption::VALUE_REQUIRED, 'Папка сайта для сохранения изображений', 'public/uploads/advertisements')
             ->setHelp(<<<'HELP'
 Команда читает XML-выгрузку 1С потоковым XMLReader, разбирает справочники
 CatalogObject.Размеры, CatalogObject.ВидыСторон, CatalogObject.ТипыРекламныхБлоков,
@@ -53,7 +55,7 @@ CatalogObject.Размеры, CatalogObject.ВидыСторон, CatalogObject.
   - Адрес/Adress -> Advertisement.address;
   - Координаты -> AdvertisementLocation latitude/longitude;
   - Описание/Specification и СсылкаНаКартуРекламногоМеста -> AdvertisementSide.description;
-  - Фото/ОсновноеИзображение -> AdvertisementSide.image;
+  - ОсновноеИзображение/Фото -> AdvertisementSide.image; если передан --images-dir, файлы копируются в public/uploads/advertisements;
   - Ref/исходная строка 1С -> sourceRef/sourceData для Advertisement и AdvertisementSide.
 HELP
             );
@@ -64,10 +66,20 @@ HELP
         $io = new SymfonyStyle($input, $output);
         $path = (string) $input->getArgument('file');
         $batchSize = max(1, (int) $input->getOption('batch-size'));
+        $imagesDir = $this->stringOrNull($input->getOption('images-dir'));
+        $imageUploadDir = $this->absolutePath((string) $input->getOption('image-upload-dir'));
 
         if (!is_file($path)) {
             $io->error(sprintf('XML-файл не найден: %s', $path));
             return Command::FAILURE;
+        }
+
+        if ($imagesDir !== null) {
+            $imagesDir = $this->absolutePath($imagesDir);
+            if (!is_dir($imagesDir)) {
+                $io->error(sprintf('Папка изображений не найдена: %s', $imagesDir));
+                return Command::FAILURE;
+            }
         }
 
         [$sizes, $sideKinds, $blockTypes, $blockRows, $stats] = $this->readXml($path);
@@ -87,6 +99,8 @@ HELP
         $updated = 0;
         $skipped = 0;
         $processed = 0;
+        $copiedImages = 0;
+        $missingImages = 0;
 
         foreach ($groups as $group) {
             $placeNumber = $group['place_number'];
@@ -151,8 +165,10 @@ HELP
                     $side->setDescription($sideData['description']);
                 }
 
-                if ($sideData['image'] !== null) {
-                    $side->setImage($sideData['image']);
+                $image = $this->prepareSideImage($sideData, $imagesDir, $imageUploadDir, $copiedImages, $missingImages);
+                if ($image !== null) {
+                    $side->setImage($image);
+                    $this->syncLegacySideImage($ad, $sideCode, $image);
                 }
             }
 
@@ -168,7 +184,7 @@ HELP
         $this->em->flush();
 
         $io->success(sprintf(
-            'Импорт XML 1С завершен. Справочники: размеры %d, виды сторон %d, типы блоков %d. Блоков прочитано: %d, групп конструкций: %d. Создано: %d, обновлено: %d, пропущено: %d.',
+            'Импорт XML 1С завершен. Справочники: размеры %d, виды сторон %d, типы блоков %d. Блоков прочитано: %d, групп конструкций: %d. Создано: %d, обновлено: %d, пропущено: %d. Изображений скопировано: %d, не найдено: %d.',
             $stats['sizes'],
             $stats['side_kinds'],
             $stats['block_types'],
@@ -176,7 +192,9 @@ HELP
             count($groups),
             $created,
             $updated,
-            $skipped
+            $skipped,
+            $copiedImages,
+            $missingImages
         ));
 
         return Command::SUCCESS;
@@ -369,13 +387,16 @@ HELP
                 $this->last($row, 'Описание') ?? $this->first($row, 'Specification'),
                 $this->first($row, 'СсылкаНаКартуРекламногоМеста')
             );
+            $imageCandidates = $this->imageCandidates($row);
             $groups[$groupKey]['sides'][$sideCode] = [
                 'source_ref' => $this->first($row, 'Ref'),
                 'description' => $description,
-                'image' => $this->first($row, 'Фото') ?? $this->first($row, 'ОсновноеИзображение'),
+                'image' => $this->imageValue($imageCandidates),
+                'image_candidates' => $imageCandidates,
                 'source_data' => [
                     'catalog' => 'CatalogObject.РекламныеБлоки',
                     'side_ref' => $sideRef,
+                    'image_candidates' => $imageCandidates,
                     'raw' => $row,
                 ],
             ];
@@ -383,6 +404,178 @@ HELP
         }
 
         return array_values($groups);
+    }
+
+
+    /**
+     * @param array<string, mixed> $sideData
+     */
+    private function prepareSideImage(array $sideData, ?string $imagesDir, string $imageUploadDir, int &$copiedImages, int &$missingImages): ?string
+    {
+        $image = $this->stringOrNull($sideData['image'] ?? null);
+        if ($image !== null && $this->isUrl($image)) {
+            return $image;
+        }
+
+        $candidates = $sideData['image_candidates'] ?? [];
+        if (!is_array($candidates)) {
+            $candidates = [];
+        }
+
+        if ($imagesDir !== null) {
+            $sourcePath = $this->findImageSource($imagesDir, $candidates);
+            if ($sourcePath !== null) {
+                if (!is_dir($imageUploadDir) && !mkdir($imageUploadDir, 0775, true) && !is_dir($imageUploadDir)) {
+                    throw new \RuntimeException(sprintf('Не удалось создать папку для изображений: %s', $imageUploadDir));
+                }
+
+                $targetName = $this->targetImageName($sourcePath, $sideData['source_ref'] ?? null);
+                $targetPath = rtrim($imageUploadDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $targetName;
+                if (!is_file($targetPath)) {
+                    if (!copy($sourcePath, $targetPath)) {
+                        throw new \RuntimeException(sprintf('Не удалось скопировать изображение 1С из %s в %s', $sourcePath, $targetPath));
+                    }
+                    $copiedImages++;
+                }
+
+                return $targetName;
+            }
+
+            if ($candidates !== []) {
+                $missingImages++;
+            }
+        }
+
+        if ($image !== null && $this->isImageFileName($image)) {
+            return basename($image);
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     * @return string[]
+     */
+    private function imageCandidates(array $row): array
+    {
+        $candidates = [];
+        foreach (['ОсновноеИзображение', 'Фото'] as $field) {
+            $value = $this->first($row, $field);
+            if ($value === null || $this->isZeroUuid($value)) {
+                continue;
+            }
+
+            $candidates[] = $value;
+            if ($this->isUuid($value)) {
+                foreach (['jpg', 'jpeg', 'png', 'webp'] as $extension) {
+                    $candidates[] = $value . '.' . $extension;
+                    $candidates[] = $value . '_pic.' . $extension;
+                }
+            }
+        }
+
+        return array_values(array_unique($candidates));
+    }
+
+    /**
+     * @param string[] $candidates
+     */
+    private function imageValue(array $candidates): ?string
+    {
+        foreach ($candidates as $candidate) {
+            if ($this->isUrl($candidate) || $this->isImageFileName($candidate)) {
+                return $candidate;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string[] $candidates
+     */
+    private function findImageSource(string $imagesDir, array $candidates): ?string
+    {
+        foreach ($candidates as $candidate) {
+            if ($this->isUrl($candidate)) {
+                continue;
+            }
+
+            $safeCandidate = basename($candidate);
+            if ($safeCandidate === '') {
+                continue;
+            }
+
+            $path = rtrim($imagesDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $safeCandidate;
+            if (is_file($path)) {
+                return $path;
+            }
+        }
+
+        return null;
+    }
+
+    private function targetImageName(string $sourcePath, mixed $sourceRef): string
+    {
+        $extension = pathinfo($sourcePath, PATHINFO_EXTENSION) ?: 'jpg';
+        $base = $this->stringOrNull($sourceRef) ?? pathinfo($sourcePath, PATHINFO_FILENAME);
+        $base = preg_replace('/[^a-zA-Z0-9_-]+/', '-', $base) ?: sha1($sourcePath);
+
+        return sprintf('1c-%s.%s', trim($base, '-'), strtolower($extension));
+    }
+
+    private function syncLegacySideImage(Advertisement $ad, string $sideCode, string $image): void
+    {
+        if ($sideCode === 'A') {
+            $ad->setSideAImage($image);
+        } elseif ($sideCode === 'B') {
+            $ad->setSideBImage($image);
+        }
+    }
+
+    private function absolutePath(string $path): string
+    {
+        if ($path === '') {
+            return getcwd() ?: '.';
+        }
+
+        if (str_starts_with($path, DIRECTORY_SEPARATOR) || preg_match('/^[A-Za-z]:[\\\/]/', $path) === 1) {
+            return $path;
+        }
+
+        return rtrim(getcwd() ?: '.', DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $path;
+    }
+
+    private function stringOrNull(mixed $value): ?string
+    {
+        if (!is_scalar($value)) {
+            return null;
+        }
+
+        $value = trim((string) $value);
+
+        return $value === '' ? null : $value;
+    }
+
+    private function isUrl(string $value): bool
+    {
+        return preg_match('#^https?://#i', $value) === 1;
+    }
+
+    private function isImageFileName(string $value): bool
+    {
+        return preg_match('/\.(?:jpe?g|png|webp|gif)$/i', parse_url($value, PHP_URL_PATH) ?: $value) === 1;
+    }
+
+    private function isUuid(string $value): bool
+    {
+        return preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $value) === 1;
+    }
+
+    private function isZeroUuid(string $value): bool
+    {
+        return $value === '00000000-0000-0000-0000-000000000000';
     }
 
     private function warmCaches(): void
