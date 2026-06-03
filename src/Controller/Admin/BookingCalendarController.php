@@ -13,14 +13,15 @@ class BookingCalendarController extends AbstractController
 {
     #[Route('/admin/booking-calendar', name: 'admin_booking_calendar')]
     public function index(
-        Request $request,
-        AdvertisementRepository $advertisementRepository,
+        Request                        $request,
+        AdvertisementRepository        $advertisementRepository,
         AdvertisementBookingRepository $bookingRepository,
-    ): Response {
+    ): Response
+    {
         $advertisements = $advertisementRepository->findBy([], ['id' => 'ASC']);
-        $adId = (int) $request->query->get('ad', 0);
-        $selectedSide = mb_strtoupper(trim((string) $request->query->get('side', '')));
-        $monthParam = (string) $request->query->get('month', (new \DateTimeImmutable('first day of this month'))->format('Y-m'));
+        $adId = (int)$request->query->get('ad', 0);
+        $selectedSide = mb_strtoupper(trim((string)$request->query->get('side', '')));
+        $monthParam = (string)$request->query->get('month', (new \DateTimeImmutable('first day of this month'))->format('Y-m'));
 
         $monthStart = \DateTimeImmutable::createFromFormat('Y-m-d', sprintf('%s-01', $monthParam));
         if (!$monthStart instanceof \DateTimeImmutable) {

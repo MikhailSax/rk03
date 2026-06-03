@@ -540,7 +540,7 @@ HELP
             return getcwd() ?: '.';
         }
 
-        if (str_starts_with($path, DIRECTORY_SEPARATOR) || preg_match('/^[A-Za-z]:[\\\/]/', $path) === 1) {
+        if (str_starts_with($path, DIRECTORY_SEPARATOR) || preg_match('#^[A-Za-z]:[\\/]#', $path) === 1) {
             return $path;
         }
 
@@ -721,10 +721,6 @@ HELP
         if ($description !== null) {
             $parts[] = $description;
         }
-        if ($mapLink !== null) {
-            $parts[] = sprintf('Ссылка на карту: %s', $mapLink);
-        }
-
         return $parts === [] ? null : implode("\n", $parts);
     }
 }
