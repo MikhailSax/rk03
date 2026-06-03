@@ -33,6 +33,12 @@ class AdvertisementSide
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nightImage = null;
 
+    #[ORM\Column(length: 36, nullable: true)]
+    private ?string $sourceRef = null;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $sourceData = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -94,6 +100,36 @@ class AdvertisementSide
     public function setImage(?string $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getSourceRef(): ?string
+    {
+        return $this->sourceRef;
+    }
+
+    public function setSourceRef(?string $sourceRef): static
+    {
+        $this->sourceRef = $sourceRef === null ? null : trim($sourceRef);
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getSourceData(): ?array
+    {
+        return $this->sourceData;
+    }
+
+    /**
+     * @param array<string, mixed>|null $sourceData
+     */
+    public function setSourceData(?array $sourceData): static
+    {
+        $this->sourceData = $sourceData;
 
         return $this;
     }

@@ -25,6 +25,12 @@ class AdvertisementType
     #[ORM\OneToMany(mappedBy: 'type', targetEntity: Advertisement::class)]
     private Collection $advertisements;
 
+    #[ORM\Column(length: 36, nullable: true)]
+    private ?string $sourceRef = null;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $sourceData = null;
+
     public function __construct()
     {
         $this->advertisements = new ArrayCollection();
@@ -54,6 +60,36 @@ class AdvertisementType
     public function setCategory(?AdvertisementCategory $category): self
     {
         $this->category = $category;
+        return $this;
+    }
+
+    public function getSourceRef(): ?string
+    {
+        return $this->sourceRef;
+    }
+
+    public function setSourceRef(?string $sourceRef): self
+    {
+        $this->sourceRef = $sourceRef === null ? null : trim($sourceRef);
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getSourceData(): ?array
+    {
+        return $this->sourceData;
+    }
+
+    /**
+     * @param array<string, mixed>|null $sourceData
+     */
+    public function setSourceData(?array $sourceData): self
+    {
+        $this->sourceData = $sourceData;
+
         return $this;
     }
 

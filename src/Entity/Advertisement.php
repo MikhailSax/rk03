@@ -61,6 +61,12 @@ class Advertisement
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $sideBImage = null;
 
+    #[ORM\Column(length: 36, nullable: true)]
+    private ?string $sourceRef = null;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $sourceData = null;
+
     public function __construct()
     {
         $this->bookings = new ArrayCollection();
@@ -373,6 +379,36 @@ class Advertisement
     public function setSideBImage(?string $sideBImage): static
     {
         $this->sideBImage = $sideBImage;
+
+        return $this;
+    }
+
+    public function getSourceRef(): ?string
+    {
+        return $this->sourceRef;
+    }
+
+    public function setSourceRef(?string $sourceRef): static
+    {
+        $this->sourceRef = $sourceRef === null ? null : trim($sourceRef);
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getSourceData(): ?array
+    {
+        return $this->sourceData;
+    }
+
+    /**
+     * @param array<string, mixed>|null $sourceData
+     */
+    public function setSourceData(?array $sourceData): static
+    {
+        $this->sourceData = $sourceData;
 
         return $this;
     }
