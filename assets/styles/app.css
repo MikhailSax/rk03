@@ -1,30 +1,369 @@
+/* =====================================================================
+   РК03 — дизайн-система (Фаза 1)
+   Tailwind v4 + токены + переиспользуемые компоненты.
+   Подключается вместо текущего assets/styles/app.css.
+   ===================================================================== */
+
 @import "tailwindcss";
 
-@layer base {
-    html {
-        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-rendering: optimizeLegibility;
-    }
+/* Шрифты дизайна. Можно вынести в <link> в base.html.twig для preconnect. */
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
 
-    body {
-        line-height: 1.5;
-    }
+/* ---------------------------------------------------------------------
+   ТОКЕНЫ. В Tailwind v4 эти переменные превращаются в утилиты
+   (bg-blue, text-ink, font-display, rounded-card, shadow-card …)
+   и одновременно доступны как обычные CSS-переменные var(--color-blue).
+   --------------------------------------------------------------------- */
+@theme {
+    --color-bg: #F4F6FB;
+    --color-bg-2: #ECEFF7;
+    --color-card: #FFFFFF;
+    --color-ink: #0D1320;
+    --color-muted: #5A6076;
+
+    --color-blue: #2A4BF7;   /* основной акцент */
+    --color-blue-deep: #16299E;   /* бренд РК03 */
+    --color-indigo: #6B6BFF;
+    --color-coral: #FF6A4D;   /* тёплый акцент, точечно */
+    --color-tint-blue: #E9EDFF;
+    --color-tint-coral: #FFECE6;
+    --color-tint-mint: #E5F7EE;
+    --color-tint-amber: #FDF0DA;
+    --color-tint-violet: #EFEBFF;
+
+    --color-free: #1FAE6A;
+    --color-busy: #FF6A4D;
+    --color-hold: #E0920A;
+
+    --font-display: "Unbounded", ui-sans-serif, system-ui, sans-serif;
+    --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+
+    --radius-card: 22px;
+    --radius-soft: 14px;
+    --radius-xs: 11px;
+
+    --shadow-soft: 0 1px 2px rgba(13, 19, 32, .06), 0 6px 16px -8px rgba(13, 19, 32, .12);
+    --shadow-card: 0 2px 6px rgba(13, 19, 32, .05), 0 30px 60px -28px rgba(13, 19, 32, .30);
+    --shadow-blue: 0 30px 70px -28px rgba(42, 75, 247, .45);
 }
+
+/* Удобные алиасы как обычные переменные (для произвольного CSS) */
+:root {
+    --grad: linear-gradient(135deg, #2A4BF7 0%, #4F5BFF 42%, #7C5CFF 100%);
+}
+
+/* ---------------------------------------------------------------------
+   ФУНКЦИОНАЛЬНЫЕ ПАРТИАЛЫ (поведение, не визуал) — оставляем.
+   ВИЗУАЛЬНЫЕ страничные стили (home/formats/contacts/company/header)
+   подключаем ВРЕМЕННО, чтобы не сломать непереведённые страницы.
+   По мере миграции страницы — удаляйте соответствующий @import.
+   --------------------------------------------------------------------- */
 @import "swiper/css";
 @import "swiper/css/navigation";
 @import "swiper/css/pagination";
-
 @import "./components/dropdown.css";
 @import "./components/mobile-menu.css";
 @import "./components/accordion.css";
+@import "./components/swiper.css";
+@import "./motion.css"; /* reveal/counters/parallax — нужны новому дизайну */
+/* TODO миграция: убрать после перевода соответствующих страниц
 @import "./components/menu.css";
 @import "./components/forms.css";
-@import "./components/swiper.css";
 @import "./layout/header.css";
 @import "./pages/home.css";
 @import "./pages/formats.css";
 @import "./pages/contacts.css";
 @import "./pages/company.css";
-@import "./motion.css";
+*/
+
+/* ---------------------------------------------------------------------
+   БАЗА
+   --------------------------------------------------------------------- */
+@layer base {
+    html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: var(--font-body);
+        background: var(--color-bg);
+        color: var(--color-ink);
+        line-height: 1.55;
+    }
+
+    /* было: Arial. Теперь глобально — Manrope, чтобы старые .site-header-font
+       по всему сайту сразу подхватили новый шрифт без правки шаблонов. */
+    .site-header-font {
+        font-family: var(--font-body)
+    }
+
+    .home-display {
+        font-family: var(--font-display);
+        letter-spacing: -.02em
+    }
+
+    /* лёгкое зерно для глубины (вкл. через класс на body: grain) */
+    body.grain::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        opacity: .035;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+}
+
+/* ---------------------------------------------------------------------
+   КОМПОНЕНТЫ. Миграция страниц = замена классов на эти.
+   --------------------------------------------------------------------- */
+@layer components {
+
+    /* контейнер */
+    .u-wrap {
+        max-width: 1240px;
+        margin-inline: auto;
+        padding-inline: 24px
+    }
+
+    /* eyebrow-чип */
+    .u-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        font-weight: 700;
+        font-size: .74rem;
+        color: var(--color-blue);
+        background: var(--color-tint-blue);
+        padding: .5rem .9rem;
+        border-radius: 999px;
+    }
+
+    .u-eyebrow::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--color-coral)
+    }
+
+    /* градиентный текст для акцентных слов в заголовках */
+    .u-grad {
+        background: var(--grad);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    /* кнопки */
+    .u-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .55rem;
+        font-weight: 700;
+        font-size: .94rem;
+        padding: .95rem 1.5rem;
+        border-radius: 999px;
+        border: 1.5px solid transparent;
+        cursor: pointer;
+        transition: transform .3s cubic-bezier(.2, 1, .3, 1), box-shadow .3s, background .25s, color .25s, border-color .25s;
+        will-change: transform;
+    }
+
+    .u-btn:hover {
+        transform: translateY(-2px)
+    }
+
+    .u-btn:focus-visible {
+        outline: 3px solid color-mix(in srgb, var(--color-blue) 45%, transparent);
+        outline-offset: 2px
+    }
+
+    .u-btn--primary {
+        background: var(--color-ink);
+        color: #fff;
+        box-shadow: var(--shadow-soft)
+    }
+
+    .u-btn--blue {
+        background: var(--color-blue);
+        color: #fff;
+        box-shadow: 0 14px 26px -12px rgba(42, 75, 247, .6)
+    }
+
+    .u-btn--soft {
+        background: #fff;
+        color: var(--color-ink);
+        border-color: rgba(13, 19, 32, .1);
+        box-shadow: var(--shadow-soft)
+    }
+
+    .u-btn--soft:hover {
+        border-color: rgba(13, 19, 32, .2)
+    }
+
+    .u-btn--ghost {
+        background: transparent;
+        color: #fff;
+        border-color: rgba(255, 255, 255, .4)
+    }
+
+    .u-btn--ghost:hover {
+        border-color: #fff;
+        background: rgba(255, 255, 255, .08)
+    }
+
+    .u-btn .arr {
+        transition: transform .25s
+    }
+
+    .u-btn:hover .arr {
+        transform: translateX(3px)
+    }
+
+    /* карточка / панель */
+    .u-card {
+        background: var(--color-card);
+        border-radius: var(--radius-card);
+        box-shadow: var(--shadow-soft)
+    }
+
+    .u-card--raised {
+        box-shadow: var(--shadow-card)
+    }
+
+    /* статус-пилюли (free / busy / hold) */
+    .u-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        font-weight: 700;
+        font-size: .68rem;
+        padding: .35rem .65rem;
+        border-radius: 999px
+    }
+
+    .u-pill::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor
+    }
+
+    .u-pill--free {
+        color: var(--color-free);
+        background: var(--color-tint-mint)
+    }
+
+    .u-pill--busy {
+        color: var(--color-busy);
+        background: var(--color-tint-coral)
+    }
+
+    .u-pill--hold {
+        color: var(--color-hold);
+        background: var(--color-tint-amber)
+    }
+
+    /* поля форм */
+    .u-field-label {
+        display: block;
+        font-weight: 700;
+        font-size: .72rem;
+        color: var(--color-muted);
+        margin-bottom: 7px
+    }
+
+    .u-input, .u-select, .u-textarea {
+        width: 100%;
+        border: 1.5px solid rgba(13, 19, 32, .1);
+        background: #fff;
+        padding: .75rem .8rem;
+        font-family: inherit;
+        font-size: .95rem;
+        color: var(--color-ink);
+        border-radius: var(--radius-xs);
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+    .u-input:focus, .u-select:focus, .u-textarea:focus {
+        outline: none;
+        border-color: var(--color-blue);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-blue) 16%, transparent);
+    }
+
+    /* секция и заголовок секции */
+    .u-section {
+        padding-block: clamp(3.5rem, 7vw, 6rem)
+    }
+
+    .u-sec-title {
+        font-family: var(--font-body);
+        font-weight: 800;
+        letter-spacing: -.02em;
+        line-height: 1.08;
+        font-size: clamp(1.9rem, 4.2vw, 3rem)
+    }
+
+    .u-sec-lead {
+        margin-top: 1rem;
+        color: var(--color-muted);
+        font-size: 1.08rem;
+        max-width: 46ch
+    }
+
+    /* градиентный фон-панель (например, для CTA-карты) */
+    .u-grad-panel {
+        background: var(--grad);
+        color: #fff;
+        border-radius: 32px;
+        box-shadow: var(--shadow-blue)
+    }
+}
+
+/* ---------------------------------------------------------------------
+   УТИЛИТЫ / МОУШЕН (новые)
+   reveal — если используете data-reveal вместо .ooh-reveal
+   --------------------------------------------------------------------- */
+@layer utilities {
+    /* Скрываем только при наличии JS (класс ставит motion.js / inline в base).
+       Без JS контент остаётся видимым — страницы не «пустеют». */
+    html.js [data-reveal] {
+        opacity: 0;
+        transform: translateY(28px);
+        transition: opacity .8s cubic-bezier(.16, 1, .3, 1), transform .8s cubic-bezier(.16, 1, .3, 1)
+    }
+
+    html.js [data-reveal].in {
+        opacity: 1;
+        transform: none
+    }
+
+    .u-float {
+        animation: u-float 7s ease-in-out infinite
+    }
+
+    @keyframes u-float {
+        0%, 100% {
+            transform: translateY(0)
+        }
+        50% {
+            transform: translateY(-12px)
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important
+    }
+
+    [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important
+    }
+}

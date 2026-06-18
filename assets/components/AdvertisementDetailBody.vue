@@ -1,7 +1,8 @@
 <template>
-    <div class="flex min-h-0 flex-1 flex-col overflow-hidden bg-white text-gray-900 lg:flex-row">
-        <div class="relative flex min-h-[220px] shrink-0 flex-col border-b border-gray-200 bg-black/5 lg:min-h-0 lg:w-[min(52%,560px)] lg:border-b-0 lg:border-r">
-            <div class="relative flex min-h-[200px] flex-1 items-center justify-center bg-gray-900/5">
+    <div class="flex min-h-0 flex-1 flex-col overflow-hidden bg-white text-[var(--color-ink)] lg:flex-row">
+        <!-- галерея -->
+        <div class="relative flex min-h-[220px] shrink-0 flex-col border-b border-[rgba(13,19,32,.08)] bg-[var(--color-bg)] lg:min-h-0 lg:w-[min(52%,560px)] lg:border-b-0 lg:border-r">
+            <div class="relative flex min-h-[200px] flex-1 items-center justify-center">
                 <img
                     :src="currentSlide?.url || '/images/orig.png'"
                     :alt="currentSlide?.label || 'Фото'"
@@ -10,38 +11,29 @@
                 <button
                     v-if="slides.length > 1"
                     type="button"
-                    class="site-header-font absolute left-2 top-1/2 z-10 -translate-y-1/2 border border-white/40 bg-black/40 px-2 py-3 text-[10px] font-semibold uppercase tracking-wider text-white backdrop-blur-sm hover:bg-black/60"
+                    class="absolute left-3 top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-xl shadow-[var(--shadow-soft)] backdrop-blur-sm transition hover:bg-white"
                     aria-label="Предыдущее фото"
                     @click="prevSlide"
-                >
-                    ‹
-                </button>
+                >‹</button>
                 <button
                     v-if="slides.length > 1"
                     type="button"
-                    class="site-header-font absolute right-2 top-1/2 z-10 -translate-y-1/2 border border-white/40 bg-black/40 px-2 py-3 text-[10px] font-semibold uppercase tracking-wider text-white backdrop-blur-sm hover:bg-black/60"
+                    class="absolute right-3 top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-xl shadow-[var(--shadow-soft)] backdrop-blur-sm transition hover:bg-white"
                     aria-label="Следующее фото"
                     @click="nextSlide"
-                >
-                    ›
-                </button>
+                >›</button>
                 <p
                     v-if="currentSlide"
-                    class="site-header-font pointer-events-none absolute bottom-3 left-3 right-3 bg-black/55 px-3 py-1.5 text-center text-[10px] font-semibold uppercase tracking-wider text-white backdrop-blur-sm"
-                >
-                    {{ currentSlide.label }}
-                </p>
+                    class="pointer-events-none absolute bottom-3 left-3 right-3 rounded-full bg-[rgba(13,19,32,.62)] px-3 py-1.5 text-center text-[10px] font-bold uppercase tracking-[0.1em] text-white backdrop-blur-sm"
+                >{{ currentSlide.label }}</p>
             </div>
-            <div
-                v-if="slides.length > 1"
-                class="flex gap-2 overflow-x-auto border-t border-gray-200 bg-white p-3"
-            >
+            <div v-if="slides.length > 1" class="flex gap-2 overflow-x-auto border-t border-[rgba(13,19,32,.08)] bg-white p-3">
                 <button
                     v-for="(slide, idx) in slides"
                     :key="idx"
                     type="button"
-                    class="relative h-16 w-20 shrink-0 overflow-hidden border-2 transition"
-                    :class="idx === galleryIndex ? 'border-[#e85d4c]' : 'border-gray-200 opacity-80 hover:opacity-100'"
+                    class="relative h-16 w-20 shrink-0 overflow-hidden rounded-xl border-2 transition"
+                    :class="idx === galleryIndex ? 'border-[var(--color-blue)]' : 'border-[rgba(13,19,32,.1)] opacity-80 hover:opacity-100'"
                     @click="galleryIndex = idx"
                 >
                     <img :src="slide.url" :alt="slide.label" class="h-full w-full object-cover" />
@@ -49,36 +41,23 @@
             </div>
         </div>
 
+        <!-- контент -->
         <div class="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto">
-            <div class="border-b border-gray-100 p-4 sm:p-6">
+            <div class="border-b border-[rgba(13,19,32,.06)] p-4 sm:p-6">
                 <div class="flex flex-wrap items-start justify-between gap-3">
                     <div class="min-w-0">
-                        <h2 id="advertisement-detail-title" class="text-lg font-bold leading-snug text-gray-900 sm:text-2xl">
+                        <h2 id="advertisement-detail-title" class="home-display text-lg font-bold leading-snug sm:text-2xl">
                             {{ advertisement.address || 'Адрес не указан' }}
                         </h2>
-                        <p class="site-header-font mt-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-400">
+                        <p class="mt-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--color-muted)]">
                             GID {{ advertisement.id }}
                             <span v-if="advertisement.code"> · код {{ advertisement.code }}</span>
                             <span v-if="advertisement.place_number"> · № площади {{ advertisement.place_number }}</span>
                         </p>
                     </div>
                     <div class="flex flex-wrap items-center gap-2">
-                        <a
-                            v-if="constructionPageUrl"
-                            :href="constructionPageUrl"
-                            class="site-header-font border border-gray-300 bg-white px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-gray-700 hover:border-[#05299E] hover:text-[#05299E]"
-                        >
-                            Страница конструкции
-                        </a>
-                        <button
-                            v-if="showClose"
-                            type="button"
-                            class="flex h-10 w-10 items-center justify-center border border-gray-200 text-xl text-gray-500 hover:bg-gray-50"
-                            aria-label="Закрыть"
-                            @click="$emit('close')"
-                        >
-                            ×
-                        </button>
+                        <a v-if="constructionPageUrl" :href="constructionPageUrl" class="u-btn u-btn--soft !px-3 !py-2 text-[11px]">Страница конструкции</a>
+                        <button v-if="showClose" type="button" class="grid h-10 w-10 place-items-center rounded-full border border-[rgba(13,19,32,.1)] text-xl text-[var(--color-muted)] hover:bg-[var(--color-bg)]" aria-label="Закрыть" @click="$emit('close')">×</button>
                     </div>
                 </div>
 
@@ -87,128 +66,86 @@
                         v-for="side in advertisement.side_details"
                         :key="side.code"
                         type="button"
-                        class="site-header-font min-w-[44px] px-3 py-2 text-[11px] font-semibold uppercase tracking-wide transition"
-                        :class="
-                            activeSideCode === side.code
-                                ? 'bg-[#05299E] text-white'
-                                : sideStatus(side.code).busy
-                                  ? 'bg-red-50 text-red-700'
-                                  : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
-                        "
+                        class="u-pill min-w-[44px] justify-center !text-[11px] transition"
+                        :class="activeSideCode === side.code
+                            ? '!bg-[var(--color-blue)] !text-white'
+                            : sideStatus(side.code).busy ? 'u-pill--busy' : 'u-pill--free'"
                         @click="selectSide(side.code)"
-                    >
-                        {{ side.code }}
-                    </button>
+                    >{{ side.code }}</button>
                 </div>
             </div>
 
             <div class="space-y-6 p-4 sm:p-6">
                 <section>
-                    <h3 class="site-header-font mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-500">
-                        Параметры
-                    </h3>
+                    <h3 class="mb-3 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--color-muted)]">Параметры</h3>
                     <dl class="grid grid-cols-1 gap-x-6 gap-y-2 text-sm sm:grid-cols-[1fr_auto]">
-                        <dt class="text-gray-500">Категория продукции</dt>
-                        <dd class="font-medium text-gray-900 sm:text-right">{{ advertisement.category || '—' }}</dd>
-                        <dt class="text-gray-500">Тип конструкции</dt>
-                        <dd class="font-medium text-gray-900 sm:text-right">{{ advertisement.type || '—' }}</dd>
-                        <dt class="text-gray-500">Сторона (выбранная)</dt>
-                        <dd class="font-medium text-gray-900 sm:text-right">{{ activeSide?.code || '—' }}</dd>
-                        <dt class="text-gray-500">Описание стороны</dt>
-                        <dd class="text-gray-800 sm:text-right">{{ activeSide?.description || '—' }}</dd>
-                        <dt class="text-gray-500">Прайс без НДС</dt>
-                        <dd class="text-lg font-extrabold text-gray-900 sm:text-right sm:text-xl">{{ formatPrice(activeSide?.price) }}</dd>
+                        <dt class="text-[var(--color-muted)]">Категория продукции</dt>
+                        <dd class="font-medium sm:text-right">{{ advertisement.category || '—' }}</dd>
+                        <dt class="text-[var(--color-muted)]">Тип конструкции</dt>
+                        <dd class="font-medium sm:text-right">{{ advertisement.type || '—' }}</dd>
+                        <dt class="text-[var(--color-muted)]">Сторона (выбранная)</dt>
+                        <dd class="font-medium sm:text-right">{{ activeSide?.code || '—' }}</dd>
+                        <dt class="text-[var(--color-muted)]">Описание стороны</dt>
+                        <dd class="sm:text-right">{{ activeSide?.description || '—' }}</dd>
+                        <dt class="text-[var(--color-muted)]">Прайс без НДС</dt>
+                        <dd class="home-display text-lg font-bold sm:text-right sm:text-xl">{{ formatPrice(activeSide?.price) }}</dd>
                         <template v-if="advertisement.location && (lat != null || lng != null)">
-                            <dt class="text-gray-500">Координаты</dt>
-                            <dd class="font-mono text-xs text-gray-800 sm:text-right">
+                            <dt class="text-[var(--color-muted)]">Координаты</dt>
+                            <dd class="font-mono text-xs sm:text-right">
                                 {{ lat != null && lng != null ? `${lat?.toFixed(5)}, ${lng?.toFixed(5)}` : '—' }}
-                                <a
-                                    v-if="lat != null && lng != null"
-                                    :href="yandexMapUrl"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="ml-2 text-[#05299E] underline-offset-2 hover:underline"
-                                >На карте</a>
+                                <a v-if="lat != null && lng != null" :href="yandexMapUrl" target="_blank" rel="noopener noreferrer" class="ml-2 text-[var(--color-blue)] underline-offset-2 hover:underline">На карте</a>
                             </dd>
                         </template>
                         <template v-if="azimuth != null">
-                            <dt class="text-gray-500">Азимут</dt>
-                            <dd class="font-medium text-gray-900 sm:text-right">{{ azimuth }}°</dd>
+                            <dt class="text-[var(--color-muted)]">Азимут</dt>
+                            <dd class="font-medium sm:text-right">{{ azimuth }}°</dd>
                         </template>
                     </dl>
                 </section>
 
                 <section v-if="activeSideStatus">
-                    <p
-                        class="site-header-font text-[11px] font-semibold uppercase tracking-wide"
-                        :class="activeSideStatus.busy ? 'text-red-600' : 'text-emerald-700'"
-                    >
-                        {{ activeSideStatus.text }}
-                    </p>
+                    <p class="u-pill" :class="activeSideStatus.busy ? 'u-pill--busy' : 'u-pill--free'">{{ activeSideStatus.text }}</p>
                 </section>
 
                 <section v-if="advertisement.bookings?.length">
-                    <h3 class="site-header-font mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-500">
-                        Бронирования
-                    </h3>
-                    <ul class="max-h-40 space-y-2 overflow-y-auto text-xs text-gray-700">
-                        <li
-                            v-for="b in advertisement.bookings"
-                            :key="b.id ?? `${b.side_code}-${b.start_date}`"
-                            class="border border-gray-100 bg-gray-50 px-3 py-2"
-                        >
-                            <span class="font-semibold text-gray-900">{{ b.side_code }}</span>
+                    <h3 class="mb-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--color-muted)]">Бронирования</h3>
+                    <ul class="max-h-40 space-y-2 overflow-y-auto text-xs text-[var(--color-muted)]">
+                        <li v-for="b in advertisement.bookings" :key="b.id ?? `${b.side_code}-${b.start_date}`" class="rounded-[var(--radius-xs)] border border-[rgba(13,19,32,.08)] bg-[var(--color-bg)] px-3 py-2">
+                            <span class="font-bold text-[var(--color-ink)]">{{ b.side_code }}</span>
                             · {{ formatBookingRange(b.start_date, b.end_date) }}
-                            <span v-if="b.client_name" class="text-gray-500"> · {{ b.client_name }}</span>
+                            <span v-if="b.client_name"> · {{ b.client_name }}</span>
                         </li>
                     </ul>
                 </section>
 
                 <section>
-                    <h3 class="site-header-font mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-500">
-                        Все стороны
-                    </h3>
-                    <div class="overflow-x-auto border border-gray-200">
+                    <h3 class="mb-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--color-muted)]">Все стороны</h3>
+                    <div class="overflow-x-auto rounded-[var(--radius-soft)] border border-[rgba(13,19,32,.08)]">
                         <table class="w-full min-w-[320px] text-left text-xs">
-                            <thead class="bg-gray-100 text-[10px] font-semibold uppercase tracking-wider text-gray-600">
-                                <tr>
-                                    <th class="px-3 py-2">Сторона</th>
-                                    <th class="px-3 py-2">Цена</th>
-                                    <th class="px-3 py-2">Описание</th>
-                                    <th class="px-3 py-2">Фото</th>
-                                </tr>
+                            <thead class="bg-[var(--color-bg-2)] text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--color-muted)]">
+                            <tr><th class="px-3 py-2">Сторона</th><th class="px-3 py-2">Цена</th><th class="px-3 py-2">Описание</th><th class="px-3 py-2">Фото</th></tr>
                             </thead>
                             <tbody>
-                                <tr v-for="s in advertisement.side_details" :key="s.code" class="border-t border-gray-100">
-                                    <td class="px-3 py-2 font-semibold">{{ s.code }}</td>
-                                    <td class="px-3 py-2">{{ formatPrice(s.price) }}</td>
-                                    <td class="px-3 py-2 text-gray-600">{{ s.description || '—' }}</td>
-                                    <td class="px-3 py-2">
-                                        <span v-if="s.image_url || s.night_image_url" class="text-emerald-700">Есть</span>
-                                        <span v-else class="text-gray-400">—</span>
-                                    </td>
-                                </tr>
+                            <tr v-for="s in advertisement.side_details" :key="s.code" class="border-t border-[rgba(13,19,32,.06)]">
+                                <td class="px-3 py-2 font-bold">{{ s.code }}</td>
+                                <td class="px-3 py-2">{{ formatPrice(s.price) }}</td>
+                                <td class="px-3 py-2 text-[var(--color-muted)]">{{ s.description || '—' }}</td>
+                                <td class="px-3 py-2">
+                                    <span v-if="s.image_url || s.night_image_url" class="text-[var(--color-free)]">Есть</span>
+                                    <span v-else class="text-[var(--color-muted)]">—</span>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
                 </section>
 
-                <div class="space-y-3 border-t border-gray-100 pt-4">
-                    <p v-if="cartMessage" class="text-sm text-gray-700">{{ cartMessage }}</p>
-                    <button
-                        type="button"
-                        class="site-header-font w-full bg-[#e85d4c] px-4 py-3 text-[12px] font-semibold uppercase tracking-wider text-white hover:bg-[#d64d3e] disabled:opacity-50"
-                        :disabled="!activeSide || cartSubmitting"
-                        @click="addToCart"
-                    >
+                <div class="space-y-3 border-t border-[rgba(13,19,32,.06)] pt-4">
+                    <p v-if="cartMessage" class="text-sm text-[var(--color-muted)]">{{ cartMessage }}</p>
+                    <button type="button" class="u-btn u-btn--blue w-full justify-center disabled:opacity-50" :disabled="!activeSide || cartSubmitting" @click="addToCart">
                         {{ cartSubmitting ? 'Добавление…' : 'В корзину' }}
                     </button>
-                    <a
-                        href="/cart"
-                        class="site-header-font flex w-full items-center justify-center border border-[#05299E] px-4 py-3 text-[12px] font-semibold uppercase tracking-wider text-[#05299E] hover:bg-[#05299E]/5"
-                    >
-                        Перейти в корзину
-                    </a>
+                    <a href="/cart" class="u-btn u-btn--soft w-full justify-center">Перейти в корзину</a>
                 </div>
             </div>
         </div>
@@ -248,18 +185,10 @@ const slides = computed(() => {
     const out = []
     for (const side of props.advertisement.side_details || []) {
         if (side.image_url) {
-            out.push({
-                url: side.image_url,
-                label: `${side.code} · день`,
-                code: side.code,
-            })
+            out.push({ url: side.image_url, label: `${side.code} · день`, code: side.code })
         }
         if (side.night_image_url) {
-            out.push({
-                url: side.night_image_url,
-                label: `${side.code} · ночь`,
-                code: side.code,
-            })
+            out.push({ url: side.night_image_url, label: `${side.code} · ночь`, code: side.code })
         }
     }
     if (out.length === 0) {
