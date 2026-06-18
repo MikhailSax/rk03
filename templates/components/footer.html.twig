@@ -1,49 +1,42 @@
-{# Подвал по макету «Подвал.svg»: фон #000f08, колонки Навигация / Форматы / Контакты + блок бренда. #}
-<footer class="site-footer-figma mt-auto bg-[#000f08] text-[#666666]" style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
-    <div class="mx-auto max-w-[1440px] px-5 py-12 sm:px-8 lg:px-[4.5rem] lg:py-14 xl:px-[4.5rem]">
-        <div class="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-10 xl:gap-x-14">
-            <div class="sm:col-span-2 lg:col-span-1 lg:max-w-[22rem]">
-                <h2 class="text-[1.375rem] font-bold leading-tight text-white">РК03</h2>
-                <p class="mt-6 text-[1.0625rem] leading-[1.45]">
+{# =====================================================================
+   Подвал (Фаза 1). Скруглённый тёмный блок, в духе v2.
+   ===================================================================== #}
+<footer class="relative z-10 mx-3 mb-3 mt-auto rounded-[32px] bg-[var(--color-ink)] px-6 py-12 text-[#9aa0b2] sm:mx-4 sm:mb-4 sm:px-10 sm:py-14">
+    <div class="mx-auto max-w-[1240px]">
+        <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1.4fr]">
+            <div class="lg:max-w-sm">
+                <h4 class="font-[var(--font-display)] text-3xl font-extrabold text-white">РК03</h4>
+                <p class="mt-4 max-w-[32ch] text-[.96rem] leading-relaxed">
                     Размещаем наружную рекламу в городе и регионе: от подбора конструкций до отчётности по кампании.
                 </p>
+                <a href="{{ path('app_map_app') }}" class="u-btn u-btn--blue mt-6">Карта конструкций <span class="arr">→</span></a>
             </div>
+
             <nav aria-label="Навигация в подвале">
-                <h3 class="text-[1.375rem] font-bold text-white">Навигация</h3>
-                <ul class="mt-6 space-y-[1.125rem] text-[1.0625rem] leading-none">
+                <h5 class="mb-4 text-[.78rem] font-bold uppercase tracking-[0.08em] text-white">Навигация</h5>
+                <ul class="space-y-3 text-[.95rem]">
                     <li><a href="{{ path('app_homepage') }}" class="transition hover:text-white">Главная</a></li>
                     <li><a href="{{ path('app_map_app') }}" class="transition hover:text-white">Карта конструкций</a></li>
+                    <li><a href="{{ path('app_site_page', { path: 'formats' }) }}" class="transition hover:text-white">Форматы</a></li>
                     <li><a href="{{ path('app_site_page', { path: 'about' }) }}" class="transition hover:text-white">О компании</a></li>
                     <li><a href="{{ path('app_homepage') }}#faq" class="transition hover:text-white">FAQ</a></li>
                 </ul>
             </nav>
-{#            <nav aria-label="Форматы рекламы">#}
-{#                <h3 class="text-[1.375rem] font-bold text-white">Форматы рекламы</h3>#}
-{#                <ul class="mt-6 space-y-[1.125rem] text-[1.0625rem] leading-none">#}
-{#                    <li><a href="{{ path('app_site_page', { path: 'formats' }) }}" class="transition hover:text-white">Форматы размещения</a></li>#}
-{#                    <li><a href="{{ path('app_site_page', { path: 'media/billboards' }) }}" class="transition hover:text-white">Билборды 6х3м</a></li>#}
-{#                    <li><a href="{{ path('app_site_page', { path: 'media/street-furniture' }) }}" class="transition hover:text-white">Сити-формат</a></li>#}
-{#                    <li><a href="{{ path('app_site_page', { path: 'formats' }) }}" class="transition hover:text-white">Digital-экраны</a></li>#}
-{#                    <li><a href="{{ path('app_site_page', { path: 'creative/studios' }) }}" class="transition hover:text-white">Брендирование фасадов</a></li>#}
-{#                </ul>#}
-{#            </nav>#}
+
             <div>
-                <h3 class="text-[1.375rem] font-bold text-white">Контакты</h3>
-                <ul class="mt-6 space-y-[1.125rem] text-[1.0625rem] leading-snug">
-                    <li>
-                        <a href="tel:+79148300553" class="transition hover:text-white">+7(914)830-05-53</a>
-                    </li>
-                    <li>
-                        <a href="mailto:n.batueva@domline.ru" class="transition hover:text-white">n.batueva@domline.ru</a>
-                    </li>
-                    <li class="max-w-[16rem]">г. Улан-Удэ, ул. Cмолина, 54а</li>
+                <h5 class="mb-4 text-[.78rem] font-bold uppercase tracking-[0.08em] text-white">Контакты</h5>
+                <ul class="space-y-3 text-[.95rem]">
+                    <li><a href="tel:+79148300553" class="transition hover:text-white">+7 (914) 830-05-53</a></li>
+                    <li><a href="mailto:n.batueva@domline.ru" class="transition hover:text-white">n.batueva@domline.ru</a></li>
+                    <li class="max-w-[18rem]">г. Улан-Удэ, ул. Смолина, 54а</li>
+                    <li>Пн–Пт, 9:00–18:00</li>
                 </ul>
             </div>
         </div>
-    </div>
-    <div class="border-t border-white">
-        <div class="mx-auto max-w-[1440px] px-5 py-6 text-center text-[1.0625rem] sm:px-8 lg:px-[4.5rem]">
-            © {{ 'now'|date('Y') }} Рекламные конструкции 03. Все права защищены.
+
+        <div class="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-6 text-[.86rem]">
+            <span>© {{ 'now'|date('Y') }} Рекламные конструкции 03. Все права защищены.</span>
+            <a href="{{ path('app_site_page', { path: 'contact' }) }}" class="transition hover:text-white">Связаться с нами →</a>
         </div>
     </div>
 </footer>

@@ -3,123 +3,62 @@
 {% block title %}Форматы размещения — РК03{% endblock %}
 
 {% block body %}
-    <div class="formats-page bg-white">
-        <div class="formats-section border-b border-gray-100 bg-[#fafafa]">
-            <div
-                class="formats-blob absolute -left-[20%] top-[10%] h-[min(80vw,520px)] w-[min(80vw,520px)] lg:left-[55%] lg:top-[5%]"></div>
-            <div
-                class="formats-blob absolute left-[40%] top-[60%] h-[min(60vw,380px)] w-[min(60vw,380px)] opacity-[0.06] lg:left-[10%]"></div>
+    <section class="u-section">
+        <div class="u-wrap">
+            <nav class="text-[.72rem] font-semibold uppercase tracking-[0.16em] text-[var(--color-muted)]"
+                 aria-label="Хлебные крошки" data-reveal>
+                <a href="{{ path('app_homepage') }}" class="transition hover:text-[var(--color-ink)]">Главная</a>
+                <span class="mx-2 opacity-40">/</span><span>Форматы</span>
+            </nav>
+            <h1 class="u-sec-title mt-7 max-w-3xl" data-reveal>Форматы, которые <span class="u-grad">видно</span> за
+                километр</h1>
+            <p class="u-sec-lead" data-reveal>
+                Подбираем наружную рекламу под задачу: от классических билбордов до digital-экранов и крупногабаритных
+                конструкций.
+                На карте — актуальные поверхности с ценой и занятостью.
+            </p>
 
-            <div class="relative z-[1] mx-auto max-w-[1200px] px-4 py-10 sm:px-6 sm:py-14 lg:px-10 lg:py-16">
-                <nav class="formats-breadcrumb home-display" aria-label="Хлебные крошки">
-                    <a href="{{ path('app_homepage') }}">Главная</a>
-                    <span class="mx-2 text-gray-300" aria-hidden="true">/</span>
-                    <span class="text-gray-500">Форматы</span>
-                </nav>
+            <div class="mt-12 flex flex-col gap-6">
+                {% set formats = [
+                    { tag: 'Максимальный охват', title: 'Суперсайты', img: 'images/supersite-format.jpg', link: path('app_map_app'),
+                        text: 'Суперсайт — один из самых крупных форматов наружной рекламы: огромная площадь, видно издалека. Размещают высоко и там, где ничего не мешает обзору — на шоссе, проспектах, парковках ТЦ. Стороны A / B / C по направлению потока.' },
+                    { tag: 'Динамика 24/7', title: 'Digital-экраны', img: 'uploads/main/digital.png', link: path('app_map_app'),
+                        text: 'Электронное устройство для визуального показа информации в цифровом формате — текст, графика, изображения, видео. Ротация креативов по времени суток и триггерам кампании.' },
+                    { tag: 'Пешеходный поток', title: 'Сити-формат', img: 'images/city.jpg', link: path('app_site_page', { path: 'media/street-furniture' }),
+                        text: 'Компактный световой короб (лайтбокс) с внутренней подсветкой на уровне глаз пешеходов. Работает в плотной городской среде.' },
+                    { tag: 'Классика OOH', title: 'Билборды 6×3 м', img: 'images/bilboard.jpg', link: path('app_site_page', { path: 'media/billboards' }),
+                        text: 'Отдельностоящая конструкция с двумя информационными полями. Сторона A — по ходу движения справа, сторона B — встречная. Базовый инструмент городской кампании.' }
+                ] %}
 
-                <h1 class="formats-page-title home-display mt-8 max-w-3xl">
-                    Форматы размещения
-                </h1>
-                <p class="formats-lead mt-6">
-                    Подбираем наружную рекламу под задачу: от классических билбордов до digital-экранов и
-                    крупногабаритных конструкций.
-                    На карте доступны актуальные поверхности  можно сразу оценить локации и занятость.
-                </p>
+                {% for f in formats %}
+                    <article
+                        class="u-card grid items-center gap-6 overflow-hidden lg:grid-cols-2 {{ loop.index is odd ? '' : 'lg:[direction:rtl]' }}"
+                        data-reveal>
+                        <figure class="m-0 aspect-[16/10] overflow-hidden lg:[direction:ltr]">
+                            <img src="{{ asset(f.img) }}" alt="{{ f.title }}"
+                                 class="h-full w-full object-cover transition duration-700 hover:scale-[1.05]"
+                                 width="800" height="500" loading="lazy" decoding="async">
+                        </figure>
+                        <div class="p-6 sm:p-8 lg:[direction:ltr]">
+                            <span class="u-pill"
+                                  style="background:var(--color-tint-blue);color:var(--color-blue)">{{ f.tag }}</span>
+                            <h2 class="mt-3 text-2xl font-extrabold tracking-tight">{{ f.title }}</h2>
+                            <p class="mt-3 text-[var(--color-muted)]">{{ f.text }}</p>
+                            <a href="{{ f.link }}" class="u-btn u-btn--soft mt-5">Смотреть на карте <span
+                                    class="arr">→</span></a>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+
+            <div class="u-grad-panel mt-12 p-8 text-center sm:p-12" data-reveal>
+                <h2 class="text-2xl font-extrabold tracking-tight">Нужна сетка под кампанию?</h2>
+                <p class="mx-auto mt-3 max-w-xl text-white/85">Откройте карту конструкций: фильтры по типу и району,
+                    бронирование слотов и корзина заявки.</p>
+                <a href="{{ path('app_map_app') }}" class="u-btn mt-6" style="background:#fff;color:var(--color-ink)">Перейти
+                    к карте <span class="arr">→</span></a>
             </div>
         </div>
-
-        <div class="formats-section">
-            <div class="formats-blob absolute -right-[15%] top-[8%] h-[min(70vw,480px)] w-[min(70vw,480px)]"></div>
-
-            <div class="relative z-[1] mx-auto max-w-[1200px] px-4 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-20">
-                <div class="formats-grid">
-                    {# 1 — суперсайты #}
-                    <article class="formats-card">
-                        <figure class="formats-card__figure formats-card__figure--a shadow-sm">
-                            <img class="formats-card__img" src="{{ asset('images/supersite-format.jpg') }}"
-                                 alt="Крупногабаритные конструкции на трассах" width="800" height="500" loading="lazy"
-                                 decoding="async">
-                        </figure>
-                        <div>
-                            <h2 class="formats-card__title home-display">Суперсайты</h2>
-                            <p class="formats-card__text home-display">
-                                Суперсайт - это один из самых крупных форматов наружной рекламы. Он предоставляет огромную площадь информационной поверхности и такую рекламу будет видно издалека. Их размещают как можно выше и там, где ничего не мешает видимости: на шоссе, широких проспектах и парковках ТЦ. У них может быть 2 или 3 стороны. Та сторона, которую видно по ходу движения называется стороной А. Сторона Б находится слева, на встречной полосе. Если есть третья сторона, она становится стороной С или А2
-                            </p>
-                            <a href="{{ path('app_map_app') }}" class="formats-card__link home-display">
-                                Смотреть на карте
-                                <span aria-hidden="true">→</span>
-                            </a>
-                        </div>
-                    </article>
-
-                    {# 2 — digital #}
-                    <article class="formats-card formats-card--reverse">
-                        <figure class="formats-card__figure formats-card__figure--b shadow-sm">
-                            <img class="formats-card__img" src="{{ asset('uploads/main/digital.png') }}"
-                                 alt="Digital-экраны наружной рекламы" width="800" height="500" loading="lazy"
-                                 decoding="async">
-                        </figure>
-                        <div>
-                            <h2 class="formats-card__title home-display">Digital-экраны</h2>
-                            <p class="formats-card__text home-display">
-                                электронное устройство для визуального отображения информации, полученной в цифровом формате, обычно в виде текста, графики, изображений или видео
-                            </p>
-                            <a href="{{ path('app_map_app') }}" class="formats-card__link home-display">
-                                Смотреть на карте
-                                <span aria-hidden="true">→</span>
-                            </a>
-                        </div>
-                    </article>
-
-                    {# 3 — сити-формат #}
-                    <article class="formats-card">
-                        <figure class="formats-card__figure formats-card__figure--a shadow-sm">
-                            <img class="formats-card__img" src="{{ asset('images/city.jpg') }}"
-                                 alt="Сити-формат в городской среде" width="800" height="500" loading="lazy"
-                                 decoding="async">
-                        </figure>
-                        <div>
-                            <h2 class="formats-card__title home-display">Сити-формат</h2>
-                            <p class="formats-card__text home-display">
-                                это вид наружной рекламы, представляющий собой компактный световой короб (лайтбокс) с внутренней подсветкой, размещаемый на уровне глаз пешеходов
-                            </p>
-                            <a href="{{ path('app_site_page', { path: 'media/street-furniture' }) }}"
-                               class="formats-card__link home-display">
-                                Подробнее о продукте
-                                <span aria-hidden="true">→</span>
-                            </a>
-                        </div>
-                    </article>
-
-                    {# 4 — билборды 6×3 #}
-                    <article class="formats-card formats-card--reverse">
-                        <figure class="formats-card__figure formats-card__figure--b shadow-sm">
-                            <img class="formats-card__img" src="{{ asset('images/bilboard.jpg') }}"
-                                 alt="Билборды классического формата 6×3 м" width="800" height="500" loading="lazy"
-                                 decoding="async">
-                        </figure>
-                        <div>
-                            <h2 class="formats-card__title home-display">Билборды 6×3 м</h2>
-                            <p class="formats-card__text home-display">
-                                Билборд - это отдельно стоящая рекламная конструкция с двумя информационными полями. Их называют сторона А и Б. Сторона А находится по ходу движения автомобильного потока с правой стороны. Сторона Б — это обратная сторона, которую видно с левой стороны
-                            </p>
-                            <a href="{{ path('app_site_page', { path: 'media/billboards' }) }}"
-                               class="formats-card__link home-display">
-                                Подробнее о продукте
-                                <span aria-hidden="true">→</span>
-                            </a>
-                        </div>
-                    </article>
-                </div>
-
-                <div class="formats-cta">
-                    <p class="formats-cta__title home-display">Нужна сетка под кампанию?</p>
-                    <p class="formats-cta__text">
-                        Откройте карту конструкций: фильтры по типу и району, бронирование слотов и корзина заявки.
-                    </p>
-                    <a href="{{ path('app_map_app') }}" class="formats-cta__btn home-display">Перейти к карте</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    </section>
 {% endblock %}
+

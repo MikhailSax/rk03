@@ -27,11 +27,12 @@ class RegistrationController extends AbstractController
 
     #[Route('/register', name: 'app_register')]
     public function register(
-        Request $request,
-        UserPasswordHasherInterface $userPasswordHasher,
-        EntityManagerInterface $entityManager,
+        Request                                                         $request,
+        UserPasswordHasherInterface                                     $userPasswordHasher,
+        EntityManagerInterface                                          $entityManager,
         #[Autowire(service: 'limiter.registration')] RateLimiterFactory $registrationLimiter,
-    ): Response {
+    ): Response
+    {
         $limiter = $registrationLimiter->create($request->getClientIp() ?? 'unknown');
         $rateLimit = $limiter->consume();
 
@@ -49,9 +50,9 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $honeypot = trim((string) $form->get('website')->getData());
-            $formStartedAt = (int) $form->get('formStartedAt')->getData();
-            $nowMs = (int) floor(microtime(true) * 1000);
+            $honeypot = trim((string)$form->get('website')->getData());
+            $formStartedAt = (int)$form->get('formStartedAt')->getData();
+            $nowMs = (int)floor(microtime(true) * 1000);
 
             if ($honeypot !== '') {
                 $this->addFlash('verify_email_error', 'Запрос отклонён.');
@@ -65,7 +66,7 @@ class RegistrationController extends AbstractController
                 return $this->redirectToRoute('app_register');
             }
 
-            $plainPassword = (string) $form->get('plainPassword')->getData();
+            $plainPassword = (string)$form->get('plainPassword')->getData();
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
             try {
@@ -77,7 +78,7 @@ class RegistrationController extends AbstractController
                     $user,
                     (new TemplatedEmail())
                         ->from(new Address('noreply@bmsbur.ru', 'БМС'))
-                        ->to((string) $user->getEmail())
+                        ->to((string)$user->getEmail())
                         ->subject('Подтвердите ваш email')
                         ->htmlTemplate('registration/confirmation_email.html.twig'),
                 );

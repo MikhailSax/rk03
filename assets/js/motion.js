@@ -85,6 +85,132 @@ function initReveals(root) {
     els.forEach((el) => io.observe(el));
 }
 
+/* ----------------------------------------------------------------------
+   НОВЫЕ хелперы дизайн-системы v2: [data-reveal] / [data-count] / [data-cycler].
+   Работают на всех страницах (вызываются из initPageMotion).
+   ---------------------------------------------------------------------- */
+
+function initDataReveal(root) {
+    const els = root.querySelectorAll('[data-reveal]');
+    if (!els.length) {
+        return;
+    }
+    if (prefersReducedMotion()) {
+        els.forEach((el) => el.classList.add('in'));
+        return;
+    }
+
+    const io = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((en) => {
+                if (en.isIntersecting) {
+                    en.target.classList.add('in');
+                    io.unobserve(en.target);
+                }
+            });
+        },
+        { threshold: 0.15, rootMargin: '0px 0px -8% 0px' },
+    );
+
+    els.forEach((el) => {
+        if (el.dataset.revealBound === '1') {
+            return;
+        }
+        el.dataset.revealBound = '1';
+        io.observe(el);
+    });
+
+    registerCleanup(() => io.disconnect());
+}
+
+function animateDataCount(el) {
+    const end = parseFloat(el.dataset.count || '0');
+    if (prefersReducedMotion()) {
+        el.textContent = String(end);
+        return;
+    }
+    const start = performance.now();
+    const dur = 1400;
+    function frame(now) {
+        const t = Math.min(1, (now - start) / dur);
+        el.textContent = String(Math.round(end * easeOutCubic(t)));
+        if (t < 1) {
+            requestAnimationFrame(frame);
+        } else {
+            el.textContent = String(end);
+        }
+    }
+    requestAnimationFrame(frame);
+}
+
+function initDataCount(root) {
+    const els = root.querySelectorAll('[data-count]');
+    if (!els.length) {
+        return;
+    }
+
+    const io = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((en) => {
+                if (en.isIntersecting) {
+                    animateDataCount(en.target);
+                    io.unobserve(en.target);
+                }
+            });
+        },
+        { threshold: 0.6 },
+    );
+
+    els.forEach((el) => {
+        if (el.dataset.countBound === '1') {
+            return;
+        }
+        el.dataset.countBound = '1';
+        io.observe(el);
+    });
+
+    registerCleanup(() => io.disconnect());
+}
+
+function initFormatCycler(root) {
+    const slots = root.querySelectorAll('[data-cycler]');
+    if (!slots.length) {
+        return;
+    }
+    const reduce = prefersReducedMotion();
+
+    slots.forEach((slot) => {
+        if (slot.dataset.cyclerBound === '1') {
+            return;
+        }
+        slot.dataset.cyclerBound = '1';
+
+        const words = (slot.dataset.cycler || '').split('|').map((s) => s.trim()).filter(Boolean);
+        if (!words.length) {
+            return;
+        }
+        slot.innerHTML = '';
+        const els = words.map((w, i) => {
+            const s = document.createElement('span');
+            s.textContent = w;
+            if (i === 0) s.className = 'on';
+            slot.appendChild(s);
+            return s;
+        });
+
+        if (reduce || els.length < 2) {
+            return;
+        }
+        let i = 0;
+        const id = setInterval(() => {
+            els[i].classList.remove('on');
+            i = (i + 1) % els.length;
+            els[i].classList.add('on');
+        }, 2300);
+        registerCleanup(() => clearInterval(id));
+    });
+}
+
 function bootHomeHero(root) {
     const home = root.querySelector('.home-ooh');
     if (!home) {
@@ -103,9 +229,14 @@ function bootHomeHero(root) {
  */
 export function initPageMotion(root = document) {
     cleanupMotion();
+    // на всякий случай — если базовый inline-скрипт не отработал
+    document.documentElement.classList.add('js');
     bootHomeHero(root);
     initReveals(root);
     initCounters(root);
+    initDataReveal(root);
+    initDataCount(root);
+    initFormatCycler(root);
     initScrollProgress();
     initSectionNavHighlight();
     initParallax(root);
@@ -209,7 +340,6 @@ function initSectionNavHighlight() {
         links.forEach((l) => l.classList.remove('ooh-nav-active'));
     };
 
-    // Подбираем “лучший” пересекающийся блок по центру экрана
     const io = new IntersectionObserver(
         (entries) => {
             const visible = entries
@@ -229,9 +359,8 @@ function initSectionNavHighlight() {
 
     targets.forEach((t) => io.observe(document.getElementById(t.id)));
 
-    // На старте выставляем активный пункт по ближайшему к верху блокy
     const setInitialActive = () => {
-        const topBias = 140; // с учётом sticky навигации/высоты шапки
+        const topBias = 140;
         let best = null;
         targets.forEach((t) => {
             const section = document.getElementById(t.id);

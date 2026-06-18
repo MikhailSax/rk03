@@ -10,119 +10,638 @@
         <script
             type="application/ld+json">{{ home_json_ld|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
     {% endif %}
+
+    {# Стили только для главной (page-scoped). Общие — в app.css. #}
+    <style>
+        .h-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(110px);
+            z-index: -1;
+            pointer-events: none
+        }
+
+        .h-blob--a {
+            width: 520px;
+            height: 520px;
+            background: var(--color-tint-blue);
+            top: -120px;
+            right: -40px;
+            opacity: .9
+        }
+
+        .h-blob--b {
+            width: 380px;
+            height: 380px;
+            background: var(--color-tint-coral);
+            bottom: -120px;
+            left: -60px;
+            opacity: .7
+        }
+
+        .h-h1 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            letter-spacing: -.02em;
+            line-height: 1.04;
+            font-size: clamp(2.4rem, 5.6vw, 4.4rem)
+        }
+
+        .h-h1 .line {
+            display: block;
+            overflow: hidden
+        }
+
+        .h-h1 .line > span {
+            display: block;
+            transform: translateY(108%);
+            animation: h-rise .9s cubic-bezier(.16, 1, .3, 1) forwards
+        }
+
+        .h-h1 .line:nth-child(1) > span {
+            animation-delay: .05s
+        }
+
+        .h-h1 .line:nth-child(2) > span {
+            animation-delay: .16s
+        }
+
+        .h-h1 .line:nth-child(3) > span {
+            animation-delay: .27s
+        }
+
+        @keyframes h-rise {
+            to {
+                transform: translateY(0)
+            }
+        }
+
+        .cyc {
+            position: relative;
+            display: inline-grid;
+            vertical-align: bottom
+        }
+
+        .cyc > span {
+            grid-area: 1/1;
+            opacity: 0;
+            transform: translateY(28%);
+            filter: blur(6px);
+            white-space: nowrap;
+            transition: opacity .5s, transform .5s, filter .5s;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent
+        }
+
+        .cyc > span.on {
+            opacity: 1;
+            transform: none;
+            filter: none
+        }
+
+        /* hero панель-продукт */
+        .h-panel {
+            position: relative;
+            border-radius: var(--radius-card);
+            background: var(--color-card);
+            box-shadow: var(--shadow-card);
+            padding: 14px
+        }
+
+        .h-map {
+            position: relative;
+            border-radius: 18px;
+            overflow: hidden;
+            height: 300px;
+            background: radial-gradient(ellipse 60% 60% at 35% 30%, rgba(42, 75, 247, .16), transparent 70%),
+            radial-gradient(ellipse 50% 50% at 80% 75%, rgba(255, 106, 77, .12), transparent 70%), #EEF1FA
+        }
+
+        .h-map .road {
+            position: absolute;
+            background: rgba(13, 19, 32, .07)
+        }
+
+        .h-map .road.r1 {
+            left: -10%;
+            width: 120%;
+            height: 8px;
+            top: 42%;
+            transform: rotate(-7deg)
+        }
+
+        .h-map .road.r2 {
+            left: -10%;
+            width: 120%;
+            height: 5px;
+            top: 70%;
+            transform: rotate(-7deg)
+        }
+
+        .h-map .road.r3 {
+            top: -10%;
+            height: 120%;
+            width: 6px;
+            left: 55%;
+            transform: rotate(5deg)
+        }
+
+        .h-pin {
+            position: absolute;
+            transform: translate(-50%, -100%);
+            width: 22px;
+            height: 22px
+        }
+
+        .h-pin i {
+            display: block;
+            width: 22px;
+            height: 22px;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            border: 2px solid #fff;
+            box-shadow: 0 6px 14px -4px rgba(13, 19, 32, .4)
+        }
+
+        .h-pin.free i {
+            background: var(--color-free)
+        }
+
+        .h-pin.busy i {
+            background: var(--color-coral)
+        }
+
+        .h-pin.sel i {
+            background: var(--color-blue);
+            transform: rotate(-45deg) scale(1.25);
+            box-shadow: 0 0 0 6px rgba(42, 75, 247, .25)
+        }
+
+        .h-mini {
+            position: absolute;
+            right: -10px;
+            bottom: -18px;
+            width: 230px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: var(--shadow-card);
+            padding: 12px;
+            animation: h-float 7s ease-in-out infinite;
+            animation-delay: -2s
+        }
+
+        @keyframes h-float {
+            0%, 100% {
+                transform: translateY(0)
+            }
+            50% {
+                transform: translateY(-10px)
+            }
+        }
+
+        /* bento */
+        .h-bento {
+            display: grid;
+            grid-template-columns:repeat(6, 1fr);
+            gap: 18px
+        }
+
+        .fcard {
+            position: relative;
+            border-radius: var(--radius-card);
+            overflow: hidden;
+            padding: 24px;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            color: #fff;
+            isolation: isolate;
+            transition: transform .4s cubic-bezier(.16, 1, .3, 1), box-shadow .4s
+        }
+
+        .fcard:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-card)
+        }
+
+        .fcard--a {
+            grid-column: span 4
+        }
+
+        .fcard--b {
+            grid-column: span 2
+        }
+
+        .fcard--c {
+            grid-column: span 2
+        }
+
+        .fcard--d {
+            grid-column: span 4
+        }
+
+        .fcard__img {
+            position: absolute;
+            inset: 0;
+            z-index: -2;
+            background: center/cover;
+            transform: scale(1.04);
+            transition: transform .8s cubic-bezier(.16, 1, .3, 1)
+        }
+
+        .fcard::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(180deg, transparent 35%, rgba(8, 12, 28, .78) 100%)
+        }
+
+        .fcard:hover .fcard__img {
+            transform: scale(1.1)
+        }
+
+        .fcard__tag {
+            align-self: flex-start;
+            font-weight: 700;
+            font-size: .66rem;
+            background: rgba(255, 255, 255, .16);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, .25);
+            padding: .4rem .7rem;
+            border-radius: 999px;
+            margin-bottom: auto
+        }
+
+        .fcard h3 {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -.01em
+        }
+
+        .fcard p {
+            margin-top: .5rem;
+            font-size: .92rem;
+            color: rgba(255, 255, 255, .82);
+            max-width: 40ch
+        }
+
+        .fcard__link {
+            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            font-weight: 700;
+            font-size: .86rem
+        }
+
+        .fcard__link .arr {
+            transition: transform .25s
+        }
+
+        .fcard:hover .fcard__link .arr {
+            transform: translateX(4px)
+        }
+
+        /* steps */
+        .h-step__n {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #fff;
+            background: var(--grad)
+        }
+
+        .h-step:nth-child(2) .h-step__n {
+            background: linear-gradient(135deg, #16299E, #2A4BF7)
+        }
+
+        .h-step:nth-child(3) .h-step__n {
+            background: linear-gradient(135deg, #7C5CFF, #FF6A4D)
+        }
+
+        /* faq */
+        .h-faq summary {
+            list-style: none
+        }
+
+        .h-faq summary::-webkit-details-marker {
+            display: none
+        }
+
+        .h-faq .pm {
+            transition: transform .3s, background .3s, color .3s
+        }
+
+        .h-faq details[open] .pm {
+            background: var(--color-blue);
+            color: #fff;
+            transform: rotate(45deg)
+        }
+
+        @media (max-width: 920px) {
+            .h-bento {
+                grid-template-columns:1fr
+            }
+
+            .fcard--a, .fcard--b, .fcard--c, .fcard--d {
+                grid-column: span 1
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .h-h1 .line > span {
+                transform: none
+            }
+
+            .cyc > span {
+                position: static
+            }
+
+            .h-mini {
+                animation: none
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-    <div class="home-ooh bg-white">
-        {% set showEnhancements = home_enhancements_enabled|default(true) %}
-
-        {% for mosaic in home_mosaics %}
-            {% include 'home_page/_mosaic.html.twig' with { mosaic: mosaic } only %}
-        {% endfor %}
-
-        {% if showEnhancements %}
-            <section class="home-proof border-t border-gray-200 bg-white py-8 sm:py-10"
-                     aria-label="Преимущества работы">
-                <div
-                    class="mx-auto grid max-w-[1400px] gap-3 px-4 sm:grid-cols-2 sm:gap-4 sm:px-8 lg:grid-cols-4 lg:px-12">
-                    <article class="home-proof-card">
-                        <p class="home-proof-title">Запуск от 2 дней</p>
-                        <p class="home-proof-text">Быстрая публикация после согласования макетов.</p>
-                    </article>
-                    <article class="home-proof-card">
-                        <p class="home-proof-title">Фотоотчеты</p>
-                        <p class="home-proof-text">Подтверждение размещения по каждой конструкции.</p>
-                    </article>
-                    <article class="home-proof-card">
-                        <p class="home-proof-title">Гибкие форматы</p>
-                        <p class="home-proof-text">Билборды, сити-формат и digital-экраны.</p>
-                    </article>
-                    <article class="home-proof-card">
-                        <p class="home-proof-title">Один менеджер</p>
-                        <p class="home-proof-text">Планирование, запуск и сопровождение в одном окне.</p>
-                    </article>
+    {# HERO #}
+    <section class="relative overflow-hidden py-[clamp(3rem,7vw,5.5rem)]">
+        <span class="h-blob h-blob--a"></span>
+        <span class="h-blob h-blob--b"></span>
+        <div class="u-wrap grid items-center gap-[clamp(2rem,4vw,4rem)] lg:grid-cols-[1.05fr_.95fr]">
+            <div>
+                <span class="u-eyebrow">Наружная реклама · Улан-Удэ и регион</span>
+                <h1 class="h-h1 mt-5">
+                    <span class="line"><span>Ваш бренд —</span></span>
+                    <span class="line"><span>на <span class="cyc"
+                                                      data-cycler="билбордах | digital-экранах | суперсайтах | сити-формате"></span></span></span>
+                    <span class="line"><span>всего города</span></span>
+                </h1>
+                <p class="mt-6 max-w-[42ch] text-[1.12rem] text-[var(--color-muted)]">
+                    Живая карта конструкций: подбирайте площадки, смотрите занятость по датам и бронируйте в один клик —
+                    от билборда до digital-экрана.
+                </p>
+                <div class="mt-8 flex flex-wrap gap-3">
+                    <a href="{{ path('app_map_app') }}" class="u-btn u-btn--primary">Открыть карту <span
+                            class="arr">→</span></a>
+                    <a href="#formats" class="u-btn u-btn--soft">Смотреть форматы</a>
                 </div>
-            </section>
-
-            <section class="home-mini-case border-t border-gray-200 bg-[#fafafa] py-9 sm:py-12"
-                     aria-labelledby="home-mini-case-title">
-                <div class="mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-12">
-                    <h2 id="home-mini-case-title"
-                        class="home-display text-lg font-bold uppercase tracking-tight text-gray-900 sm:text-xl">
-                        Кейс: сеть супермаркетов
-                    </h2>
-                    <div class="mt-4 grid gap-4 sm:grid-cols-3">
-                        <div class="home-mini-case-item">
-                            <p class="home-mini-case-value">+28%</p>
-                            <p class="home-mini-case-text">Узнаваемость в целевых районах.</p>
-                        </div>
-                        <div class="home-mini-case-item">
-                            <p class="home-mini-case-value">6 недель</p>
-                            <p class="home-mini-case-text">Срок кампании от старта до отчета.</p>
-                        </div>
-                        <div class="home-mini-case-item">
-                            <p class="home-mini-case-value">1 окно</p>
-                            <p class="home-mini-case-text">Планирование, запуск и контроль.</p>
-                        </div>
+                <div class="mt-10 flex flex-wrap gap-8">
+                    <div class="flex flex-col"><b class="font-[var(--font-display)] text-2xl font-bold" data-count="15">0</b><span
+                            class="text-[.82rem] text-[var(--color-muted)]">лет на рынке OOH</span></div>
+                    <div class="flex flex-col"><b class="font-[var(--font-display)] text-2xl font-bold"><span
+                                data-count="345">0</span>%</b><span class="text-[.82rem] text-[var(--color-muted)]">рост трафика после кампании</span>
                     </div>
-                </div>
-            </section>
-
-            <section class="home-cta border-t border-gray-200 bg-[#fafafa] py-10 sm:py-12" aria-label="Действия">
-                <div
-                    class="mx-auto flex max-w-[1400px] flex-col items-center justify-center gap-4 px-4 sm:flex-row sm:gap-6 sm:px-8 lg:px-12">
-                    <a href="{{ path('app_site_page', { path: 'contact' }) }}"
-                       class="home-display ooh-lift ooh-shine inline-flex min-h-[48px] min-w-[200px] items-center justify-center bg-[#05299E] px-8 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-[#041d6b]">
-                        Связаться
-                    </a>
-                    <a href="{{ path('app_map_app') }}"
-                       class="home-display ooh-lift inline-flex min-h-[48px] min-w-[200px] items-center justify-center border border-[#05299E] bg-white px-8 text-sm font-semibold uppercase tracking-wider text-[#05299E] transition hover:bg-[#05299E]/5">
-                        Карта конструкций
-                    </a>
-                    <a href="{{ path('app_register') }}"
-                       class="home-display text-sm font-semibold text-gray-600 underline-offset-4 transition hover:text-[#05299E] hover:underline">
-                        Личный кабинет
-                    </a>
-                </div>
-            </section>
-
-            <section class="home-faq-mini border-t border-gray-200 bg-white py-10 sm:py-12"
-                     aria-labelledby="home-faq-title">
-                <div class="mx-auto max-w-4xl px-4 sm:px-8">
-                    <h2 id="home-faq-title"
-                        class="home-display text-xl font-bold uppercase tracking-tight text-gray-900">
-                        Частые вопросы
-                    </h2>
-                    <div class="mt-6 space-y-2">
-                        <details class="home-faq-item">
-                            <summary>Как быстро можно запустить размещение?</summary>
-                            <p>Обычно от 2 до 5 рабочих дней, в зависимости от формата и загрузки поверхностей.</p>
-                        </details>
-                        <details class="home-faq-item">
-                            <summary>Можно ли забронировать конструкции заранее?</summary>
-                            <p>Да, бронирование доступно заранее, а занятость подтверждается менеджером.</p>
-                        </details>
-                        <details class="home-faq-item">
-                            <summary>Делаете ли вы адаптацию макетов?</summary>
-                            <p>Да, адаптируем креатив под каждый формат и требования площадок.</p>
-                        </details>
-                    </div>
-                </div>
-            </section>
-
-            <div
-                class="home-sticky-cta fixed bottom-4 left-1/2 z-40 w-[calc(100%-1rem)] max-w-md -translate-x-1/2 rounded-xl border border-gray-200 bg-white/95 p-2 shadow-lg backdrop-blur md:hidden">
-                <div class="grid grid-cols-2 gap-2">
-                    <a href="{{ path('app_site_page', { path: 'contact' }) }}"
-                       class="home-display inline-flex min-h-[42px] items-center justify-center bg-[#05299E] px-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-white">
-                        Связаться
-                    </a>
-                    <a href="{{ path('app_map_app') }}"
-                       class="home-display inline-flex min-h-[42px] items-center justify-center border border-[#05299E] bg-white px-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#05299E]">
-                        Карта
-                    </a>
+                    <div class="flex flex-col"><b class="font-[var(--font-display)] text-2xl font-bold"
+                                                  data-count="5">0</b><span
+                            class="text-[.82rem] text-[var(--color-muted)]">дней до запуска</span></div>
                 </div>
             </div>
-        {% endif %}
-    </div>
+
+            <div class="h-panel u-float" aria-hidden="true">
+                <div class="h-map">
+                    <span
+                        class="absolute left-3 top-3 z-[5] rounded-full bg-white/90 px-3 py-1.5 text-[.64rem] font-bold tracking-[0.08em] text-[var(--color-blue)] shadow-[var(--shadow-soft)]">● Карта · live</span>
+                    <span class="road r1"></span><span class="road r2"></span><span class="road r3"></span>
+                    <span class="h-pin free" style="left:30%;top:36%"><i></i></span>
+                    <span class="h-pin busy" style="left:64%;top:30%"><i></i></span>
+                    <span class="h-pin sel" style="left:46%;top:58%"><i></i></span>
+                    <span class="h-pin free" style="left:76%;top:64%"><i></i></span>
+                </div>
+                <div class="h-mini">
+                    <div class="h-32 rounded-[10px] bg-cover bg-center"
+                         style="height:84px;background-image:url('{{ asset('images/bilboard.jpg') }}')"></div>
+                    <div class="mt-2 text-[.92rem] font-bold">Билборд 6×3 · ул. Ленина</div>
+                    <div class="mt-0.5 text-[.76rem] text-[var(--color-muted)]">Сторона A · по ходу потока</div>
+                    <div class="mt-2.5 flex items-center justify-between">
+                        <span class="font-[var(--font-display)] text-[1.05rem] font-bold">42 000 ₽</span>
+                        <span class="u-pill u-pill--free">Свободна</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# FORMATS #}
+    <section class="u-section" id="formats">
+        <div class="u-wrap">
+            <div class="mb-12 max-w-[48ch]" data-reveal>
+                <h2 class="u-sec-title">Форматы, которые <em class="u-grad not-italic">видно</em> за километр</h2>
+                <p class="u-sec-lead">От крупногабаритных суперсайтов на трассах до световых сити-боксов у пешеходов.
+                    Всё на одной карте — с ценой и занятостью.</p>
+            </div>
+            <div class="h-bento">
+                <a href="{{ path('app_site_page', { path: 'media/billboards' }) }}" class="fcard fcard--a" data-reveal>
+                    <div class="fcard__img"
+                         style="background-image:url('{{ asset('images/supersite-format.jpg') }}')"></div>
+                    <span class="fcard__tag">Максимальный охват</span>
+                    <h3>Суперсайты</h3>
+                    <p>Самый крупный формат — видно издалека. Шоссе, проспекты, парковки ТЦ. Стороны A / B / C по
+                        направлению потока.</p>
+                    <span class="fcard__link">На карте <span class="arr">→</span></span>
+                </a>
+                <a href="{{ path('app_site_page', { path: 'formats' }) }}" class="fcard fcard--b" data-reveal>
+                    <div class="fcard__img"
+                         style="background-image:url('{{ asset('uploads/main/digital.png') }}')"></div>
+                    <span class="fcard__tag">Динамика 24/7</span>
+                    <h3>Digital</h3>
+                    <p>Ротация креативов по времени и триггерам.</p>
+                    <span class="fcard__link">Подробнее <span class="arr">→</span></span>
+                </a>
+                <a href="{{ path('app_site_page', { path: 'media/street-furniture' }) }}" class="fcard fcard--c"
+                   data-reveal>
+                    <div class="fcard__img" style="background-image:url('{{ asset('images/city.jpg') }}')"></div>
+                    <span class="fcard__tag">Пешеходы</span>
+                    <h3>Сити-формат</h3>
+                    <p>Световой лайтбокс на уровне глаз.</p>
+                    <span class="fcard__link">Подробнее <span class="arr">→</span></span>
+                </a>
+                <a href="{{ path('app_map_app') }}" class="fcard fcard--d" data-reveal>
+                    <div class="fcard__img" style="background-image:url('{{ asset('images/bilboard.jpg') }}')"></div>
+                    <span class="fcard__tag">Классика OOH</span>
+                    <h3>Билборды 6×3 м</h3>
+                    <p>Отдельностоящая конструкция с двумя полями. Сторона A — по ходу потока, B — встречная. База
+                        городской кампании.</p>
+                    <span class="fcard__link">На карте <span class="arr">→</span></span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    {# HOW #}
+    <section class="u-section" id="how">
+        <div class="u-wrap">
+            <div class="mb-12 max-w-[48ch]" data-reveal>
+                <h2 class="u-sec-title">От брифа до <em class="u-grad not-italic">фотоотчёта</em></h2>
+                <p class="u-sec-lead">Прозрачный путь без потерянных писем: вы видите занятость, мы держим сроки.</p>
+            </div>
+            <div class="grid gap-[18px] md:grid-cols-3">
+                <div class="h-step u-card p-7" data-reveal>
+                    <div class="h-step__n">1</div>
+                    <h3 class="mt-4 text-xl font-extrabold">Подбор и бронь</h3>
+                    <p class="mt-2 text-[.96rem] text-[var(--color-muted)]">Фильтруете по типу, району и датам на карте,
+                        добавляете стороны в корзину и бронируете.</p></div>
+                <div class="h-step u-card p-7" data-reveal>
+                    <div class="h-step__n">2</div>
+                    <h3 class="mt-4 text-xl font-extrabold">Макет и запуск</h3>
+                    <p class="mt-2 text-[.96rem] text-[var(--color-muted)]">Адаптируем креатив под каждый формат и
+                        площадку. Старт обычно за 2–5 рабочих дней.</p></div>
+                <div class="h-step u-card p-7" data-reveal>
+                    <div class="h-step__n">3</div>
+                    <h3 class="mt-4 text-xl font-extrabold">Контроль и отчёт</h3>
+                    <p class="mt-2 text-[.96rem] text-[var(--color-muted)]">Подтверждаем размещение фотоотчётом по
+                        каждой конструкции и сопровождаем кампанию.</p></div>
+            </div>
+        </div>
+    </section>
+
+    {# MAP CTA #}
+    <section class="u-section">
+        <div class="u-wrap">
+            <div class="u-grad-panel relative overflow-hidden" data-reveal>
+                <div class="grid items-center gap-10 p-[clamp(2.4rem,4vw,3.6rem)] lg:grid-cols-[1.1fr_.9fr]">
+                    <div>
+                        <h2 class="text-[clamp(1.9rem,4vw,3rem)] font-extrabold leading-[1.08] tracking-[-.02em]">Город
+                            уже на карте</h2>
+                        <p class="mt-4 max-w-[42ch] text-white/85">Интерактивный каталог конструкций: фильтры по формату
+                            и району, занятость по датам, бронирование и корзина заявки.</p>
+                        <div class="mt-7 flex flex-wrap gap-3">
+                            <a href="{{ path('app_map_app') }}" class="u-btn"
+                               style="background:#fff;color:var(--color-ink)">Открыть карту <span
+                                    class="arr">→</span></a>
+                            <a href="tel:+79148300553" class="u-btn u-btn--ghost">+7 (914) 830-05-53</a>
+                        </div>
+                    </div>
+                    <div class="rounded-[20px] border border-white/20 bg-white/10 p-[18px] backdrop-blur-md">
+                        <div class="flex items-center justify-between border-b border-white/15 py-2.5 text-[.94rem]">
+                            <span>Билборд · ул. Ленина</span><span class="font-bold text-[#9BF7C8]">Свободна</span>
+                        </div>
+                        <div class="flex items-center justify-between border-b border-white/15 py-2.5 text-[.94rem]">
+                            <span>Суперсайт · Трасса М55</span><span class="font-bold text-[#FFD0C6]">До 14.07</span>
+                        </div>
+                        <div class="flex items-center justify-between border-b border-white/15 py-2.5 text-[.94rem]">
+                            <span>Digital · ТЦ People’s Park</span><span
+                                class="font-bold text-[#9BF7C8]">Свободна</span></div>
+                        <div class="flex items-center justify-between py-2.5 text-[.94rem]"><span>Сити-формат · пр. Победы</span><b
+                                class="font-[var(--font-display)] font-bold">от 18 000 ₽</b></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# FAQ #}
+    <section class="u-section" id="faq">
+        <div class="u-wrap">
+            <div class="mx-auto mb-10 max-w-[48ch] text-center" data-reveal>
+                <h2 class="u-sec-title">Частые вопросы</h2>
+            </div>
+            <div class="h-faq mx-auto flex max-w-[820px] flex-col gap-3" data-reveal>
+                <details class="u-card px-6 py-1" open>
+                    <summary
+                        class="flex cursor-pointer items-center justify-between gap-4 py-4 text-[1.06rem] font-bold">Как
+                        быстро можно запустить размещение?<span
+                            class="pm grid h-[30px] w-[30px] place-items-center rounded-full bg-[var(--color-tint-blue)] text-[1.2rem] text-[var(--color-blue)]">+</span>
+                    </summary>
+                    <p class="pb-4 text-[var(--color-muted)]">Обычно от 2 до 5 рабочих дней — в зависимости от формата и
+                        загрузки поверхностей.</p>
+                </details>
+                <details class="u-card px-6 py-1">
+                    <summary
+                        class="flex cursor-pointer items-center justify-between gap-4 py-4 text-[1.06rem] font-bold">
+                        Можно ли забронировать конструкции заранее?<span
+                            class="pm grid h-[30px] w-[30px] place-items-center rounded-full bg-[var(--color-tint-blue)] text-[1.2rem] text-[var(--color-blue)]">+</span>
+                    </summary>
+                    <p class="pb-4 text-[var(--color-muted)]">Да. Бронирование доступно заранее, занятость по датам
+                        видна на карте, статус подтверждает менеджер.</p>
+                </details>
+                <details class="u-card px-6 py-1">
+                    <summary
+                        class="flex cursor-pointer items-center justify-between gap-4 py-4 text-[1.06rem] font-bold">
+                        Делаете ли вы адаптацию макетов?<span
+                            class="pm grid h-[30px] w-[30px] place-items-center rounded-full bg-[var(--color-tint-blue)] text-[1.2rem] text-[var(--color-blue)]">+</span>
+                    </summary>
+                    <p class="pb-4 text-[var(--color-muted)]">Да, адаптируем креатив под каждый формат и требования
+                        площадок — от билборда до digital-экрана.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    {# моушен для главной (самодостаточно; если перенесёте в motion.js — удалите) #}
+    <script>
+        (function () {
+            var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+            document.querySelectorAll('[data-cycler]').forEach(function (slot) {
+                var words = (slot.dataset.cycler || '').split('|').map(function (s) {
+                    return s.trim();
+                }).filter(Boolean);
+                slot.innerHTML = '';
+                var els = words.map(function (w, i) {
+                    var s = document.createElement('span');
+                    s.textContent = w;
+                    if (i === 0) s.className = 'on';
+                    slot.appendChild(s);
+                    return s;
+                });
+                if (reduce || els.length < 2) return;
+                var i = 0;
+                setInterval(function () {
+                    els[i].classList.remove('on');
+                    i = (i + 1) % els.length;
+                    els[i].classList.add('on');
+                }, 2300);
+            });
+            var io = new IntersectionObserver(function (es) {
+                es.forEach(function (e) {
+                    if (e.isIntersecting) {
+                        e.target.classList.add('in');
+                        io.unobserve(e.target);
+                    }
+                });
+            }, {threshold: .15, rootMargin: '0px 0px -8% 0px'});
+            document.querySelectorAll('[data-reveal]').forEach(function (el) {
+                reduce ? el.classList.add('in') : io.observe(el);
+            });
+
+            function count(el) {
+                var end = parseFloat(el.dataset.count) || 0;
+                if (reduce) {
+                    el.textContent = end;
+                    return;
+                }
+                var s = performance.now();
+
+                function f(n) {
+                    var t = Math.min(1, (n - s) / 1400);
+                    el.textContent = Math.round(end * (1 - Math.pow(1 - t, 3)));
+                    if (t < 1) requestAnimationFrame(f); else el.textContent = end;
+                }
+
+                requestAnimationFrame(f);
+            }
+
+            var cio = new IntersectionObserver(function (es) {
+                es.forEach(function (e) {
+                    if (e.isIntersecting) {
+                        count(e.target);
+                        cio.unobserve(e.target);
+                    }
+                });
+            }, {threshold: .6});
+            document.querySelectorAll('[data-count]').forEach(function (el) {
+                cio.observe(el);
+            });
+        })();
+    </script>
 {% endblock %}

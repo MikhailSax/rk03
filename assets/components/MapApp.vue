@@ -1,470 +1,206 @@
 <template>
-    <div class="flex min-h-0 flex-1 flex-col bg-[#ececee] text-gray-900 lg:overflow-hidden">
-        <header class="relative shrink-0 overflow-hidden bg-gradient-to-br from-[#05299E] via-[#05299E] to-[#041d6b] text-white">
-            <div class="pointer-events-none absolute inset-0 opacity-40 bg-[radial-gradient(ellipse_70%_80%_at_100%_0%,rgba(232,93,76,0.35),transparent)]"></div>
-            <div class="relative mx-auto max-w-[1600px] px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-5">
-                <div class="flex items-start justify-between gap-3">
-                    <div>
-                        <p class="site-header-font text-[10px] font-semibold uppercase tracking-[0.32em] text-white/50">Каталог и карта</p>
-                        <h1 class="home-display home-display-tight mt-2 max-w-3xl text-[clamp(1.65rem,3.5vw,2.5rem)] font-bold uppercase leading-tight tracking-tight text-white">
-                            Найдите
-                            <span class="text-[0.92em] font-normal normal-case italic text-[#e85d4c]">идеальные</span>
-                            конструкции
-                        </h1>
-                        <p class="mt-3 max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
-                            Фильтруйте по типу продукции и формату, смотрите доступность по датам и открывайте карточку на карте.
-                        </p>
-                    </div>
-                    <a
-                        href="/cart"
-                        class="site-header-font mt-1 hidden shrink-0 border border-white/30 bg-white/10 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-white transition hover:border-white/60 hover:bg-white/20 lg:block"
-                    >
-                        Корзина ({{ cartItems.length }})
-                    </a>
-                </div>
-            </div>
-        </header>
+    <div class="flex min-h-0 flex-1 flex-col bg-[var(--color-bg)] text-[var(--color-ink)] lg:overflow-hidden">
 
-        <div class="sticky top-16 z-20 flex gap-0 border-b border-gray-200 bg-white shadow-sm lg:hidden">
-            <button
-                type="button"
-                class="site-header-font flex-1 border-b-[3px] px-5 py-4 text-[13px] font-semibold uppercase tracking-[0.14em] transition"
-                :class="mobileView === 'list' ? 'border-[#e85d4c] bg-white text-[#05299E]' : 'border-transparent bg-gray-50 text-gray-500'"
-                @click="mobileView = 'list'"
-            >
-                Фильтры
-            </button>
-            <button
-                type="button"
-                class="site-header-font flex-1 border-b-[3px] px-5 py-4 text-[13px] font-semibold uppercase tracking-[0.14em] transition"
-                :class="mobileView === 'map' ? 'border-[#e85d4c] bg-white text-[#05299E]' : 'border-transparent bg-gray-50 text-gray-500'"
-                @click="mobileView = 'map'"
-            >
-                Карта
-            </button>
+        <!-- toolbar -->
+        <div class="flex items-center justify-between gap-3 px-4 py-3 sm:px-6">
+            <div class="flex items-center gap-3">
+                <h1 class="home-display text-lg font-bold">Карта и каталог</h1>
+                <span class="u-pill" style="background:var(--color-tint-blue);color:var(--color-blue)">{{ objects.length }} конструкций</span>
+            </div>
+            <a href="/cart" class="u-btn u-btn--blue !px-4 !py-2 text-sm">Корзина ({{ cartItems.length }}) <span class="arr">→</span></a>
         </div>
 
-        <div class="flex min-h-0 flex-1 flex-col lg:flex-row lg:overflow-hidden">
+        <!-- mobile tabs -->
+        <div class="flex gap-2 px-4 pb-2 lg:hidden">
+            <button
+                type="button"
+                class="flex-1 rounded-full py-2.5 text-[.82rem] font-bold transition"
+                :class="mobileView === 'list' ? 'bg-[var(--color-ink)] text-white' : 'bg-white text-[var(--color-muted)] shadow-[var(--shadow-soft)]'"
+                @click="mobileView = 'list'"
+            >Фильтры</button>
+            <button
+                type="button"
+                class="flex-1 rounded-full py-2.5 text-[.82rem] font-bold transition"
+                :class="mobileView === 'map' ? 'bg-[var(--color-ink)] text-white' : 'bg-white text-[var(--color-muted)] shadow-[var(--shadow-soft)]'"
+                @click="mobileView = 'map'"
+            >Карта</button>
+        </div>
+
+        <div class="flex min-h-0 flex-1 flex-col gap-4 p-4 pt-0 lg:flex-row lg:overflow-hidden">
+
+            <!-- sidebar -->
             <aside
-                class="w-full border-b border-gray-200 bg-white lg:w-[min(100%,320px)] xl:w-[360px] lg:shrink-0 lg:border-b-0 lg:border-r lg:border-gray-200"
-                :class="mobileView === 'map' ? 'hidden lg:block' : 'block'"
+                class="u-card flex w-full flex-col overflow-hidden lg:w-[372px] lg:shrink-0"
+                :class="mobileView === 'map' ? 'hidden lg:flex' : 'flex'"
             >
-                <div class="flex max-h-[calc(100dvh-11.5rem)] min-h-[calc(100dvh-11.5rem)] flex-col lg:h-full lg:max-h-none lg:min-h-0">
-                    <div class="border-b-4 border-[#e85d4c] px-5 py-5">
+                <div class="flex items-start justify-between border-b border-[rgba(13,19,32,.08)] px-5 py-4">
+                    <div>
+                        <h2 class="text-lg font-extrabold tracking-tight">Инвентарь</h2>
+                        <p class="mt-0.5 text-xs text-[var(--color-muted)]">Подбор поверхностей</p>
+                    </div>
+                    <span v-if="hasActiveFilters" class="u-pill" style="background:var(--color-tint-blue);color:var(--color-blue)">Фильтр</span>
+                </div>
+
+                <div class="flex max-h-[44vh] flex-col gap-4 overflow-auto border-b border-[rgba(13,19,32,.08)] p-5 lg:max-h-none">
+                    <div>
+                        <label class="u-field-label">Категория конструкции</label>
+                        <select v-model="filters.productType" class="u-select">
+                            <option value="">Все категории</option>
+                            <option v-for="item in productTypes" :key="item.id" :value="String(item.id)">{{ item.name }}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="u-field-label">Тип конструкции</label>
+                        <select v-model="filters.constrTypeId" :disabled="isLoadingFilters" class="u-select disabled:cursor-not-allowed disabled:opacity-60">
+                            <option value="">Все типы</option>
+                            <option v-for="item in constrTypes" :key="item.id" :value="String(item.id)">{{ item.name }}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="u-field-label">Период</label>
+                        <div class="flex gap-2">
+                            <button
+                                v-for="preset in datePresets"
+                                :key="preset.key"
+                                type="button"
+                                class="flex-1 rounded-full border py-2.5 text-[.78rem] font-bold transition"
+                                :class="activeDatePreset === preset.key
+                                    ? 'border-[var(--color-ink)] bg-[var(--color-ink)] text-white'
+                                    : 'border-[rgba(13,19,32,.12)] bg-white text-[var(--color-muted)] hover:border-[var(--color-blue)] hover:text-[var(--color-blue)]'"
+                                @click="applyDatePreset(preset.key)"
+                            >{{ preset.label }}</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div><label class="u-field-label">Свободно с</label><input v-model="filters.bookingFrom" type="date" class="u-input"></div>
+                        <div><label class="u-field-label">Свободно до</label><input v-model="filters.bookingTo" type="date" class="u-input"></div>
+                    </div>
+                    <div class="flex gap-2.5">
+                        <button type="button" class="u-btn u-btn--soft flex-1 justify-center !py-3 text-[.82rem]" @click="resetFilters">Сбросить</button>
+                        <button type="button" class="u-btn u-btn--blue flex-1 justify-center !py-3 text-[.82rem]" @click="applyFilters">Подобрать</button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between border-b border-[rgba(13,19,32,.08)] px-5 py-3 text-[.74rem] font-bold text-[var(--color-muted)]">
+                    <span>Найдено конструкций</span>
+                    <span class="rounded-full bg-[var(--color-tint-blue)] px-2.5 py-0.5 font-[var(--font-display)] text-[.88rem] text-[var(--color-blue)]">{{ objects.length }}</span>
+                </div>
+
+                <div class="min-h-0 flex-1 overflow-y-auto p-3.5">
+                    <div v-if="isLoadingObjects" class="p-4 text-sm text-[var(--color-muted)]">Загрузка объектов…</div>
+                    <div v-else-if="objects.length === 0" class="rounded-[var(--radius-soft)] border border-dashed border-[rgba(13,19,32,.18)] bg-white p-4 text-sm text-[var(--color-muted)]">
+                        По выбранным фильтрам ничего не найдено.
+                    </div>
+
+                    <button
+                        v-for="item in objects"
+                        :key="item.id"
+                        type="button"
+                        class="mb-3 w-full rounded-[var(--radius-soft)] border bg-white p-4 text-left transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-soft)]"
+                        :class="activeObjectId === item.id ? 'border-[var(--color-blue)] shadow-[0_0_0_3px_rgba(42,75,247,.15)]' : 'border-[rgba(13,19,32,.08)] hover:border-[rgba(42,75,247,.35)]'"
+                        @click="focusObject(item.id)"
+                    >
                         <div class="flex items-start justify-between gap-3">
-                            <div>
-                                <h2 class="site-header-font text-lg font-bold uppercase tracking-[0.12em] text-gray-900">Инвентарь</h2>
-                                <p class="mt-1 text-xs text-gray-500">Параметры подбора поверхностей</p>
-                            </div>
-                            <span
-                                v-if="hasActiveFilters"
-                                class="site-header-font shrink-0 border border-[#05299E]/20 bg-[#05299E]/5 px-2 py-1 text-[9px] font-semibold uppercase tracking-wider text-[#05299E]"
-                            >
-                                Фильтр
-                            </span>
+                            <h3 class="line-clamp-2 text-[.96rem] font-bold leading-snug">{{ item.address || 'Адрес не указан' }}</h3>
+                            <span class="shrink-0 rounded-full bg-[var(--color-bg-2)] px-2 py-0.5 font-[var(--font-display)] text-[.66rem] font-bold text-[var(--color-muted)]">#{{ item.id }}</span>
                         </div>
-                    </div>
-
-                    <div class="max-h-[46dvh] space-y-5 overflow-y-auto border-b border-gray-100 bg-[#f7f7f8] p-5 lg:max-h-none lg:overflow-visible">
-                        <div>
-                            <label class="site-header-font mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.16em] text-gray-500">Категория Конструкции</label>
-                            <select
-                                v-model="filters.productType"
-                                class="w-full border border-gray-300 bg-white px-3 py-3 text-base focus:border-[#05299E] focus:outline-none focus:ring-2 focus:ring-[#05299E]/15"
-                            >
-                                <option value="">Все типы конструкций</option>
-                                <option v-for="item in productTypes" :key="item.id" :value="String(item.id)">
-                                    {{ item.name }}
-                                </option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="site-header-font mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.16em] text-gray-500">Тип конструкции</label>
-                            <select
-                                v-model="filters.constrTypeId"
-                                :disabled="isLoadingFilters"
-                                class="w-full border border-gray-300 bg-white px-3 py-3 text-base focus:border-[#05299E] focus:outline-none focus:ring-2 focus:ring-[#05299E]/15 disabled:cursor-not-allowed disabled:bg-gray-100"
-                            >
-                                <option value="">Все типы конструкций</option>
-                                <option v-for="item in constrTypes" :key="item.id" :value="String(item.id)">
-                                    {{ item.name }}
-                                </option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <p class="site-header-font mb-2 text-[12px] font-semibold uppercase tracking-[0.16em] text-gray-500">Период</p>
-                            <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                                <button
-                                    v-for="preset in datePresets"
-                                    :key="preset.key"
-                                    type="button"
-                                    class="site-header-font border px-3 py-3 text-[12px] font-semibold uppercase tracking-wide transition"
-                                    :class="
-                                        activeDatePreset === preset.key
-                                            ? 'border-[#05299E] bg-[#05299E] text-white'
-                                            : 'border-gray-300 bg-white text-gray-600 hover:border-[#05299E]/40 hover:text-[#05299E]'
-                                    "
-                                    @click="applyDatePreset(preset.key)"
-                                >
-                                    {{ preset.label }}
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-3">
-                            <label class="text-xs">
-                                <span class="site-header-font mb-1 block text-[10px] font-semibold uppercase tracking-[0.15em] text-gray-500">Свободно с</span>
-                                <input v-model="filters.bookingFrom" type="date" class="w-full border border-gray-300 bg-white px-3 py-3 text-base" />
-                            </label>
-                            <label class="text-xs">
-                                <span class="site-header-font mb-1 block text-[10px] font-semibold uppercase tracking-[0.15em] text-gray-500">Свободно до</span>
-                                <input v-model="filters.bookingTo" type="date" class="w-full border border-gray-300 bg-white px-3 py-3 text-base" />
-                            </label>
-                        </div>
-
-                        <div class="flex gap-2 pt-1">
-                            <button
-                                type="button"
-                                class="site-header-font flex-1 border border-gray-400 bg-white px-3 py-3 text-[12px] font-semibold uppercase tracking-wider text-gray-700 hover:border-[#05299E] hover:text-[#05299E]"
-                                @click="resetFilters"
-                            >
-                                Сбросить
-                            </button>
-                            <button
-                                type="button"
-                                class="site-header-font flex-1 bg-[#e85d4c] px-3 py-3 text-[12px] font-semibold uppercase tracking-wider text-white hover:bg-[#d64d3e]"
-                                @click="applyFilters"
-                            >
-                                Подобрать
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="site-header-font flex items-center justify-between border-b border-gray-100 bg-white px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-600">
-                        <span>Найдено</span>
-                        <span class="bg-[#05299E] px-3 py-1 text-white">{{ objects.length }}</span>
-                    </div>
-
-                    <div class="min-h-0 flex-1 overflow-y-auto p-3 lg:overflow-y-auto">
-                        <div v-if="isLoadingObjects" class="p-4 text-sm text-gray-500">Загрузка объектов…</div>
-                        <div
-                            v-else-if="objects.length === 0"
-                            class="border border-dashed border-gray-300 bg-white p-4 text-sm text-gray-500"
-                        >
-                            По выбранным фильтрам ничего не найдено.
-                        </div>
-
-                        <button
-                            v-for="item in objects"
-                            :key="item.id"
-                            type="button"
-                            class="mb-3 w-full border bg-white p-4 text-left shadow-sm transition hover:border-[#05299E]/35 hover:shadow-md"
-                            :class="activeObjectId === item.id ? 'border-[#e85d4c] ring-1 ring-[#e85d4c]/40' : 'border-gray-200'"
-                            @click="focusObject(item.id)"
-                        >
-                            <div class="mb-1 flex items-start justify-between gap-3">
-                                <h3 class="line-clamp-2 text-sm font-semibold text-gray-900">
-                                    {{ item.address || 'Адрес не указан' }}
-                                </h3>
-                                <span class="site-header-font shrink-0 bg-gray-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-gray-600">#{{ item.id }}</span>
-                            </div>
-                            <p class="text-xs text-gray-600">
-                                {{ item.category || '—' }} • {{ item.type || '—' }}
-                            </p>
-                            <p class="mt-1 text-xs text-gray-500">Стороны: {{ formatSides(item.sides) }}</p>
-                            <p
-                                class="site-header-font mt-2 text-[10px] font-semibold uppercase tracking-wide"
-                                :class="getItemStatus(item, bookingRange.from, bookingRange.to).toneClass"
-                            >
-                                {{ getItemStatus(item, bookingRange.from, bookingRange.to).text }}
-                            </p>
-                        </button>
-                    </div>
+                        <p class="mt-1.5 text-[.82rem] text-[var(--color-muted)]">{{ item.category || '—' }} • {{ item.type || '—' }}</p>
+                        <p class="mt-0.5 text-[.78rem] text-[var(--color-muted)]">Стороны: {{ formatSides(item.sides) }}</p>
+                        <span class="u-pill mt-2.5" :class="getItemStatus(item, bookingRange.from, bookingRange.to).pillClass">
+                            {{ getItemStatus(item, bookingRange.from, bookingRange.to).text }}
+                        </span>
+                    </button>
                 </div>
             </aside>
 
+            <!-- map -->
             <section
-                class="relative flex min-h-0 flex-1 flex-col overflow-hidden p-1.5 sm:p-2 lg:p-3"
+                class="u-card relative flex min-h-0 flex-1 overflow-hidden"
                 :class="mobileView === 'list' ? 'hidden lg:flex' : 'flex'"
             >
-                <div
-                    v-if="mapError"
-                    class="flex min-h-[280px] flex-1 items-center justify-center border border-red-200 bg-red-50 p-6 text-center text-sm text-red-800"
-                >
+                <div v-if="mapError" class="flex min-h-[280px] flex-1 items-center justify-center p-6 text-center text-sm text-[var(--color-busy)]">
                     {{ mapError }}
                 </div>
 
-                <div v-else class="relative min-h-[320px] w-full flex-1 max-lg:min-h-[48vh] lg:min-h-0">
-                    <div
-                        ref="mapContainer"
-                        class="absolute inset-0 border border-gray-300 bg-gray-200 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.25)]"
-                    ></div>
-                    <div
-                        v-show="!isMapLoaded"
-                        class="site-header-font absolute inset-0 z-10 flex items-center justify-center border border-gray-200 bg-white text-xs font-semibold uppercase tracking-[0.2em] text-gray-400"
-                    >
+                <div v-else class="relative min-h-[320px] w-full flex-1 max-lg:min-h-[52vh] lg:min-h-0">
+                    <div ref="mapContainer" class="absolute inset-0 bg-[#EEF1FA]"></div>
+                    <div v-show="!isMapLoaded" class="absolute inset-0 z-10 flex items-center justify-center bg-[#EEF1FA] text-xs font-bold uppercase tracking-[0.18em] text-[var(--color-muted)]">
                         Загрузка карты…
                     </div>
+                    <span class="pointer-events-none absolute left-4 top-4 z-[5] rounded-full bg-white/92 px-3 py-1.5 text-[.64rem] font-bold tracking-[0.08em] text-[var(--color-blue)] shadow-[var(--shadow-soft)]">● Карта · live</span>
                 </div>
 
-                <article
-                    v-if="activeObject && activeSide"
-                    class="absolute inset-0 z-30 overflow-y-auto border-t-4 border-[#e85d4c] bg-white shadow-[0_24px_48px_-12px_rgba(0,0,0,0.35)] sm:inset-auto sm:right-4 sm:top-4 sm:bottom-auto sm:max-h-[calc(100%-2rem)] sm:w-[520px] sm:max-w-[calc(100%-2rem)] lg:right-5 lg:top-1/2 lg:max-h-[calc(100%-2.5rem)] lg:w-[520px] lg:max-w-[calc(100%-40px)] lg:-translate-y-1/2"
-                >
-                    <div class="relative">
-                        <div class="absolute left-3 top-3 z-10 flex max-w-[calc(100%-90px)] gap-1 overflow-x-auto bg-white/95 p-1 shadow-md sm:left-4 sm:top-4">
-                            <button
-                                v-for="side in activeObject.side_details"
-                                :key="side.code"
-                                type="button"
-                                class="site-header-font min-w-[40px] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide transition"
-                                :class="activeSideCode === side.code ? 'bg-[#05299E] text-white' : getSideStatus(activeObject, side.code, bookingRange.from, bookingRange.to).toneClass"
-                                @click="selectSide(side.code)"
-                            >
-                                {{ side.code }}
-                            </button>
-                        </div>
+                <!-- detail card -->
+                <transition name="detail">
+                    <article
+                        v-if="activeObject && activeSide"
+                        class="absolute inset-0 z-30 flex flex-col overflow-hidden bg-white shadow-[var(--shadow-card)] sm:inset-auto sm:right-3.5 sm:top-3.5 sm:bottom-3.5 sm:w-[430px] sm:max-w-[calc(100%-28px)] sm:rounded-[var(--radius-card)]"
+                    >
+                        <div class="h-[5px] shrink-0" style="background:var(--grad)"></div>
 
-                        <button
-                            type="button"
-                            class="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center border border-gray-200 bg-white text-xl text-gray-600 shadow-sm hover:bg-gray-50 sm:right-4 sm:top-4"
-                            @click="closeCard"
-                        >
-                            ×
-                        </button>
-
-                        <img
-                            :src="getMainSideImage(activeSide)"
-                            alt="Фото стороны"
-                            class="h-44 w-full object-cover sm:h-56 lg:h-64"
-                        />
-                        <button
-                            v-if="activeSide.night_image_url"
-                            type="button"
-                            class="site-header-font absolute bottom-3 right-3 bg-white/95 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-gray-800"
-                            @click="isNightPhoto = !isNightPhoto"
-                        >
-                            {{ isNightPhoto ? 'Днём' : 'Ночью' }}
-                        </button>
-                    </div>
-
-                    <div class="space-y-4 p-4 sm:p-5">
-                        <div class="flex items-start justify-between gap-4">
-                            <div>
-                                <h3 class="text-base font-bold leading-tight text-gray-900 sm:text-xl">{{ activeObject.address }}</h3>
-                                <p class="site-header-font mt-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-400">GID {{ activeObject.id }}</p>
-                            </div>
-                        </div>
-
-                        <dl class="grid grid-cols-[1fr_auto] gap-x-4 gap-y-2 border-t border-gray-100 pt-3 text-sm">
-                            <dt class="border-b border-gray-100 pb-2 text-gray-500">Формат</dt>
-                            <dd class="border-b border-gray-100 pb-2 text-right font-semibold text-gray-900">{{ activeObject.type }}</dd>
-                            <dt class="border-b border-gray-100 pb-2 text-gray-500">Сторона</dt>
-                            <dd class="border-b border-gray-100 pb-2 text-right font-semibold text-gray-900">{{ activeSide.code }}</dd>
-                            <dt class="border-b border-gray-100 pb-2 text-gray-500">Описание</dt>
-                            <dd class="border-b border-gray-100 pb-2 text-right text-xs text-gray-700 sm:text-sm">
-                                {{ activeSide.description || '—' }}
-                            </dd>
-                            <dt class="pt-1 text-gray-500">Прайс без НДС</dt>
-                            <dd class="pt-1 text-right text-xl font-extrabold text-gray-900 sm:text-2xl">{{ formatPrice(activeSide.price) }}</dd>
-                        </dl>
-
-                        <section v-if="activeObject.side_details?.length" class="space-y-2 border-t border-gray-100 pt-3">
-                            <p class="site-header-font text-[10px] font-semibold uppercase tracking-[0.15em] text-gray-500">
-                                Фотографии всех сторон
-                            </p>
-                            <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        <div class="relative h-[200px] shrink-0 bg-cover bg-center" :style="{ backgroundImage: `url(${getMainSideImage(activeSide)})` }">
+                            <div class="absolute left-3 top-3 z-[3] flex gap-1.5">
                                 <button
                                     v-for="side in activeObject.side_details"
-                                    :key="`photo-${side.code}`"
+                                    :key="side.code"
                                     type="button"
-                                    class="group text-left"
+                                    class="rounded-full px-3 py-1.5 font-[var(--font-display)] text-[.78rem] font-bold shadow-[var(--shadow-soft)] transition"
+                                    :class="activeSideCode === side.code ? 'bg-[var(--color-blue)] text-white' : 'bg-white/92 text-[var(--color-ink)]'"
                                     @click="selectSide(side.code)"
-                                >
-                                    <div
-                                        class="relative aspect-[4/3] overflow-hidden border transition"
-                                        :class="activeSideCode === side.code ? 'border-[#05299E] ring-1 ring-[#05299E]/35' : 'border-gray-200 hover:border-[#05299E]/40'"
+                                >{{ side.code }}</button>
+                            </div>
+                            <button type="button" class="absolute right-3 top-3 z-[3] grid h-9 w-9 place-items-center rounded-full bg-white/92 text-xl shadow-[var(--shadow-soft)]" @click="closeCard">×</button>
+                            <button
+                                v-if="activeSide.night_image_url"
+                                type="button"
+                                class="absolute bottom-3 right-3 z-[3] rounded-full bg-[rgba(13,19,32,.72)] px-3 py-1.5 text-[.64rem] font-bold tracking-[0.06em] text-white"
+                                @click="isNightPhoto = !isNightPhoto"
+                            >{{ isNightPhoto ? 'Днём' : 'Ночью' }}</button>
+                        </div>
+
+                        <div class="min-h-0 flex-1 overflow-y-auto px-5 py-5">
+                            <h3 class="home-display text-[1.4rem] font-bold leading-tight">{{ activeObject.address }}</h3>
+                            <p class="mt-1.5 text-[.68rem] font-bold uppercase tracking-[0.04em] text-[var(--color-muted)]">GID {{ activeObject.id }}</p>
+
+                            <dl class="mt-4 border-t border-[rgba(13,19,32,.08)]">
+                                <div class="flex justify-between gap-4 border-b border-[rgba(13,19,32,.08)] py-2.5 text-[.92rem]"><dt class="text-[var(--color-muted)]">Формат</dt><dd class="text-right font-semibold">{{ activeObject.type || '—' }}</dd></div>
+                                <div class="flex justify-between gap-4 border-b border-[rgba(13,19,32,.08)] py-2.5 text-[.92rem]"><dt class="text-[var(--color-muted)]">Сторона</dt><dd class="text-right font-semibold">{{ activeSide.code }}</dd></div>
+                                <div class="flex justify-between gap-4 border-b border-[rgba(13,19,32,.08)] py-2.5 text-[.92rem]"><dt class="text-[var(--color-muted)]">Описание</dt><dd class="text-right text-[var(--color-ink)]">{{ activeSide.description || '—' }}</dd></div>
+                            </dl>
+
+                            <div class="flex items-center justify-between py-4">
+                                <span class="text-[.92rem] text-[var(--color-muted)]">Прайс без НДС</span>
+                                <b class="home-display text-[1.8rem] font-bold">{{ formatPrice(activeSide.price) }}</b>
+                            </div>
+
+                            <p v-if="activeSideStatus" class="u-pill" :class="activeSideStatus.pillClass">{{ activeSideStatus.text }}</p>
+
+                            <section v-if="activeObject.side_details?.length" class="mt-5">
+                                <p class="mb-2 text-[.7rem] font-bold uppercase tracking-[0.14em] text-[var(--color-muted)]">Фотографии сторон</p>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <button
+                                        v-for="side in activeObject.side_details"
+                                        :key="`photo-${side.code}`"
+                                        type="button"
+                                        class="group relative aspect-[4/3] overflow-hidden rounded-xl border transition"
+                                        :class="activeSideCode === side.code ? 'border-[var(--color-blue)] ring-2 ring-[rgba(42,75,247,.25)]' : 'border-[rgba(13,19,32,.08)] hover:border-[rgba(42,75,247,.4)]'"
+                                        @click="selectSide(side.code)"
                                     >
-                                        <img
-                                            :src="getPreviewSideImage(side)"
-                                            :alt="`Сторона ${side.code}`"
-                                            class="h-full w-full object-cover"
-                                        />
-                                        <span class="site-header-font absolute left-1.5 top-1.5 bg-white/90 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-gray-800">
-                                            {{ side.code }}
-                                        </span>
-                                    </div>
-                                </button>
-                            </div>
-                        </section>
-
-                        <p
-                            v-if="activeSideStatus"
-                            class="site-header-font text-[11px] font-semibold uppercase tracking-wide"
-                            :class="activeSideStatus.toneClass"
-                        >
-                            {{ activeSideStatus.text }}
-                        </p>
-
-                        <button
-                            type="button"
-                            class="site-header-font w-full bg-[#e85d4c] px-4 py-3 text-[12px] font-semibold uppercase tracking-wider text-white hover:bg-[#d64d3e]"
-                            @click="addToCart"
-                        >
-                            В корзину
-                        </button>
-                        <button
-                            type="button"
-                            class="site-header-font w-full border border-[#05299E] px-4 py-3 text-[12px] font-semibold uppercase tracking-wider text-[#05299E] hover:bg-[#05299E]/5"
-                            @click="goToCart"
-                        >
-                            Перейти в корзину ({{ cartItems.length }})
-                        </button>
-                        <a
-                            :href="`/catalog/construction/${activeObject.id}`"
-                            class="site-header-font flex w-full items-center justify-center border border-gray-300 bg-white px-4 py-3 text-[12px] font-semibold uppercase tracking-wider text-gray-800 transition hover:border-[#05299E] hover:text-[#05299E]"
-                        >
-                            Детальная карточка
-                        </a>
-                    </div>
-                </article>
-
-                <a
-                    v-if="cartItems.length"
-                    href="/cart"
-                    class="site-header-font absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 bg-[#05299E] px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-white shadow-lg lg:hidden"
-                >
-                    <span>Корзина</span>
-                    <span class="bg-white px-2 py-0.5 text-[#05299E]">{{ cartItems.length }}</span>
-                </a>
-
-                <aside
-                    v-if="false && isCartOpen"
-                    class="absolute inset-x-2 bottom-2 z-30 max-h-[72vh] overflow-y-auto border-t-4 border-[#05299E] bg-white shadow-[0_24px_48px_-12px_rgba(0,0,0,0.35)] sm:right-4 sm:top-4 sm:inset-x-auto sm:w-[420px] sm:max-w-[calc(100%-2rem)] lg:bottom-5 lg:right-5 lg:top-auto lg:max-h-[calc(100%-2.5rem)]"
-                >
-                    <div class="flex items-center justify-between border-b border-gray-100 px-4 py-3">
-                        <h3 class="site-header-font text-[11px] font-semibold uppercase tracking-[0.15em] text-gray-900">Корзина</h3>
-                        <button type="button" class="text-2xl leading-none text-gray-400 hover:text-gray-700" @click="isCartOpen = false">×</button>
-                    </div>
-
-                    <div class="max-h-[46vh] space-y-2 overflow-y-auto p-4">
-                        <article
-                            v-for="(item, index) in cartItems"
-                            :key="`${item.advertisementId}-${item.side}-${item.startDate}-${item.endDate}`"
-                            class="border border-gray-200 bg-[#fafafa] p-3"
-                        >
-                            <div class="flex items-start justify-between gap-3">
-                                <div class="min-w-0">
-                                    <p class="truncate text-sm font-semibold text-gray-900">{{ item.address }}</p>
-                                    <p class="mt-1 text-xs text-gray-600">Сторона {{ item.side }} • {{ item.startDate }}—{{ item.endDate }}</p>
-                                    <p class="mt-1 text-xs font-semibold text-[#05299E]">{{ formatPrice(item.price) }}</p>
+                                        <img :src="getPreviewSideImage(side)" :alt="`Сторона ${side.code}`" class="h-full w-full object-cover">
+                                        <span class="absolute left-1.5 top-1.5 rounded-full bg-white/92 px-1.5 py-0.5 text-[.62rem] font-bold text-[var(--color-ink)]">{{ side.code }}</span>
+                                    </button>
                                 </div>
-                                <button
-                                    type="button"
-                                    class="site-header-font shrink-0 border border-gray-300 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-gray-600 hover:border-[#e85d4c] hover:text-[#e85d4c]"
-                                    @click="removeCartItem(index)"
-                                >
-                                    Удалить
-                                </button>
-                            </div>
-                        </article>
-                        <p v-if="!cartItems.length" class="border border-dashed border-gray-300 p-4 text-sm text-gray-500">Корзина пуста.</p>
-                    </div>
-
-                    <div class="space-y-3 border-t border-gray-100 bg-white px-4 py-4">
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-600">Позиций</span>
-                            <span class="font-semibold text-gray-900">{{ cartItems.length }}</span>
-                        </div>
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-600">Итого (без НДС)</span>
-                            <span class="text-base font-bold text-gray-900">{{ formatPrice(cartTotal) }}</span>
-                        </div>
-                        <div class="flex gap-2">
-                            <button
-                                type="button"
-                                class="site-header-font flex-1 border border-gray-400 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-gray-700 hover:bg-gray-50"
-                                :disabled="!cartItems.length"
-                                @click="clearCart"
-                            >
-                                Очистить
-                            </button>
-                            <button
-                                type="button"
-                                class="site-header-font flex-1 bg-[#05299E] py-2.5 text-[11px] font-semibold uppercase tracking-wider text-white hover:bg-[#041d6b] disabled:opacity-50"
-                                :disabled="!cartItems.length"
-                                @click="openOrderModal"
-                            >
-                                Оформить
-                            </button>
-                        </div>
-                    </div>
-                </aside>
-
-                <div v-if="isOrderModalOpen" class="absolute inset-0 z-30 flex items-center justify-center bg-[#0d1117]/60 p-4 backdrop-blur-[2px]">
-                    <div class="w-full max-w-xl border-t-4 border-[#e85d4c] bg-white p-6 shadow-2xl">
-                        <div class="mb-4 flex items-start justify-between gap-4">
-                            <div>
-                                <h4 class="site-header-font text-lg font-bold uppercase tracking-wide text-gray-900">Заказ</h4>
-                                <p class="mt-1 text-xs text-gray-500">Бронь — 24 часа после отправки</p>
-                            </div>
-                            <button type="button" class="text-2xl leading-none text-gray-400 hover:text-gray-800" @click="closeOrderModal">×</button>
+                            </section>
                         </div>
 
-                        <form class="space-y-4" @submit.prevent="submitOrder">
-                            <div class="max-h-36 space-y-2 overflow-auto border border-gray-200 bg-[#f9fafb] p-3">
-                                <div
-                                    v-for="(item, index) in cartItems"
-                                    :key="`${item.advertisementId}-${item.side}-${index}`"
-                                    class="flex items-start justify-between gap-2 text-sm"
-                                >
-                                    <span class="text-gray-700">{{ item.address }} • {{ item.side }} • {{ item.startDate }}—{{ item.endDate }} • {{ formatPrice(item.price) }}</span>
-                                    <button type="button" class="shrink-0 text-[#e85d4c] hover:underline" @click="removeCartItem(index)">Удалить</button>
-                                </div>
-                                <p v-if="!cartItems.length" class="text-sm text-gray-500">Корзина пуста</p>
-                            </div>
-                            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                                <label class="text-sm">
-                                    <span class="site-header-font mb-1 block text-[10px] font-semibold uppercase tracking-wider text-gray-500">Имя</span>
-                                    <input v-model.trim="orderForm.name" :readonly="isAuthenticated" required class="w-full border border-gray-300 px-3 py-2" />
-                                </label>
-                                <label class="text-sm">
-                                    <span class="site-header-font mb-1 block text-[10px] font-semibold uppercase tracking-wider text-gray-500">Телефон</span>
-                                    <input v-model.trim="orderForm.phone" :readonly="isAuthenticated" required class="w-full border border-gray-300 px-3 py-2" />
-                                </label>
-                            </div>
-
-                            <p v-if="isAuthenticated" class="text-xs text-gray-500">Данные из аккаунта.</p>
-
-                            <label class="block text-sm">
-                                <span class="site-header-font mb-1 block text-[10px] font-semibold uppercase tracking-wider text-gray-500">Комментарий</span>
-                                <textarea v-model.trim="orderForm.comment" rows="3" class="w-full border border-gray-300 px-3 py-2"></textarea>
-                            </label>
-                            <input v-model="orderForm.website" type="text" autocomplete="off" class="hidden" tabindex="-1" />
-
-                            <p v-if="orderStatusMessage" class="border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700">{{ orderStatusMessage }}</p>
-
-                            <div class="flex gap-2">
-                                <button
-                                    type="button"
-                                    class="site-header-font flex-1 border border-gray-400 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-gray-700 hover:bg-gray-50"
-                                    @click="closeOrderModal"
-                                >
-                                    Отмена
-                                </button>
-                                <button
-                                    type="submit"
-                                    :disabled="isSubmittingOrder || !cartItems.length"
-                                    class="site-header-font flex-1 bg-[#05299E] py-2.5 text-[11px] font-semibold uppercase tracking-wider text-white hover:bg-[#041d6b] disabled:opacity-50"
-                                >
-                                    {{ isSubmittingOrder ? 'Отправка…' : 'Подтвердить' }}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                        <div class="shrink-0 border-t border-[rgba(13,19,32,.08)] bg-[#fbfcfe] px-5 py-4">
+                            <p v-if="orderStatusMessage" class="mb-2.5 text-[.85rem] font-semibold text-[var(--color-free)]">{{ orderStatusMessage }}</p>
+                            <button type="button" class="u-btn u-btn--blue w-full justify-center" @click="addToCart">В корзину</button>
+                            <button type="button" class="u-btn u-btn--soft mt-2.5 w-full justify-center" @click="goToCart">Перейти в корзину ({{ cartItems.length }})</button>
+                            <a :href="`/catalog/construction/${activeObject.id}`" class="u-btn u-btn--soft mt-2.5 w-full justify-center">Детальная карточка</a>
+                        </div>
+                    </article>
+                </transition>
             </section>
         </div>
     </div>
@@ -478,10 +214,7 @@ const props = defineProps({
     advertisementsUrl: { type: String, required: true },
     ordersUrl: { type: String, required: true },
     cartUrl: { type: String, required: true },
-    authUser: {
-        type: Object,
-        required: true,
-    },
+    authUser: { type: Object, required: true },
 })
 
 // --- Состояние ---
@@ -634,6 +367,7 @@ function normalizeSideDetails(item) {
     return sides.map(code => ({ code: String(code).toUpperCase(), price: null, image_url: null, night_image_url: null }))
 }
 
+// pillClass — классы под новую систему (.u-pill--free/busy/hold)
 function getSideStatus(item, sideCode, fromDate, toDate) {
     const bookings = (item?.bookings || []).filter(b => b.side_code === sideCode)
     const from = fromDate || new Date()
@@ -651,42 +385,31 @@ function getSideStatus(item, sideCode, fromDate, toDate) {
         const kind = overlap.booking_kind ?? overlap.bookingKind ?? 'firm'
         const dateText = d.toLocaleDateString('ru-RU')
         if (kind === 'hold') {
-            return {
-                busy: true,
-                kind,
-                text: `Занята (ожидание оплаты) до ${dateText}`,
-                toneClass: 'bg-amber-50 text-amber-700',
-            }
+            return { busy: true, kind, text: `Занята (ожидание оплаты) до ${dateText}`, pillClass: 'u-pill--hold' }
         }
-
-        return {
-            busy: true,
-            kind,
-            text: `Занята до ${dateText}`,
-            toneClass: 'bg-red-50 text-red-700',
-        }
+        return { busy: true, kind, text: `Занята до ${dateText}`, pillClass: 'u-pill--busy' }
     }
 
-    return { busy: false, kind: 'free', text: 'Свободна', toneClass: 'text-emerald-800 hover:bg-emerald-50' }
+    return { busy: false, kind: 'free', text: 'Свободна', pillClass: 'u-pill--free' }
 }
 
 function getItemStatus(item, from, to) {
     const sideDetails = Array.isArray(item?.side_details) ? item.side_details : []
     const statuses = sideDetails.map(s => getSideStatus(item, s.code, from, to))
     if (!statuses.length) {
-        return { busy: false, kind: 'free', text: 'Есть свободные стороны', toneClass: 'text-emerald-700' }
+        return { busy: false, kind: 'free', text: 'Есть свободные стороны', pillClass: 'u-pill--free' }
     }
     const busyAll = statuses.every(s => s.busy)
     if (!busyAll) {
-        return { busy: false, kind: 'free', text: 'Есть свободные стороны', toneClass: 'text-emerald-700' }
+        return { busy: false, kind: 'free', text: 'Есть свободные стороны', pillClass: 'u-pill--free' }
     }
 
     const anyHold = statuses.some(s => s.kind === 'hold')
     if (anyHold) {
-        return { busy: true, kind: 'hold', text: 'Занята (ожидание оплаты)', toneClass: 'text-amber-600' }
+        return { busy: true, kind: 'hold', text: 'Занята (ожидание оплаты)', pillClass: 'u-pill--hold' }
     }
 
-    return { busy: true, kind: 'firm', text: 'Занята', toneClass: 'text-red-600' }
+    return { busy: true, kind: 'firm', text: 'Занята', pillClass: 'u-pill--busy' }
 }
 
 // --- API ---
@@ -739,6 +462,13 @@ async function loadCart() {
 }
 
 // --- Карта ---
+function placemarkPreset(item) {
+    const kind = getItemStatus(item, bookingRange.value.from, bookingRange.value.to).kind
+    if (kind === 'hold') return 'islands#orangeCircleDotIcon'
+    if (kind === 'firm') return 'islands#redCircleDotIcon'
+    return 'islands#greenCircleDotIcon'
+}
+
 function syncMapPlacemarks() {
     if (!map) return
     placemarks.forEach(p => map.geoObjects.remove(p))
@@ -749,7 +479,7 @@ function syncMapPlacemarks() {
         const p = new window.ymaps.Placemark(
             [item.location.latitude, item.location.longitude],
             {},
-            { preset: 'islands#redCircleDotIcon' }
+            { preset: placemarkPreset(item) }
         )
         p.events.add('click', () => focusObject(item.id))
         placemarks.set(item.id, p)
@@ -762,6 +492,7 @@ function focusObject(id) {
     const item = objects.value.find(o => o.id === id)
     activeSideCode.value = item?.sides[0] || ''
     isNightPhoto.value = false
+    orderStatusMessage.value = ''
     if (map && item?.location) {
         map.setCenter([item.location.latitude, item.location.longitude], 15, { duration: 300 })
     }
@@ -976,6 +707,7 @@ watch(() => [filters.bookingFrom, filters.bookingTo], ([from, to]) => {
     }
     if (!from && !to) activeDatePreset.value = ''
     scheduleApplyFilters()
+    syncMapPlacemarks()
 })
 </script>
 
@@ -985,5 +717,18 @@ watch(() => [filters.bookingFrom, filters.bookingTo], ([from, to]) => {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+.detail-enter-from,
+.detail-leave-to {
+    transform: translateX(110%);
+    opacity: 0;
+}
+.detail-enter-active,
+.detail-leave-active {
+    transition: transform .42s cubic-bezier(.16, 1, .3, 1), opacity .3s;
+}
+@media (prefers-reduced-motion: reduce) {
+    .detail-enter-active,
+    .detail-leave-active { transition: none; }
 }
 </style>
