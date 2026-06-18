@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}О компании — БМС{% endblock %}
+{% block title %}О компании — РК03{% endblock %}
 
 {% block head_extra %}
     <meta name="description" content="РК03 (Рекламные конструкции 03) — оператор наружной рекламы: форматы, карта конструкций, команда и устойчивое развитие." />
@@ -15,146 +15,105 @@
 } %}
 
 {% block body %}
-    {# Структура в духе https://www.russoutdoor.ru/company: герой с лидом, полоса метрик, история, сетка разделов, таймлайн, CTA. #}
-    <div class="company-page bg-white">
-        <header class="company-hero border-b border-white/10">
-            <div class="company-hero__grid" aria-hidden="true"></div>
-            <div class="company-hero__glow -right-32 -top-24 h-80 w-80 bg-[#e85d4c]/30"></div>
-            <div class="company-hero__glow -left-20 bottom-0 h-72 w-72 bg-[#05299E]/40"></div>
-
-            <div class="relative z-[1] mx-auto max-w-[1200px] px-4 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-20">
-                <nav class="company-breadcrumb ooh-reveal" aria-label="Хлебные крошки">
-                    <a href="{{ path('app_homepage') }}">Главная</a>
-                    <span class="mx-2 text-white/35" aria-hidden="true">/</span>
-                    <span class="text-white/80">О компании</span>
+    <section class="u-section">
+        <div class="u-wrap">
+            {# hero #}
+            <div class="u-grad-panel relative overflow-hidden p-8 sm:p-12 lg:p-16" data-reveal>
+                <nav class="text-[.72rem] font-semibold uppercase tracking-[0.16em] text-white/60" aria-label="Хлебные крошки">
+                    <a href="{{ path('app_homepage') }}" class="transition hover:text-white">Главная</a>
+                    <span class="mx-2 opacity-40">/</span><span class="text-white/85">О компании</span>
                 </nav>
-
-                <p class="company-hero__eyebrow ooh-reveal mt-8" style="--ooh-delay: 60ms">О компании</p>
-                <h1 class="company-hero__title home-display ooh-reveal mt-4 max-w-4xl" style="--ooh-delay: 120ms">
-                    Мы соединяем бренды и&nbsp;их аудиторию с&nbsp;помощью наружной рекламы
+                <p class="mt-7 text-[.72rem] font-bold uppercase tracking-[0.22em] text-white/70">О компании</p>
+                <h1 class="mt-3 max-w-4xl text-[clamp(1.8rem,4.5vw,3rem)] font-extrabold leading-[1.1] tracking-[-.02em]">
+                    Соединяем бренды и их аудиторию с помощью наружной рекламы
                 </h1>
-                <p class="company-hero__lead ooh-reveal mt-6" style="--ooh-delay: 180ms">
-                    <strong class="font-semibold text-white">РК (Рекламные конструкции 03)</strong> МЫ-группа компаний рекламных самостоятельных операционно-управляемых и независимых друг от друга агентств наружной рекламы .
-                    Предлагаем  большую сеть РК,  лучшие стратегические места в городе,  сервис и комфортные условия для любого бизнеса.
-                    Развиваем бизнес вместе с Вами уже более 15 лет
+                <p class="mt-6 max-w-2xl text-white/85">
+                    <b class="font-semibold text-white">РК03 (Рекламные конструкции 03)</b> — группа независимых операторов наружной рекламы.
+                    Большая сеть конструкций, лучшие места в городе, сервис и комфортные условия для любого бизнеса. Развиваем бизнес вместе с вами уже более 15 лет.
                 </p>
             </div>
-        </header>
 
-        <section class="company-stats ooh-reveal" aria-label="Ключевые показатели">
-            <div class="company-stat">
-                <p class="company-stat__value">15</p>
-                <p class="company-stat__label">лет опыта в наружной рекламе и работе с локальными брендами</p>
-            </div>
-            <div class="company-stat">
-                <p class="company-stat__value company-stat__value--sm">Единая карта</p>
-                <p class="company-stat__label">актуальный каталог конструкций, бронирование и контроль кампаний</p>
-            </div>
-            <div class="company-stat">
-                <p class="company-stat__value company-stat__value--sm">Полный цикл</p>
-                <p class="company-stat__label">бриф, производство, монтаж, сопровождение и фотоотчёты</p>
-            </div>
-            <div class="company-stat">
-                <p class="company-stat__value company-stat__value--sm">Измеримость</p>
-                <p class="company-stat__label">прозрачная отчётность и понятные сроки запуска</p>
-            </div>
-        </section>
-
-        <section class="relative overflow-hidden border-b border-gray-100 bg-[#fafafa]">
-            <div class="relative z-[1] mx-auto grid max-w-[1200px] gap-10 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-16 lg:px-10 lg:py-20">
-                <figure class="ooh-reveal m-0 overflow-hidden rounded-2xl shadow-lg ring-1 ring-black/5">
-                    <img
-                        src="{{ asset('images/digital.png') }}"
-                        alt="Примеры наружных форматов в городе"
-                        class="h-full w-full object-cover"
-                        width="960"
-                        height="640"
-                        loading="lazy"
-                        decoding="async"
-                    />
-                </figure>
-                <div class="ooh-reveal" style="--ooh-delay: 80ms">
-                    <h2 class="company-section-title">Кто мы</h2>
-                    <div class="company-prose mt-5 space-y-4">
-                        <p>
-                            Мы развиваем наружную рекламу там, где она даёт максимальный контакт бренда с аудиторией: на магистралях, в транспортных коридорах и в ключевых точках города.
-                            Работаем с агентствами и прямыми рекламодателями - от разовых размещений до долгосрочных контрактов.
-                        </p>
-                        <p>
-                            Наша цель - сделать закупку OOH предсказуемой: понятные форматы, честные сроки, аккуратное производство креатива и сопровождение на площадке.
-                        </p>
+            {# stats #}
+            <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-reveal>
+                {% set stats = [
+                    { v: '15', l: 'лет опыта в наружной рекламе и работе с локальными брендами' },
+                    { v: 'Единая карта', l: 'актуальный каталог, бронирование и контроль кампаний' },
+                    { v: 'Полный цикл', l: 'бриф, производство, монтаж, сопровождение и фотоотчёты' },
+                    { v: 'Измеримость', l: 'прозрачная отчётность и понятные сроки запуска' }
+                ] %}
+                {% for s in stats %}
+                    <div class="u-card p-6">
+                        <p class="font-[var(--font-display)] font-bold text-[var(--color-blue)] {{ s.v|length > 3 ? 'text-xl' : 'text-4xl' }}">{{ s.v }}</p>
+                        <p class="mt-2 text-[.86rem] text-[var(--color-muted)]">{{ s.l }}</p>
                     </div>
-                    <p class="mt-8">
-                        <a href="{{ path('app_site_page', { path: 'formats' }) }}" class="inline-flex items-center gap-2 text-sm font-semibold text-[#05299E] underline-offset-4 hover:underline">
-                            Смотреть форматы размещения
-                            <span aria-hidden="true">→</span>
-                        </a>
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <section class="mx-auto max-w-[1200px] px-4 py-14 sm:px-6 lg:px-10 lg:py-20">
-            <h2 class="company-section-title ooh-reveal">Компания</h2>
-            <p class="company-prose ooh-reveal mt-4 max-w-3xl" style="--ooh-delay: 60ms">
-                Разделы ниже - как на корпоративном сайте оператора OOH: команда, партнёрства, устойчивое развитие, инвесторам и работа с площадками. Контент можно наполнить финальными текстами и документами.
-            </p>
-
-            <div class="company-tiles ooh-reveal mt-10" style="--ooh-delay: 100ms">
-                {% for item in related_pages %}
-                    <a href="{{ path('app_site_page', { path: item.path }) }}" class="company-tile ooh-lift group">
-                        <span class="company-tile__label">Подробнее</span>
-                        <span class="company-tile__title">{{ item.label }}</span>
-                        <span class="company-tile__text">{{ about_tile_blurb[item.path]|default('Материалы раздела — в разработке.') }}</span>
-                        <span class="company-tile__link">
-                            Перейти
-                            <span aria-hidden="true">→</span>
-                        </span>
-                    </a>
                 {% endfor %}
             </div>
-        </section>
 
-        <section class="border-t border-gray-100 bg-white">
-            <div class="mx-auto max-w-[1200px] px-4 py-14 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-12 lg:px-10 lg:py-20">
-                <div class="lg:col-span-5">
-                    <h2 class="company-section-title ooh-reveal">Развитие</h2>
-                    <p class="company-prose ooh-reveal mt-4" style="--ooh-delay: 60ms">
-                        Как и на странице «О компании» у крупных операторов, здесь удобно показать вехи: выход на рынок, запуск digital-направления, масштабирование сети. Замените годы и формулировки на факты о РК03.
-                    </p>
-                </div>
-                <ul class="company-timeline ooh-reveal mt-10 lg:col-span-7 lg:mt-0" style="--ooh-delay: 100ms">
-                    <li>
-                        <p class="company-timeline__year">Старт</p>
-                        <p class="company-timeline__text">Фокус на классических билбордах и городских форматах в регионе.</p>
-                    </li>
-                    <li>
-                        <p class="company-timeline__year">Цифровизация</p>
-                        <p class="company-timeline__text">Карта конструкций, онлайн-подбор площадок и прозрачная занятость.</p>
-                    </li>
-                    <li>
-                        <p class="company-timeline__year">Сегодня</p>
-                        <p class="company-timeline__text">Комплексные кампании: классика + digital OOH, отчётность и сопровождение.</p>
-                    </li>
-                </ul>
-            </div>
-        </section>
-
-        <section class="mx-auto max-w-[1200px] px-4 pb-16 sm:px-6 lg:px-10 lg:pb-24">
-            <div class="company-cta ooh-reveal flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            {# кто мы #}
+            <div class="mt-12 grid items-center gap-10 lg:grid-cols-2" data-reveal>
+                <figure class="m-0 overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-card)]">
+                    <img src="{{ asset('images/digital.png') }}" alt="Примеры наружных форматов в городе" class="h-full w-full object-cover" width="960" height="640" loading="lazy" decoding="async">
+                </figure>
                 <div>
-                    <h2 class="home-display text-xl font-bold uppercase tracking-tight text-white sm:text-2xl">Подберём площадки под кампанию</h2>
-                    <p class="mt-2 max-w-xl text-sm text-white/75">Откройте карту конструкций или свяжитесь с командой - подготовим медиаплан и смету.</p>
+                    <h2 class="text-2xl font-extrabold tracking-tight">Кто мы</h2>
+                    <div class="mt-5 space-y-4 text-[var(--color-muted)]">
+                        <p>Развиваем наружную рекламу там, где она даёт максимальный контакт с аудиторией: на магистралях, в транспортных коридорах и ключевых точках города. Работаем с агентствами и прямыми рекламодателями — от разовых размещений до долгосрочных контрактов.</p>
+                        <p>Наша цель — сделать закупку OOH предсказуемой: понятные форматы, честные сроки, аккуратное производство креатива и сопровождение на площадке.</p>
+                    </div>
+                    <a href="{{ path('app_site_page', { path: 'formats' }) }}" class="u-btn u-btn--soft mt-7">Смотреть форматы <span class="arr">→</span></a>
+                </div>
+            </div>
+
+            {# разделы #}
+            {% if related_pages is defined and related_pages is not empty %}
+                <div class="mt-14" data-reveal>
+                    <h2 class="text-2xl font-extrabold tracking-tight">Компания</h2>
+                    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {% for item in related_pages %}
+                            <a href="{{ path('app_site_page', { path: item.path }) }}" class="u-card group flex flex-col p-6 transition hover:-translate-y-1 hover:shadow-[var(--shadow-card)]">
+                                <span class="text-[.66rem] font-bold uppercase tracking-[0.14em] text-[var(--color-coral)]">Подробнее</span>
+                                <span class="mt-2 text-lg font-extrabold">{{ item.label }}</span>
+                                <span class="mt-2 flex-1 text-[.88rem] text-[var(--color-muted)]">{{ about_tile_blurb[item.path]|default('Материалы раздела — в разработке.') }}</span>
+                                <span class="mt-4 inline-flex items-center gap-1.5 text-[.82rem] font-semibold text-[var(--color-blue)]">Перейти <span class="transition group-hover:translate-x-0.5">→</span></span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {# таймлайн #}
+            <div class="mt-14 grid gap-10 lg:grid-cols-[5fr_7fr]" data-reveal>
+                <div>
+                    <h2 class="text-2xl font-extrabold tracking-tight">Развитие</h2>
+                    <p class="mt-4 text-[var(--color-muted)]">Вехи компании: выход на рынок, запуск digital-направления, масштабирование сети.</p>
+                </div>
+                <ol class="relative space-y-0">
+                    {% set milestones = [
+                        { y: 'Старт', t: 'Фокус на классических билбордах и городских форматах в регионе.' },
+                        { y: 'Цифровизация', t: 'Карта конструкций, онлайн-подбор площадок и прозрачная занятость.' },
+                        { y: 'Сегодня', t: 'Комплексные кампании: классика + digital OOH, отчётность и сопровождение.' }
+                    ] %}
+                    {% for m in milestones %}
+                        <li class="relative border-l-2 border-[rgba(13,19,32,.1)] pb-6 pl-6 {{ loop.last ? '!border-transparent pb-0' : '' }}">
+                            <span class="absolute -left-[5px] top-1.5 h-2 w-2 rounded-full bg-[var(--color-coral)]"></span>
+                            <p class="text-[.74rem] font-bold uppercase tracking-[0.1em] text-[var(--color-blue)]">{{ m.y }}</p>
+                            <p class="mt-1.5 text-[var(--color-muted)]">{{ m.t }}</p>
+                        </li>
+                    {% endfor %}
+                </ol>
+            </div>
+
+            {# cta #}
+            <div class="u-grad-panel mt-14 flex flex-col gap-6 p-8 sm:p-10 md:flex-row md:items-center md:justify-between" data-reveal>
+                <div>
+                    <h2 class="text-xl font-extrabold tracking-tight sm:text-2xl">Подберём площадки под кампанию</h2>
+                    <p class="mt-2 max-w-xl text-white/85">Откройте карту или свяжитесь с командой — подготовим медиаплан и смету.</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
-                    <a href="{{ path('app_map_app') }}" class="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#05299E] shadow-sm transition hover:bg-white/95">
-                        Карта конструкций
-                    </a>
-                    <a href="{{ path('app_site_page', { path: 'contact' }) }}" class="inline-flex items-center justify-center rounded-full border border-white/40 bg-transparent px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
-                        Контакты
-                    </a>
+                    <a href="{{ path('app_map_app') }}" class="u-btn" style="background:#fff;color:var(--color-ink)">Карта конструкций</a>
+                    <a href="{{ path('app_site_page', { path: 'contact' }) }}" class="u-btn u-btn--ghost">Контакты</a>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
 {% endblock %}
