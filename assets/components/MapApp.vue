@@ -5,9 +5,12 @@
         <div class="flex items-center justify-between gap-3 px-4 py-3 sm:px-6">
             <div class="flex items-center gap-3">
                 <h1 class="home-display text-lg font-bold">Карта и каталог</h1>
-                <span class="u-pill" style="background:var(--color-tint-blue);color:var(--color-blue)">{{ objects.length }} конструкций</span>
+                <span class="u-pill" style="background:var(--color-tint-blue);color:var(--color-blue)">{{
+                        objects.length
+                    }} конструкций</span>
             </div>
-            <a href="/cart" class="u-btn u-btn--blue !px-4 !py-2 text-sm">Корзина ({{ cartItems.length }}) <span class="arr">→</span></a>
+            <a href="/cart" class="u-btn u-btn--blue !px-4 !py-2 text-sm">Корзина ({{ cartItems.length }}) <span
+                class="arr">→</span></a>
         </div>
 
         <!-- mobile tabs -->
@@ -17,13 +20,15 @@
                 class="flex-1 rounded-full py-2.5 text-[.82rem] font-bold transition"
                 :class="mobileView === 'list' ? 'bg-[var(--color-ink)] text-white' : 'bg-white text-[var(--color-muted)] shadow-[var(--shadow-soft)]'"
                 @click="mobileView = 'list'"
-            >Фильтры</button>
+            >Фильтры
+            </button>
             <button
                 type="button"
                 class="flex-1 rounded-full py-2.5 text-[.82rem] font-bold transition"
                 :class="mobileView === 'map' ? 'bg-[var(--color-ink)] text-white' : 'bg-white text-[var(--color-muted)] shadow-[var(--shadow-soft)]'"
                 @click="mobileView = 'map'"
-            >Карта</button>
+            >Карта
+            </button>
         </div>
 
         <div class="flex min-h-0 flex-1 flex-col gap-4 p-4 pt-0 lg:flex-row lg:overflow-hidden">
@@ -38,22 +43,57 @@
                         <h2 class="text-lg font-extrabold tracking-tight">Инвентарь</h2>
                         <p class="mt-0.5 text-xs text-[var(--color-muted)]">Подбор поверхностей</p>
                     </div>
-                    <span v-if="hasActiveFilters" class="u-pill" style="background:var(--color-tint-blue);color:var(--color-blue)">Фильтр</span>
+                    <span v-if="hasActiveFilters" class="u-pill"
+                          style="background:var(--color-tint-blue);color:var(--color-blue)">Фильтр</span>
                 </div>
 
-                <div class="flex max-h-[44vh] flex-col gap-4 overflow-auto border-b border-[rgba(13,19,32,.08)] p-5 lg:max-h-none">
+                <div
+                    class="flex max-h-[44vh] flex-col gap-4 overflow-auto border-b border-[rgba(13,19,32,.08)] p-5 lg:max-h-none">
+                    <div>
+                        <label class="u-field-label">Поиск по номеру конструкции</label>
+                        <div class="relative">
+                            <svg
+                                class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-muted)]"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="7"/>
+                                <path d="M21 21l-4.3-4.3"/>
+                            </svg>
+                            <input
+                                v-model="searchQuery"
+                                type="search"
+                                inputmode="search"
+                                placeholder="Код или № площади…"
+                                class="u-input !pl-9 !pr-9"
+                            />
+                            <button
+                                v-if="searchQuery"
+                                type="button"
+                                class="absolute right-2.5 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-full text-[var(--color-muted)] transition hover:bg-[var(--color-bg-2)]"
+                                aria-label="Очистить поиск"
+                                @click="searchQuery = ''"
+                            >×
+                            </button>
+                        </div>
+                    </div>
                     <div>
                         <label class="u-field-label">Категория конструкции</label>
                         <select v-model="filters.productType" class="u-select">
                             <option value="">Все категории</option>
-                            <option v-for="item in productTypes" :key="item.id" :value="String(item.id)">{{ item.name }}</option>
+                            <option v-for="item in productTypes" :key="item.id" :value="String(item.id)">{{
+                                    item.name
+                                }}
+                            </option>
                         </select>
                     </div>
                     <div>
                         <label class="u-field-label">Тип конструкции</label>
-                        <select v-model="filters.constrTypeId" :disabled="isLoadingFilters" class="u-select disabled:cursor-not-allowed disabled:opacity-60">
+                        <select v-model="filters.constrTypeId" :disabled="isLoadingFilters"
+                                class="u-select disabled:cursor-not-allowed disabled:opacity-60">
                             <option value="">Все типы</option>
-                            <option v-for="item in constrTypes" :key="item.id" :value="String(item.id)">{{ item.name }}</option>
+                            <option v-for="item in constrTypes" :key="item.id" :value="String(item.id)">{{
+                                    item.name
+                                }}
+                            </option>
                         </select>
                     </div>
                     <div>
@@ -68,32 +108,46 @@
                                     ? 'border-[var(--color-ink)] bg-[var(--color-ink)] text-white'
                                     : 'border-[rgba(13,19,32,.12)] bg-white text-[var(--color-muted)] hover:border-[var(--color-blue)] hover:text-[var(--color-blue)]'"
                                 @click="applyDatePreset(preset.key)"
-                            >{{ preset.label }}</button>
+                            >{{ preset.label }}
+                            </button>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-2.5">
-                        <div><label class="u-field-label">Свободно с</label><input v-model="filters.bookingFrom" type="date" class="u-input"></div>
-                        <div><label class="u-field-label">Свободно до</label><input v-model="filters.bookingTo" type="date" class="u-input"></div>
+                        <div><label class="u-field-label">Свободно с</label><input v-model="filters.bookingFrom"
+                                                                                   type="date" class="u-input"></div>
+                        <div><label class="u-field-label">Свободно до</label><input v-model="filters.bookingTo"
+                                                                                    type="date" class="u-input"></div>
                     </div>
                     <div class="flex gap-2.5">
-                        <button type="button" class="u-btn u-btn--soft flex-1 justify-center !py-3 text-[.82rem]" @click="resetFilters">Сбросить</button>
-                        <button type="button" class="u-btn u-btn--blue flex-1 justify-center !py-3 text-[.82rem]" @click="applyFilters">Подобрать</button>
+                        <button type="button" class="u-btn u-btn--soft flex-1 justify-center !py-3 text-[.82rem]"
+                                @click="resetFilters">Сбросить
+                        </button>
+                        <button type="button" class="u-btn u-btn--blue flex-1 justify-center !py-3 text-[.82rem]"
+                                @click="applyFilters">Подобрать
+                        </button>
                     </div>
                 </div>
 
-                <div class="flex items-center justify-between border-b border-[rgba(13,19,32,.08)] px-5 py-3 text-[.74rem] font-bold text-[var(--color-muted)]">
-                    <span>Найдено конструкций</span>
-                    <span class="rounded-full bg-[var(--color-tint-blue)] px-2.5 py-0.5 font-[var(--font-display)] text-[.88rem] text-[var(--color-blue)]">{{ objects.length }}</span>
+                <div
+                    class="flex items-center justify-between border-b border-[rgba(13,19,32,.08)] px-5 py-3 text-[.74rem] font-bold text-[var(--color-muted)]">
+                    <span>{{ searchQuery ? 'Найдено по запросу' : 'Найдено конструкций' }}</span>
+                    <span
+                        class="rounded-full bg-[var(--color-tint-blue)] px-2.5 py-0.5 font-[var(--font-display)] text-[.88rem] text-[var(--color-blue)]">{{
+                            visibleObjects.length
+                        }}</span>
                 </div>
 
                 <div class="min-h-0 flex-1 overflow-y-auto p-3.5">
                     <div v-if="isLoadingObjects" class="p-4 text-sm text-[var(--color-muted)]">Загрузка объектов…</div>
-                    <div v-else-if="objects.length === 0" class="rounded-[var(--radius-soft)] border border-dashed border-[rgba(13,19,32,.18)] bg-white p-4 text-sm text-[var(--color-muted)]">
-                        По выбранным фильтрам ничего не найдено.
+                    <div v-else-if="visibleObjects.length === 0"
+                         class="rounded-[var(--radius-soft)] border border-dashed border-[rgba(13,19,32,.18)] bg-white p-4 text-sm text-[var(--color-muted)]">
+                        {{
+                            searchQuery ? `Конструкция «${searchQuery}» не найдена.` : 'По выбранным фильтрам ничего не найдено.'
+                        }}
                     </div>
 
                     <button
-                        v-for="item in objects"
+                        v-for="item in visibleObjects"
                         :key="item.id"
                         type="button"
                         class="mb-3 w-full rounded-[var(--radius-soft)] border bg-white p-4 text-left transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-soft)]"
@@ -101,12 +155,23 @@
                         @click="focusObject(item.id)"
                     >
                         <div class="flex items-start justify-between gap-3">
-                            <h3 class="line-clamp-2 text-[.96rem] font-bold leading-snug">{{ item.address || 'Адрес не указан' }}</h3>
-                            <span class="shrink-0 rounded-full bg-[var(--color-bg-2)] px-2 py-0.5 font-[var(--font-display)] text-[.66rem] font-bold text-[var(--color-muted)]">#{{ item.id }}</span>
+                            <h3 class="line-clamp-2 text-[.96rem] font-bold leading-snug">
+                                {{ item.address || 'Адрес не указан' }}</h3>
+                            <span
+                                class="shrink-0 rounded-full bg-[var(--color-bg-2)] px-2 py-0.5 font-[var(--font-display)] text-[.66rem] font-bold text-[var(--color-muted)]">#{{
+                                    item.id
+                                }}</span>
                         </div>
-                        <p class="mt-1.5 text-[.82rem] text-[var(--color-muted)]">{{ item.category || '—' }} • {{ item.type || '—' }}</p>
-                        <p class="mt-0.5 text-[.78rem] text-[var(--color-muted)]">Стороны: {{ formatSides(item.sides) }}</p>
-                        <span class="u-pill mt-2.5" :class="getItemStatus(item, bookingRange.from, bookingRange.to).pillClass">
+                        <p v-if="constructionNumber(item)"
+                           class="mt-1 text-[.74rem] font-semibold text-[var(--color-blue)]">№
+                            {{ constructionNumber(item) }}</p>
+                        <p class="mt-1.5 text-[.82rem] text-[var(--color-muted)]">{{ item.category || '—' }} •
+                            {{ item.type || '—' }}</p>
+                        <p class="mt-0.5 text-[.78rem] text-[var(--color-muted)]">Стороны: {{
+                                formatSides(item.sides)
+                            }}</p>
+                        <span class="u-pill mt-2.5"
+                              :class="getItemStatus(item, bookingRange.from, bookingRange.to).pillClass">
                             {{ getItemStatus(item, bookingRange.from, bookingRange.to).text }}
                         </span>
                     </button>
@@ -118,16 +183,19 @@
                 class="u-card relative flex min-h-0 flex-1 overflow-hidden"
                 :class="mobileView === 'list' ? 'hidden lg:flex' : 'flex'"
             >
-                <div v-if="mapError" class="flex min-h-[280px] flex-1 items-center justify-center p-6 text-center text-sm text-[var(--color-busy)]">
+                <div v-if="mapError"
+                     class="flex min-h-[280px] flex-1 items-center justify-center p-6 text-center text-sm text-[var(--color-busy)]">
                     {{ mapError }}
                 </div>
 
                 <div v-else class="relative min-h-[320px] w-full flex-1 max-lg:min-h-[52vh] lg:min-h-0">
                     <div ref="mapContainer" class="absolute inset-0 bg-[#EEF1FA]"></div>
-                    <div v-show="!isMapLoaded" class="absolute inset-0 z-10 flex items-center justify-center bg-[#EEF1FA] text-xs font-bold uppercase tracking-[0.18em] text-[var(--color-muted)]">
+                    <div v-show="!isMapLoaded"
+                         class="absolute inset-0 z-10 flex items-center justify-center bg-[#EEF1FA] text-xs font-bold uppercase tracking-[0.18em] text-[var(--color-muted)]">
                         Загрузка карты…
                     </div>
-                    <span class="pointer-events-none absolute left-4 top-4 z-[5] rounded-full bg-white/92 px-3 py-1.5 text-[.64rem] font-bold tracking-[0.08em] text-[var(--color-blue)] shadow-[var(--shadow-soft)]">● Карта · live</span>
+                    <span
+                        class="pointer-events-none absolute left-4 top-4 z-[5] rounded-full bg-white/92 px-3 py-1.5 text-[.64rem] font-bold tracking-[0.08em] text-[var(--color-blue)] shadow-[var(--shadow-soft)]">● Карта · live</span>
                 </div>
 
                 <!-- detail card -->
@@ -138,7 +206,8 @@
                     >
                         <div class="h-[5px] shrink-0" style="background:var(--grad)"></div>
 
-                        <div class="relative h-[200px] shrink-0 bg-cover bg-center" :style="{ backgroundImage: `url(${getMainSideImage(activeSide)})` }">
+                        <div class="relative h-[200px] shrink-0 bg-cover bg-center"
+                             :style="{ backgroundImage: `url(${getMainSideImage(activeSide)})` }">
                             <div class="absolute left-3 top-3 z-[3] flex gap-1.5">
                                 <button
                                     v-for="side in activeObject.side_details"
@@ -147,25 +216,48 @@
                                     class="rounded-full px-3 py-1.5 font-[var(--font-display)] text-[.78rem] font-bold shadow-[var(--shadow-soft)] transition"
                                     :class="activeSideCode === side.code ? 'bg-[var(--color-blue)] text-white' : 'bg-white/92 text-[var(--color-ink)]'"
                                     @click="selectSide(side.code)"
-                                >{{ side.code }}</button>
+                                >{{ side.code }}
+                                </button>
                             </div>
-                            <button type="button" class="absolute right-3 top-3 z-[3] grid h-9 w-9 place-items-center rounded-full bg-white/92 text-xl shadow-[var(--shadow-soft)]" @click="closeCard">×</button>
+                            <button type="button"
+                                    class="absolute right-3 top-3 z-[3] grid h-9 w-9 place-items-center rounded-full bg-white/92 text-xl shadow-[var(--shadow-soft)]"
+                                    @click="closeCard">×
+                            </button>
                             <button
                                 v-if="activeSide.night_image_url"
                                 type="button"
                                 class="absolute bottom-3 right-3 z-[3] rounded-full bg-[rgba(13,19,32,.72)] px-3 py-1.5 text-[.64rem] font-bold tracking-[0.06em] text-white"
                                 @click="isNightPhoto = !isNightPhoto"
-                            >{{ isNightPhoto ? 'Днём' : 'Ночью' }}</button>
+                            >{{ isNightPhoto ? 'Днём' : 'Ночью' }}
+                            </button>
                         </div>
 
                         <div class="min-h-0 flex-1 overflow-y-auto px-5 py-5">
-                            <h3 class="home-display text-[1.4rem] font-bold leading-tight">{{ activeObject.address }}</h3>
-                            <p class="mt-1.5 text-[.68rem] font-bold uppercase tracking-[0.04em] text-[var(--color-muted)]">GID {{ activeObject.id }}</p>
+                            <h3 class="home-display text-[1.4rem] font-bold leading-tight">{{
+                                    activeObject.address
+                                }}</h3>
+                            <p class="mt-1.5 text-[.68rem] font-bold uppercase tracking-[0.04em] text-[var(--color-muted)]">
+                                GID {{ activeObject.id }}</p>
 
                             <dl class="mt-4 border-t border-[rgba(13,19,32,.08)]">
-                                <div class="flex justify-between gap-4 border-b border-[rgba(13,19,32,.08)] py-2.5 text-[.92rem]"><dt class="text-[var(--color-muted)]">Формат</dt><dd class="text-right font-semibold">{{ activeObject.type || '—' }}</dd></div>
-                                <div class="flex justify-between gap-4 border-b border-[rgba(13,19,32,.08)] py-2.5 text-[.92rem]"><dt class="text-[var(--color-muted)]">Сторона</dt><dd class="text-right font-semibold">{{ activeSide.code }}</dd></div>
-                                <div class="flex justify-between gap-4 border-b border-[rgba(13,19,32,.08)] py-2.5 text-[.92rem]"><dt class="text-[var(--color-muted)]">Описание</dt><dd class="text-right text-[var(--color-ink)]">{{ activeSide.description || '—' }}</dd></div>
+                                <div
+                                    class="flex justify-between gap-4 border-b border-[rgba(13,19,32,.08)] py-2.5 text-[.92rem]">
+                                    <dt class="text-[var(--color-muted)]">Формат</dt>
+                                    <dd class="text-right font-semibold">{{ activeObject.type || '—' }}</dd>
+                                </div>
+                                <div
+                                    class="flex justify-between gap-4 border-b border-[rgba(13,19,32,.08)] py-2.5 text-[.92rem]">
+                                    <dt class="text-[var(--color-muted)]">Сторона</dt>
+                                    <dd class="text-right font-semibold">{{ activeSide.code }}</dd>
+                                </div>
+                                <div
+                                    class="flex justify-between gap-4 border-b border-[rgba(13,19,32,.08)] py-2.5 text-[.92rem]">
+                                    <dt class="text-[var(--color-muted)]">Описание</dt>
+                                    <dd class="text-right text-[var(--color-ink)]">{{
+                                            activeSide.description || '—'
+                                        }}
+                                    </dd>
+                                </div>
                             </dl>
 
                             <div class="flex items-center justify-between py-4">
@@ -173,10 +265,12 @@
                                 <b class="home-display text-[1.8rem] font-bold">{{ formatPrice(activeSide.price) }}</b>
                             </div>
 
-                            <p v-if="activeSideStatus" class="u-pill" :class="activeSideStatus.pillClass">{{ activeSideStatus.text }}</p>
+                            <p v-if="activeSideStatus" class="u-pill" :class="activeSideStatus.pillClass">
+                                {{ activeSideStatus.text }}</p>
 
                             <section v-if="activeObject.side_details?.length" class="mt-5">
-                                <p class="mb-2 text-[.7rem] font-bold uppercase tracking-[0.14em] text-[var(--color-muted)]">Фотографии сторон</p>
+                                <p class="mb-2 text-[.7rem] font-bold uppercase tracking-[0.14em] text-[var(--color-muted)]">
+                                    Фотографии сторон</p>
                                 <div class="grid grid-cols-3 gap-2">
                                     <button
                                         v-for="side in activeObject.side_details"
@@ -186,18 +280,30 @@
                                         :class="activeSideCode === side.code ? 'border-[var(--color-blue)] ring-2 ring-[rgba(42,75,247,.25)]' : 'border-[rgba(13,19,32,.08)] hover:border-[rgba(42,75,247,.4)]'"
                                         @click="selectSide(side.code)"
                                     >
-                                        <img :src="getPreviewSideImage(side)" :alt="`Сторона ${side.code}`" class="h-full w-full object-cover">
-                                        <span class="absolute left-1.5 top-1.5 rounded-full bg-white/92 px-1.5 py-0.5 text-[.62rem] font-bold text-[var(--color-ink)]">{{ side.code }}</span>
+                                        <img :src="getPreviewSideImage(side)" :alt="`Сторона ${side.code}`"
+                                             class="h-full w-full object-cover">
+                                        <span
+                                            class="absolute left-1.5 top-1.5 rounded-full bg-white/92 px-1.5 py-0.5 text-[.62rem] font-bold text-[var(--color-ink)]">{{
+                                                side.code
+                                            }}</span>
                                     </button>
                                 </div>
                             </section>
                         </div>
 
                         <div class="shrink-0 border-t border-[rgba(13,19,32,.08)] bg-[#fbfcfe] px-5 py-4">
-                            <p v-if="orderStatusMessage" class="mb-2.5 text-[.85rem] font-semibold text-[var(--color-free)]">{{ orderStatusMessage }}</p>
-                            <button type="button" class="u-btn u-btn--blue w-full justify-center" @click="addToCart">В корзину</button>
-                            <button type="button" class="u-btn u-btn--soft mt-2.5 w-full justify-center" @click="goToCart">Перейти в корзину ({{ cartItems.length }})</button>
-                            <a :href="`/catalog/construction/${activeObject.id}`" class="u-btn u-btn--soft mt-2.5 w-full justify-center">Детальная карточка</a>
+                            <p v-if="orderStatusMessage"
+                               class="mb-2.5 text-[.85rem] font-semibold text-[var(--color-free)]">{{
+                                    orderStatusMessage
+                                }}</p>
+                            <button type="button" class="u-btn u-btn--blue w-full justify-center" @click="addToCart">В
+                                корзину
+                            </button>
+                            <button type="button" class="u-btn u-btn--soft mt-2.5 w-full justify-center"
+                                    @click="goToCart">Перейти в корзину ({{ cartItems.length }})
+                            </button>
+                            <a :href="`/catalog/construction/${activeObject.id}`"
+                               class="u-btn u-btn--soft mt-2.5 w-full justify-center">Детальная карточка</a>
                         </div>
                     </article>
                 </transition>
@@ -207,21 +313,21 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import {computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch} from 'vue'
 
 const props = defineProps({
-    filtersUrl: { type: String, required: true },
-    advertisementsUrl: { type: String, required: true },
-    ordersUrl: { type: String, required: true },
-    cartUrl: { type: String, required: true },
-    authUser: { type: Object, required: true },
+    filtersUrl: {type: String, required: true},
+    advertisementsUrl: {type: String, required: true},
+    ordersUrl: {type: String, required: true},
+    cartUrl: {type: String, required: true},
+    authUser: {type: Object, required: true},
 })
 
 // --- Состояние ---
 const productTypes = ref([])
 const constrTypes = ref([])
 const objects = ref([])
-const filters = reactive({ productType: '', constrTypeId: '', bookingFrom: '', bookingTo: '' })
+const filters = reactive({productType: '', constrTypeId: '', bookingFrom: '', bookingTo: ''})
 const isLoadingFilters = ref(false)
 const isLoadingObjects = ref(false)
 const mobileView = ref('list')
@@ -235,26 +341,27 @@ const activeSideCode = ref('')
 const isOrderModalOpen = ref(false)
 const isSubmittingOrder = ref(false)
 const orderStatusMessage = ref('')
-const orderForm = reactive({ name: '', phone: '', comment: '', website: '', startedAt: 0 })
+const orderForm = reactive({name: '', phone: '', comment: '', website: '', startedAt: 0})
 const cartItems = ref([])
 const isCartOpen = ref(false)
 const isNightPhoto = ref(false)
+const searchQuery = ref('')
 
 let map = null
 let placemarks = new Map()
 let applyTimer = null
 
 const datePresets = [
-    { key: 'week', label: '7 дней' },
-    { key: 'month', label: '30 дней' },
+    {key: 'week', label: '7 дней'},
+    {key: 'month', label: '30 дней'},
 ]
 
 // --- Вычисляемые свойства ---
 const bookingRange = computed(() => {
     const from = parseDate(filters.bookingFrom)
     const to = parseDate(filters.bookingTo)
-    if (from && to && to < from) return { from: to, to: from }
-    return { from, to }
+    if (from && to && to < from) return {from: to, to: from}
+    return {from, to}
 })
 
 const activeObject = computed(() =>
@@ -275,6 +382,21 @@ const normalizedOrdersUrl = computed(() => String(props.ordersUrl || '').replace
 const isAuthenticated = computed(() => Boolean(props.authUser?.isAuthenticated))
 const hasActiveFilters = computed(() => Boolean(filters.productType || filters.constrTypeId || filters.bookingFrom || filters.bookingTo))
 const cartTotal = computed(() => cartItems.value.reduce((sum, item) => sum + (Number(item.price) || 0), 0))
+
+// Человеческий «номер» конструкции: № площади, затем код.
+function constructionNumber(item) {
+    return item?.place_number ?? item?.placeNumber ?? item?.code ?? ''
+}
+
+// Поиск по номеру конструкции (код / № площади), плюс адрес как запасной вариант.
+const visibleObjects = computed(() => {
+    const q = searchQuery.value.trim().toLowerCase()
+    if (!q) return objects.value
+    return objects.value.filter((o) => {
+        const fields = [o.code, o.place_number, o.placeNumber, o.address, o.id]
+        return fields.some((v) => v != null && String(v).toLowerCase().includes(q))
+    })
+})
 
 // --- Вспомогательные функции ---
 function parseDate(value) {
@@ -364,7 +486,7 @@ function normalizeSideDetails(item) {
             .filter(side => side.code !== '')
     }
 
-    return sides.map(code => ({ code: String(code).toUpperCase(), price: null, image_url: null, night_image_url: null }))
+    return sides.map(code => ({code: String(code).toUpperCase(), price: null, image_url: null, night_image_url: null}))
 }
 
 // pillClass — классы под новую систему (.u-pill--free/busy/hold)
@@ -385,31 +507,31 @@ function getSideStatus(item, sideCode, fromDate, toDate) {
         const kind = overlap.booking_kind ?? overlap.bookingKind ?? 'firm'
         const dateText = d.toLocaleDateString('ru-RU')
         if (kind === 'hold') {
-            return { busy: true, kind, text: `Занята (ожидание оплаты) до ${dateText}`, pillClass: 'u-pill--hold' }
+            return {busy: true, kind, text: `Занята (ожидание оплаты) до ${dateText}`, pillClass: 'u-pill--hold'}
         }
-        return { busy: true, kind, text: `Занята до ${dateText}`, pillClass: 'u-pill--busy' }
+        return {busy: true, kind, text: `Занята до ${dateText}`, pillClass: 'u-pill--busy'}
     }
 
-    return { busy: false, kind: 'free', text: 'Свободна', pillClass: 'u-pill--free' }
+    return {busy: false, kind: 'free', text: 'Свободна', pillClass: 'u-pill--free'}
 }
 
 function getItemStatus(item, from, to) {
     const sideDetails = Array.isArray(item?.side_details) ? item.side_details : []
     const statuses = sideDetails.map(s => getSideStatus(item, s.code, from, to))
     if (!statuses.length) {
-        return { busy: false, kind: 'free', text: 'Есть свободные стороны', pillClass: 'u-pill--free' }
+        return {busy: false, kind: 'free', text: 'Есть свободные стороны', pillClass: 'u-pill--free'}
     }
     const busyAll = statuses.every(s => s.busy)
     if (!busyAll) {
-        return { busy: false, kind: 'free', text: 'Есть свободные стороны', pillClass: 'u-pill--free' }
+        return {busy: false, kind: 'free', text: 'Есть свободные стороны', pillClass: 'u-pill--free'}
     }
 
     const anyHold = statuses.some(s => s.kind === 'hold')
     if (anyHold) {
-        return { busy: true, kind: 'hold', text: 'Занята (ожидание оплаты)', pillClass: 'u-pill--hold' }
+        return {busy: true, kind: 'hold', text: 'Занята (ожидание оплаты)', pillClass: 'u-pill--hold'}
     }
 
-    return { busy: true, kind: 'firm', text: 'Занята', pillClass: 'u-pill--busy' }
+    return {busy: true, kind: 'firm', text: 'Занята', pillClass: 'u-pill--busy'}
 }
 
 // --- API ---
@@ -420,7 +542,9 @@ async function loadFilters() {
         const data = await res.json()
         productTypes.value = data.productTypes || []
         constrTypes.value = data.constrTypes || []
-    } finally { isLoadingFilters.value = false }
+    } finally {
+        isLoadingFilters.value = false
+    }
 }
 
 async function loadAdvertisements() {
@@ -441,7 +565,9 @@ async function loadAdvertisements() {
             bookings: Array.isArray(item?.bookings) ? item.bookings : [],
         }))
         syncMapPlacemarks()
-    } finally { isLoadingObjects.value = false }
+    } finally {
+        isLoadingObjects.value = false
+    }
 }
 
 function applyCartPayload(data) {
@@ -474,12 +600,12 @@ function syncMapPlacemarks() {
     placemarks.forEach(p => map.geoObjects.remove(p))
     placemarks.clear()
 
-    objects.value.forEach(item => {
+    visibleObjects.value.forEach(item => {
         if (!item.location?.latitude) return
         const p = new window.ymaps.Placemark(
             [item.location.latitude, item.location.longitude],
             {},
-            { preset: placemarkPreset(item) }
+            {preset: placemarkPreset(item)}
         )
         p.events.add('click', () => focusObject(item.id))
         placemarks.set(item.id, p)
@@ -494,7 +620,7 @@ function focusObject(id) {
     isNightPhoto.value = false
     orderStatusMessage.value = ''
     if (map && item?.location) {
-        map.setCenter([item.location.latitude, item.location.longitude], 15, { duration: 300 })
+        map.setCenter([item.location.latitude, item.location.longitude], 15, {duration: 300})
     }
 }
 
@@ -505,8 +631,9 @@ function applyFilters() {
 }
 
 function resetFilters() {
-    Object.assign(filters, { productType: '', constrTypeId: '', bookingFrom: '', bookingTo: '' })
+    Object.assign(filters, {productType: '', constrTypeId: '', bookingFrom: '', bookingTo: ''})
     activeDatePreset.value = ''
+    searchQuery.value = ''
     applyFilters()
 }
 
@@ -532,7 +659,7 @@ async function addToCart() {
     try {
         const response = await fetch(`${props.cartUrl}/items`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 advertisementId: activeObject.value.id,
                 side: activeSide.value.code,
@@ -556,7 +683,7 @@ async function addToCart() {
 
 async function removeCartItem(index) {
     try {
-        const response = await fetch(`${props.cartUrl}/items/${index}`, { method: 'DELETE' })
+        const response = await fetch(`${props.cartUrl}/items/${index}`, {method: 'DELETE'})
         const data = await response.json()
         if (!response.ok) {
             orderStatusMessage.value = data?.message || 'Не удалось удалить позицию.'
@@ -571,7 +698,7 @@ async function removeCartItem(index) {
 
 async function clearCart() {
     try {
-        const response = await fetch(props.cartUrl, { method: 'DELETE' })
+        const response = await fetch(props.cartUrl, {method: 'DELETE'})
         const data = await response.json()
         if (!response.ok) {
             orderStatusMessage.value = data?.message || 'Не удалось очистить корзину.'
@@ -601,14 +728,16 @@ function openOrderModal() {
     isCartOpen.value = false
 }
 
-function closeOrderModal() { isOrderModalOpen.value = false }
+function closeOrderModal() {
+    isOrderModalOpen.value = false
+}
 
 async function submitOrder() {
     isSubmittingOrder.value = true
     try {
         const response = await fetch(normalizedOrdersUrl.value || '/api/orders', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 website: orderForm.website,
                 formStartedAt: orderForm.startedAt,
@@ -709,6 +838,11 @@ watch(() => [filters.bookingFrom, filters.bookingTo], ([from, to]) => {
     scheduleApplyFilters()
     syncMapPlacemarks()
 })
+
+// Поиск по номеру конструкции фильтрует и список, и пины на карте.
+watch(searchQuery, () => {
+    syncMapPlacemarks()
+})
 </script>
 
 <style scoped>
@@ -718,17 +852,22 @@ watch(() => [filters.bookingFrom, filters.bookingTo], ([from, to]) => {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
 .detail-enter-from,
 .detail-leave-to {
     transform: translateX(110%);
     opacity: 0;
 }
+
 .detail-enter-active,
 .detail-leave-active {
     transition: transform .42s cubic-bezier(.16, 1, .3, 1), opacity .3s;
 }
+
 @media (prefers-reduced-motion: reduce) {
     .detail-enter-active,
-    .detail-leave-active { transition: none; }
+    .detail-leave-active {
+        transition: none;
+    }
 }
 </style>

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    <script>document.documentElement.classList.add('js')</script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>{% block title %}РК03 — {% endblock %}</title>
-    <meta name="description" content="РК03 (Рекламные конструкции 03) — размещение наружной рекламы: билборды, digital-экраны и рекламные конструкции." />
+    <meta name="description"
+          content="РК03 (Рекламные конструкции 03) — размещение наружной рекламы: билборды, digital-экраны и рекламные конструкции."/>
     {% set canonicalUrl = app.request.schemeAndHttpHost ~ app.request.requestUri %}
     <link rel="canonical" href="{{ canonicalUrl }}">
     <meta property="og:locale" content="ru_RU">
@@ -12,13 +14,23 @@
     <meta property="og:site_name" content="РК03">
     <meta property="og:url" content="{{ canonicalUrl }}">
     <meta property="og:title" content="{{ block('title') }}">
-    <meta property="og:description" content="РК03 (Рекламные конструкции 03) — размещение наружной рекламы: билборды, digital-экраны и рекламные конструкции.">
+    <meta property="og:description"
+          content="РК03 (Рекламные конструкции 03) — размещение наружной рекламы: билборды, digital-экраны и рекламные конструкции.">
     <meta property="og:image" content="{{ asset('images/ooh-hero-collage.png') }}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ block('title') }}">
-    <meta name="twitter:description" content="РК03 (Рекламные конструкции 03) — размещение наружной рекламы: билборды, digital-экраны и рекламные конструкции.">
+    <meta name="twitter:description"
+          content="РК03 (Рекламные конструкции 03) — размещение наружной рекламы: билборды, digital-экраны и рекламные конструкции.">
     <meta name="twitter:image" content="{{ asset('images/ooh-hero-collage.png') }}">
     <link rel="icon" href="{{ asset('images/favicon.jpg') }}">
+
+    {# Шрифты дизайна (preconnect для скорости; @import в app.css можно убрать) #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
     {% block head_extra %}{% endblock %}
 
     {% block stylesheets %}
@@ -29,7 +41,8 @@
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
 </head>
-<body class="flex min-h-screen flex-col bg-white text-gray-900 antialiased {{ app.request.attributes.get('_route') == 'app_homepage' ? 'home-page' : '' }}">
+<body
+    class="grain flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-ink)] antialiased {{ app.request.attributes.get('_route') == 'app_homepage' ? 'home-page' : '' }}">
 {% include 'components/header.html.twig' %}
 
 <div id="ooh-scroll-progress" aria-hidden="true"></div>
