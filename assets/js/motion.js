@@ -22,6 +22,7 @@ function animateNumber(el, end, durationMs, format) {
             el.textContent = format(end);
         }
     }
+
     requestAnimationFrame(frame);
 }
 
@@ -58,7 +59,7 @@ function initCounters(root) {
                 animateNumber(el, end, duration, format);
             });
         },
-        { threshold: 0.35, rootMargin: '0px' },
+        {threshold: 0.35, rootMargin: '0px'},
     );
 
     els.forEach((el) => io.observe(el));
@@ -79,7 +80,7 @@ function initReveals(root) {
                 }
             });
         },
-        { threshold: 0.1, rootMargin: '0px 0px -6% 0px' },
+        {threshold: 0.1, rootMargin: '0px 0px -6% 0px'},
     );
 
     els.forEach((el) => io.observe(el));
@@ -92,11 +93,20 @@ function initReveals(root) {
 
 function initDataReveal(root) {
     const els = root.querySelectorAll('[data-reveal]');
-    if (!els.length) {
-        return;
-    }
-    if (prefersReducedMotion()) {
-        els.forEach((el) => el.classList.add('in'));
+    if (!els.length) return;
+
+    const reduce = prefersReducedMotion();
+
+    // eager — показываем сразу (используется на главной, чтобы не прятать above-fold контент)
+    const eager = root.querySelectorAll('[data-reveal="eager"]');
+    eager.forEach(el => el.classList.add('in'));
+
+    // остальные — по скроллу
+    const deferred = [...els].filter(el => el.dataset.reveal !== 'eager' && el.dataset.revealBound !== '1');
+    if (!deferred.length) return;
+
+    if (reduce) {
+        deferred.forEach(el => el.classList.add('in'));
         return;
     }
 
@@ -109,13 +119,10 @@ function initDataReveal(root) {
                 }
             });
         },
-        { threshold: 0.15, rootMargin: '0px 0px -8% 0px' },
+        {threshold: 0.15, rootMargin: '0px 0px -8% 0px'},
     );
 
-    els.forEach((el) => {
-        if (el.dataset.revealBound === '1') {
-            return;
-        }
+    deferred.forEach(el => {
         el.dataset.revealBound = '1';
         io.observe(el);
     });
@@ -131,6 +138,7 @@ function animateDataCount(el) {
     }
     const start = performance.now();
     const dur = 1400;
+
     function frame(now) {
         const t = Math.min(1, (now - start) / dur);
         el.textContent = String(Math.round(end * easeOutCubic(t)));
@@ -140,6 +148,7 @@ function animateDataCount(el) {
             el.textContent = String(end);
         }
     }
+
     requestAnimationFrame(frame);
 }
 
@@ -158,7 +167,7 @@ function initDataCount(root) {
                 }
             });
         },
-        { threshold: 0.6 },
+        {threshold: 0.6},
     );
 
     els.forEach((el) => {
@@ -250,7 +259,7 @@ function clamp(n, min, max) {
 function getMotionState() {
     const key = '__oohMotionState__';
     if (!window[key]) {
-        window[key] = { cleanups: [] };
+        window[key] = {cleanups: []};
     }
     return window[key];
 }
@@ -305,7 +314,7 @@ function initScrollProgress() {
     };
 
     update();
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, {passive: true});
     window.addEventListener('resize', update);
 
     registerCleanup(() => {
@@ -332,7 +341,7 @@ function initSectionNavHighlight() {
         .map((a) => {
             const href = a.getAttribute('href') || '';
             const id = href.startsWith('#') ? href.slice(1) : '';
-            return { id, link: a };
+            return {id, link: a};
         })
         .filter((x) => x.id && document.getElementById(x.id));
 
@@ -354,7 +363,7 @@ function initSectionNavHighlight() {
                 match.link.classList.add('ooh-nav-active');
             }
         },
-        { threshold: [0.2, 0.35, 0.5], rootMargin: '-20% 0px -55% 0px' },
+        {threshold: [0.2, 0.35, 0.5], rootMargin: '-20% 0px -55% 0px'},
     );
 
     targets.forEach((t) => io.observe(document.getElementById(t.id)));
@@ -368,7 +377,7 @@ function initSectionNavHighlight() {
             const rect = section.getBoundingClientRect();
             const dist = Math.abs(rect.top - topBias);
             if (!best || dist < best.dist) {
-                best = { dist, link: t.link };
+                best = {dist, link: t.link};
             }
         });
         clearActive();
@@ -412,7 +421,7 @@ function initParallax(root) {
     };
 
     update();
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, {passive: true});
     window.addEventListener('resize', update);
 
     registerCleanup(() => {
@@ -466,8 +475,8 @@ function initSpotlight(root) {
             el.classList.remove('is-spotlight-on');
         };
 
-        el.addEventListener('mousemove', onMove, { passive: true });
-        el.addEventListener('mouseleave', onLeave, { passive: true });
+        el.addEventListener('mousemove', onMove, {passive: true});
+        el.addEventListener('mouseleave', onLeave, {passive: true});
 
         cleanupFns.push(() => {
             el.removeEventListener('mousemove', onMove);

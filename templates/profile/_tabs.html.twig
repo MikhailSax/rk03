@@ -1,17 +1,21 @@
-<nav class="flex flex-row gap-2 overflow-x-auto pb-1 lg:flex-col lg:gap-2 lg:overflow-visible lg:pb-0"
-     aria-label="Разделы кабинета">
-    <a href="{{ path('profile') }}"
-       class="home-display shrink-0 rounded-xl border px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-[0.12em] transition sm:min-w-0 sm:flex-1 lg:w-full lg:text-left
-       {{ app.request.attributes.get('_route') == 'profile'
-       ? 'border-[#05299E] bg-gradient-to-r from-[#05299E] to-[#041d6b] text-white shadow-md'
-       : 'border-gray-200 bg-white text-gray-700 hover:border-[#05299E]/35 hover:bg-[#05299E]/5 hover:text-[#05299E]' }}">
-        Профиль
-    </a>
-    <a href="{{ path('profile.orders') }}"
-       class="home-display shrink-0 rounded-xl border px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-[0.12em] transition sm:min-w-0 sm:flex-1 lg:w-full lg:text-left
-       {{ app.request.attributes.get('_route') == 'profile.orders'
-       ? 'border-[#05299E] bg-gradient-to-r from-[#05299E] to-[#041d6b] text-white shadow-md'
-       : 'border-gray-200 bg-white text-gray-700 hover:border-[#05299E]/35 hover:bg-[#05299E]/5 hover:text-[#05299E]' }}">
-        Активность и заказы
-    </a>
+<nav class="flex flex-row gap-1 lg:flex-col" aria-label="Разделы кабинета">
+    {% set tabs = [
+        { route: 'profile',        icon: '👤', label: 'Профиль',              sub: 'Данные и пароль' },
+        { route: 'profile.orders', icon: '📋', label: 'Активность и заказы',  sub: 'История' }
+    ] %}
+    {% for t in tabs %}
+        {% set active = app.request.attributes.get('_route') == t.route %}
+        <a href="{{ path(t.route) }}"
+           class="group flex items-center gap-3 rounded-[var(--radius-soft)] px-4 py-3 text-sm transition
+           {{ active
+           ? 'bg-[var(--color-blue)] text-white shadow-[0_8px_20px_-8px_rgba(42,75,247,.65)]'
+           : 'text-[var(--color-ink)] hover:bg-[var(--color-tint-blue)] hover:text-[var(--color-blue)]' }}">
+            <span class="text-base leading-none">{{ t.icon }}</span>
+            <span class="min-w-0">
+                <span class="block font-bold leading-tight">{{ t.label }}</span>
+                <span
+                    class="block text-[.72rem] {{ active ? 'text-white/70' : 'text-[var(--color-muted)]' }}">{{ t.sub }}</span>
+            </span>
+        </a>
+    {% endfor %}
 </nav>

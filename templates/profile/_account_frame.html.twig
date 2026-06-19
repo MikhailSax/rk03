@@ -2,73 +2,66 @@
 {% set page_subtitle = page_subtitle|default('') %}
 {% set show_verification_badge = show_verification_badge|default(false) %}
 
-<header
-    class="relative overflow-hidden border-b border-white/10 bg-gradient-to-br from-[#041d6b] via-[#05299E] to-[#0d1117] text-white">
-    <div class="pointer-events-none absolute inset-0 opacity-90 site-page-hero-grid"></div>
-    <div
-        class="pointer-events-none absolute -right-20 top-0 h-[min(70vw,430px)] w-[min(70vw,430px)] rounded-full bg-[#e85d4c]/25 blur-3xl"></div>
-    <div
-        class="pointer-events-none absolute -left-20 bottom-[-80px] h-[260px] w-[260px] rounded-full bg-white/10 blur-3xl"></div>
+<section class="min-h-[calc(100dvh-6rem)] bg-[var(--color-bg)] pb-16 pt-8">
+    <div class="u-wrap">
 
-    <div class="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
-        <nav class="home-display mb-7 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/55"
-             aria-label="Навигация">
-            <a href="{{ path('app_homepage') }}" class="transition hover:text-white">Главная</a>
-            <span class="mx-2 text-white/30" aria-hidden="true">/</span>
-            <span class="text-white/80">Личный кабинет</span>
-        </nav>
+        {# breadcrumb + page header — светлый, без градиента #}
+        <div class="mb-8" data-reveal>
+            <nav class="text-[.72rem] font-semibold uppercase tracking-[0.16em] text-[var(--color-muted)]"
+                 aria-label="Навигация">
+                <a href="{{ path('app_homepage') }}" class="transition hover:text-[var(--color-ink)]">Главная</a>
+                <span class="mx-2 opacity-40">/</span>
+                <span>Личный кабинет</span>
+            </nav>
 
-        <div class="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em]">
-            <span class="inline-flex rounded-full border border-white/25 bg-white/10 px-3 py-1 text-white/90">Клиентский портал</span>
-            <span class="inline-flex rounded-full border border-[#e85d4c]/40 bg-[#e85d4c]/15 px-3 py-1 text-[#ffd0ca]">Домино</span>
-        </div>
+            <div class="mt-5 flex flex-wrap items-end justify-between gap-4">
+                <div>
+                    <h1 class="text-[clamp(1.6rem,3.5vw,2.4rem)] font-extrabold tracking-tight">{{ page_title }}</h1>
+                    {% if page_subtitle %}
+                        <p class="mt-1.5 max-w-xl text-[var(--color-muted)]">{{ page_subtitle }}</p>
+                    {% endif %}
+                </div>
 
-        <div class="mt-5 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <div class="max-w-3xl">
-                <h1 class="home-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold uppercase leading-[1.08] tracking-tight">
-                    {{ page_title }}
-                </h1>
-                {% if page_subtitle %}
-                    <p class="mt-4 max-w-2xl text-sm leading-relaxed text-white/75 sm:text-base">
-                        {{ page_subtitle }}
-                    </p>
-                {% endif %}
-            </div>
-
-            <div class="flex flex-wrap items-center gap-2">
                 {% if user is defined %}
-                    <span
-                        class="inline-flex h-fit w-fit shrink-0 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/90">
-                        {{ user.firstName ?: 'Пользователь' }}
-                    </span>
-                {% endif %}
-                {% if show_verification_badge and user is defined %}
-                    <span
-                        class="inline-flex h-fit w-fit shrink-0 rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] {{ user.isVerified ? 'border-emerald-200/40 bg-emerald-300/10 text-emerald-100' : 'border-amber-200/45 bg-amber-300/10 text-amber-100' }}">
-                        {{ user.isVerified ? 'Email подтверждён' : 'Email не подтверждён' }}
-                    </span>
+                    <div class="flex flex-wrap items-center gap-2">
+                        {# аватар-инициал #}
+                        <span
+                            class="grid h-10 w-10 shrink-0 place-items-center rounded-full font-[var(--font-display)] text-sm font-bold text-white"
+                            style="background:var(--grad)">
+                            {{ (user.firstName ?? 'U')|first|upper }}
+                        </span>
+                        <div class="text-sm">
+                            <p class="font-semibold leading-tight">{{ user.firstName }} {{ user.lastName }}</p>
+                            <p class="text-[.78rem] text-[var(--color-muted)]">{{ user.userIdentifier }}</p>
+                        </div>
+                        {% if show_verification_badge %}
+                            <span class="u-pill {{ user.isVerified ? 'u-pill--free' : 'u-pill--hold' }}">
+                                {{ user.isVerified ? '✓ Email подтверждён' : '! Email не подтверждён' }}
+                            </span>
+                        {% endif %}
+                    </div>
                 {% endif %}
             </div>
         </div>
-    </div>
-</header>
 
-<section class="min-h-[50vh] bg-[#eef0f4] py-8 sm:py-10">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="mb-6 sm:mb-8">
+        {# флеши #}
+        <div class="mb-6">
             {% include 'components/_account_flashes.html.twig' with { keys: ['success', 'error'] } only %}
         </div>
 
-        <div class="flex flex-col gap-6 lg:flex-row lg:gap-8 xl:gap-10">
-            <aside class="shrink-0 lg:w-64">
-                <div class="rounded-2xl border border-gray-200 bg-white p-3 shadow-sm lg:sticky lg:top-24">
-                    {% include 'profile/_tabs.html.twig' %}
-                </div>
+        {# layout: sidebar + main #}
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
+
+            {# sidebar nav #}
+            <aside class="shrink-0 lg:sticky lg:top-28 lg:w-56">
+                {% include 'profile/_tabs.html.twig' %}
             </aside>
 
+            {# content #}
             <div class="min-w-0 flex-1">
                 {% block account_main %}{% endblock %}
             </div>
         </div>
+
     </div>
 </section>

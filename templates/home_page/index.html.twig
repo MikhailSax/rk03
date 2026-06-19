@@ -357,16 +357,96 @@
             }
         }
 
+        /* ticker */
+        .ticker-wrap {
+            overflow: hidden;
+            position: relative;
+            border-top: 1px solid rgba(13, 19, 32, .07);
+            border-bottom: 1px solid rgba(13, 19, 32, .07);
+            background: #fff;
+            padding: 0
+        }
+
+        .ticker-wrap::before, .ticker-wrap::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 80px;
+            z-index: 2;
+            pointer-events: none
+        }
+
+        .ticker-wrap::before {
+            left: 0;
+            background: linear-gradient(to right, #fff, transparent)
+        }
+
+        .ticker-wrap::after {
+            right: 0;
+            background: linear-gradient(to left, #fff, transparent)
+        }
+
+        .ticker-track {
+            display: flex;
+            width: max-content;
+            animation: ticker-slide 32s linear infinite
+        }
+
+        .ticker-track:hover {
+            animation-play-state: paused
+        }
+
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            gap: .75rem;
+            padding: .85rem 2rem;
+            white-space: nowrap;
+            font-size: .82rem;
+            font-weight: 600;
+            color: var(--color-muted)
+        }
+
+        .ticker-item .t-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--color-blue);
+            opacity: .45;
+            flex-shrink: 0
+        }
+
+        .ticker-item .t-pill {
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: .25rem .7rem;
+            border-radius: 999px
+        }
+
+        .ticker-item a {
+            color: inherit;
+            text-decoration: none;
+            transition: color .2s
+        }
+
+        .ticker-item a:hover {
+            color: var(--color-blue)
+        }
+
+        @keyframes ticker-slide {
+            0% {
+                transform: translateX(0)
+            }
+            100% {
+                transform: translateX(-50%)
+            }
+        }
+
         @media (prefers-reduced-motion: reduce) {
-            .h-h1 .line > span {
-                transform: none
-            }
-
-            .cyc > span {
-                position: static
-            }
-
-            .h-mini {
+            .ticker-track {
                 animation: none
             }
         }
@@ -435,13 +515,14 @@
     {# FORMATS #}
     <section class="u-section" id="formats">
         <div class="u-wrap">
-            <div class="mb-12 max-w-[48ch]" data-reveal>
+            <div class="mb-12 max-w-[48ch]" data-reveal="eager">
                 <h2 class="u-sec-title">Форматы, которые <em class="u-grad not-italic">видно</em> за километр</h2>
                 <p class="u-sec-lead">От крупногабаритных суперсайтов на трассах до световых сити-боксов у пешеходов.
                     Всё на одной карте — с ценой и занятостью.</p>
             </div>
             <div class="h-bento">
-                <a href="{{ path('app_site_page', { path: 'media/billboards' }) }}" class="fcard fcard--a" data-reveal>
+                <a href="{{ path('app_site_page', { path: 'media/billboards' }) }}" class="fcard fcard--a"
+                   data-reveal="eager">
                     <div class="fcard__img"
                          style="background-image:url('{{ asset('images/supersite-format.jpg') }}')"></div>
                     <span class="fcard__tag">Максимальный охват</span>
@@ -450,7 +531,7 @@
                         направлению потока.</p>
                     <span class="fcard__link">На карте <span class="arr">→</span></span>
                 </a>
-                <a href="{{ path('app_site_page', { path: 'formats' }) }}" class="fcard fcard--b" data-reveal>
+                <a href="{{ path('app_site_page', { path: 'formats' }) }}" class="fcard fcard--b" data-reveal="eager">
                     <div class="fcard__img"
                          style="background-image:url('{{ asset('uploads/main/digital.png') }}')"></div>
                     <span class="fcard__tag">Динамика 24/7</span>
@@ -459,14 +540,14 @@
                     <span class="fcard__link">Подробнее <span class="arr">→</span></span>
                 </a>
                 <a href="{{ path('app_site_page', { path: 'media/street-furniture' }) }}" class="fcard fcard--c"
-                   data-reveal>
+                   data-reveal="eager">
                     <div class="fcard__img" style="background-image:url('{{ asset('images/city.jpg') }}')"></div>
                     <span class="fcard__tag">Пешеходы</span>
                     <h3>Сити-формат</h3>
                     <p>Световой лайтбокс на уровне глаз.</p>
                     <span class="fcard__link">Подробнее <span class="arr">→</span></span>
                 </a>
-                <a href="{{ path('app_map_app') }}" class="fcard fcard--d" data-reveal>
+                <a href="{{ path('app_map_app') }}" class="fcard fcard--d" data-reveal="eager">
                     <div class="fcard__img" style="background-image:url('{{ asset('images/bilboard.jpg') }}')"></div>
                     <span class="fcard__tag">Классика OOH</span>
                     <h3>Билборды 6×3 м</h3>
@@ -478,25 +559,61 @@
         </div>
     </section>
 
+    {# TICKER #}
+    {% set ticker_items = [
+        { type: 'format', label: 'Суперсайты', tag: 'Охват', color: 'var(--color-tint-blue)', tc: 'var(--color-blue)', href: path('app_site_page', { path: 'media/supersites' }) },
+        { type: 'stat',   label: '15 лет на рынке OOH' },
+        { type: 'format', label: 'Digital-экраны', tag: 'Динамика', color: 'var(--color-tint-coral)', tc: 'var(--color-coral)', href: path('app_site_page', { path: 'media/digital' }) },
+        { type: 'stat',   label: 'Живая карта конструкций' },
+        { type: 'format', label: 'Сити-формат', tag: 'Пешеходы', color: 'var(--color-tint-mint)', tc: 'var(--color-free)', href: path('app_site_page', { path: 'media/street-furniture' }) },
+        { type: 'stat',   label: 'Бронирование в один клик' },
+        { type: 'format', label: 'Билборды 6×3 м', tag: 'Классика', color: 'var(--color-tint-amber)', tc: 'var(--color-hold)', href: path('app_site_page', { path: 'media/billboards' }) },
+        { type: 'stat',   label: 'Фотоотчёт по каждой точке' },
+        { type: 'format', label: 'Наружная реклама', tag: 'Улан-Удэ', color: 'var(--color-tint-blue)', tc: 'var(--color-blue)', href: path('app_map_app') },
+        { type: 'stat',   label: 'Макет и запуск за 5 дней' },
+    ] %}
+
+    <div class="ticker-wrap my-0 py-0" aria-hidden="true">
+        <div class="ticker-track">
+            {# дублируем дважды для бесшовного loop #}
+            {% for _ in 1..2 %}
+                {% for item in ticker_items %}
+                    <span class="ticker-item">
+                        {% if item.type == 'format' %}
+                            <a href="{{ item.href }}">
+                                <span class="t-pill"
+                                      style="background:{{ item.color }};color:{{ item.tc }}">{{ item.tag }}</span>
+                                {{ item.label }}
+                            </a>
+                        {% else %}
+                            <span class="t-dot"></span>
+                            {{ item.label }}
+                        {% endif %}
+                    </span>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+
     {# HOW #}
     <section class="u-section" id="how">
         <div class="u-wrap">
-            <div class="mb-12 max-w-[48ch]" data-reveal>
+            <div class="mb-12 max-w-[48ch]" data-reveal="eager">
                 <h2 class="u-sec-title">От брифа до <em class="u-grad not-italic">фотоотчёта</em></h2>
                 <p class="u-sec-lead">Прозрачный путь без потерянных писем: вы видите занятость, мы держим сроки.</p>
             </div>
             <div class="grid gap-[18px] md:grid-cols-3">
-                <div class="h-step u-card p-7" data-reveal>
+                <div class="h-step u-card p-7" data-reveal="eager">
                     <div class="h-step__n">1</div>
                     <h3 class="mt-4 text-xl font-extrabold">Подбор и бронь</h3>
                     <p class="mt-2 text-[.96rem] text-[var(--color-muted)]">Фильтруете по типу, району и датам на карте,
                         добавляете стороны в корзину и бронируете.</p></div>
-                <div class="h-step u-card p-7" data-reveal>
+                <div class="h-step u-card p-7" data-reveal="eager">
                     <div class="h-step__n">2</div>
                     <h3 class="mt-4 text-xl font-extrabold">Макет и запуск</h3>
                     <p class="mt-2 text-[.96rem] text-[var(--color-muted)]">Адаптируем креатив под каждый формат и
                         площадку. Старт обычно за 2–5 рабочих дней.</p></div>
-                <div class="h-step u-card p-7" data-reveal>
+                <div class="h-step u-card p-7" data-reveal="eager">
                     <div class="h-step__n">3</div>
                     <h3 class="mt-4 text-xl font-extrabold">Контроль и отчёт</h3>
                     <p class="mt-2 text-[.96rem] text-[var(--color-muted)]">Подтверждаем размещение фотоотчётом по
@@ -508,7 +625,7 @@
     {# MAP CTA #}
     <section class="u-section">
         <div class="u-wrap">
-            <div class="u-grad-panel relative overflow-hidden" data-reveal>
+            <div class="u-grad-panel relative overflow-hidden" data-reveal="eager">
                 <div class="grid items-center gap-10 p-[clamp(2.4rem,4vw,3.6rem)] lg:grid-cols-[1.1fr_.9fr]">
                     <div>
                         <h2 class="text-[clamp(1.9rem,4vw,3rem)] font-extrabold leading-[1.08] tracking-[-.02em]">Город
@@ -543,10 +660,10 @@
     {# FAQ #}
     <section class="u-section" id="faq">
         <div class="u-wrap">
-            <div class="mx-auto mb-10 max-w-[48ch] text-center" data-reveal>
+            <div class="mx-auto mb-10 max-w-[48ch] text-center" data-reveal="eager">
                 <h2 class="u-sec-title">Частые вопросы</h2>
             </div>
-            <div class="h-faq mx-auto flex max-w-[820px] flex-col gap-3" data-reveal>
+            <div class="h-faq mx-auto flex max-w-[820px] flex-col gap-3" data-reveal="eager">
                 <details class="u-card px-6 py-1" open>
                     <summary
                         class="flex cursor-pointer items-center justify-between gap-4 py-4 text-[1.06rem] font-bold">Как
@@ -578,70 +695,5 @@
         </div>
     </section>
 
-    {# моушен для главной (самодостаточно; если перенесёте в motion.js — удалите) #}
-    <script>
-        (function () {
-            var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-            document.querySelectorAll('[data-cycler]').forEach(function (slot) {
-                var words = (slot.dataset.cycler || '').split('|').map(function (s) {
-                    return s.trim();
-                }).filter(Boolean);
-                slot.innerHTML = '';
-                var els = words.map(function (w, i) {
-                    var s = document.createElement('span');
-                    s.textContent = w;
-                    if (i === 0) s.className = 'on';
-                    slot.appendChild(s);
-                    return s;
-                });
-                if (reduce || els.length < 2) return;
-                var i = 0;
-                setInterval(function () {
-                    els[i].classList.remove('on');
-                    i = (i + 1) % els.length;
-                    els[i].classList.add('on');
-                }, 2300);
-            });
-            var io = new IntersectionObserver(function (es) {
-                es.forEach(function (e) {
-                    if (e.isIntersecting) {
-                        e.target.classList.add('in');
-                        io.unobserve(e.target);
-                    }
-                });
-            }, {threshold: .15, rootMargin: '0px 0px -8% 0px'});
-            document.querySelectorAll('[data-reveal]').forEach(function (el) {
-                reduce ? el.classList.add('in') : io.observe(el);
-            });
-
-            function count(el) {
-                var end = parseFloat(el.dataset.count) || 0;
-                if (reduce) {
-                    el.textContent = end;
-                    return;
-                }
-                var s = performance.now();
-
-                function f(n) {
-                    var t = Math.min(1, (n - s) / 1400);
-                    el.textContent = Math.round(end * (1 - Math.pow(1 - t, 3)));
-                    if (t < 1) requestAnimationFrame(f); else el.textContent = end;
-                }
-
-                requestAnimationFrame(f);
-            }
-
-            var cio = new IntersectionObserver(function (es) {
-                es.forEach(function (e) {
-                    if (e.isIntersecting) {
-                        count(e.target);
-                        cio.unobserve(e.target);
-                    }
-                });
-            }, {threshold: .6});
-            document.querySelectorAll('[data-count]').forEach(function (el) {
-                cio.observe(el);
-            });
-        })();
-    </script>
+    {# Появления, счётчики и слово-циклер обрабатываются глобально в assets/js/motion.js #}
 {% endblock %}

@@ -1,85 +1,291 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ page_title }} — РК03{% endblock %}
+{#
+Универсальная страница раздела + детальные страницы форматов.
+Контроллер передаёт переменную `path` (тот же параметр маршрута).
+Для media/supersites, media/digital, media/street-furniture, media/billboards
+рендерится богатая детальная страница. Для остальных путей — обобщённый макет.
+#}
+
+{% set current_path = path|default('') %}
+
+{% set categories = {
+    'media/supersites': {
+        eyebrow: 'Максимальный охват',
+        title: 'Суперсайты',
+        img: 'images/supersite-format.jpg',
+        tagline: 'Крупнейший формат наружной рекламы — видно издалека и со всех полос движения.',
+        intro: [
+            'Суперсайт — один из самых больших форматов наружной рекламы: огромная площадь изображения и максимальная дальность считывания. Конструкции размещают высоко и на открытых участках, где ничто не перекрывает обзор — на шоссе, проспектах, въездах в город и парковках крупных ТЦ.',
+            'Несколько рекламных полей (стороны A / B / C) ориентированы по направлениям транспортного потока, поэтому одна конструкция работает сразу на несколько направлений.'
+        ],
+        specs: [
+            { k: 'Тип', v: 'Крупноформатная отдельностоящая конструкция' },
+            { k: 'Поле', v: 'Как правило 12×5 м и крупнее' },
+            { k: 'Стороны', v: 'A / B / C по направлению потока' },
+            { k: 'Освещение', v: 'Внешняя подсветка прожекторами' },
+            { k: 'Локации', v: 'Магистрали, въезды, парковки ТЦ' }
+        ],
+        advantages: [
+            { t: 'Дальнее считывание', d: 'Большой масштаб изображения работает на скорости и с дальней дистанции.' },
+            { t: 'Имиджевый эффект', d: 'Премиальный формат для брендовых и охватных кампаний.' },
+            { t: 'Несколько направлений', d: 'Стороны A/B/C охватывают разные потоки одной точкой.' }
+        ],
+        placements: ['Магистрали', 'Шоссе и развязки', 'Въезды в город', 'Парковки ТЦ']
+    },
+    'media/digital': {
+        eyebrow: 'Динамика 24/7',
+        title: 'Digital-экраны',
+        img: 'images/digital.png',
+        tagline: 'Электронные экраны с ротацией контента: статика, анимация и видео.',
+        intro: [
+            'Digital-экран — электронное устройство для показа информации в цифровом формате: текст, графика, изображения и видео. Контент обновляется удалённо, без перепечатки и монтажа постеров.',
+            'Ротация креативов настраивается по слотам и времени суток, что позволяет менять сообщение под аудиторию и задачи кампании в течение дня.'
+        ],
+        specs: [
+            { k: 'Технология', v: 'Светодиодный (LED) экран' },
+            { k: 'Контент', v: 'Статика, анимация, видео' },
+            { k: 'Ротация', v: 'По слотам и времени суток' },
+            { k: 'Управление', v: 'Удалённое обновление' },
+            { k: 'Режим', v: 'Работа 24/7' }
+        ],
+        advantages: [
+            { t: 'Гибкость', d: 'Меняйте креатив и расписание без производства и монтажа.' },
+            { t: 'Динамика', d: 'Видео и анимация привлекают больше внимания, чем статика.' },
+            { t: 'Таргетинг по времени', d: 'Разные сообщения на утро, день и вечер.' }
+        ],
+        placements: ['ТРЦ', 'Центральные улицы', 'Перекрёстки', 'Медиафасады']
+    },
+    'media/street-furniture': {
+        eyebrow: 'Пешеходный поток',
+        title: 'Сити-формат',
+        img: 'images/city.jpg',
+        tagline: 'Компактный световой короб на уровне глаз пешеходов.',
+        intro: [
+            'Сити-формат — это лайтбокс (световой короб) с внутренней подсветкой, расположенный в плотной городской среде на уровне глаз. Формат рассчитан на пешеходов и медленный трафик.',
+            'Подсветка обеспечивает читаемость в тёмное время суток, а расположение в пешеходных зонах даёт частый и близкий контакт с аудиторией.'
+        ],
+        specs: [
+            { k: 'Формат', v: 'Световой короб (лайтбокс)' },
+            { k: 'Поле', v: 'Как правило 1,2×1,8 м' },
+            { k: 'Подсветка', v: 'Внутренняя, постоянная' },
+            { k: 'Стороны', v: '1–2 рекламных поля' },
+            { k: 'Среда', v: 'Тротуары, остановки, ТЦ' }
+        ],
+        advantages: [
+            { t: 'Близкий контакт', d: 'Изображение на уровне глаз, удобно рассматривать.' },
+            { t: 'Работает ночью', d: 'Внутренняя подсветка держит читаемость в тёмное время.' },
+            { t: 'Городская среда', d: 'Эффективен в местах высокого пешеходного трафика.' }
+        ],
+        placements: ['Тротуары', 'Остановки', 'Входные группы ТЦ', 'Пешеходные зоны']
+    },
+    'media/billboards': {
+        eyebrow: 'Классика OOH',
+        title: 'Билборды 6×3 м',
+        img: 'images/bilboard.jpg',
+        tagline: 'Базовый формат наружной рекламы с двумя информационными полями.',
+        intro: [
+            'Билборд — отдельностоящая конструкция с двумя рекламными полями. Сторона A направлена по ходу движения справа, сторона B — на встречный поток. Это самый распространённый инструмент городской кампании.',
+            'Универсальный размер 6×3 м и большое количество локаций позволяют гибко строить сетку размещения по районам и магистралям.'
+        ],
+        specs: [
+            { k: 'Поле', v: '6×3 м' },
+            { k: 'Стороны', v: 'A — по ходу справа, B — встречная' },
+            { k: 'Освещение', v: 'Внешние прожекторы / подсветка' },
+            { k: 'Конструкция', v: 'Отдельностоящая опора' },
+            { k: 'Локации', v: 'Улицы и магистрали' }
+        ],
+        advantages: [
+            { t: 'Охват сетью', d: 'Много точек — удобно строить районное покрытие.' },
+            { t: 'Понятная цена', d: 'Прозрачный базовый формат для любого бюджета.' },
+            { t: 'Две стороны', d: 'Попутный и встречный поток на одной опоре.' }
+        ],
+        placements: ['Городские улицы', 'Магистрали', 'Выезды', 'Промзоны']
+    }
+} %}
+
+{% set cat = categories[current_path]|default(null) %}
+
+{% block title %}{{ (cat ? cat.title : page_title) }} — РК03{% endblock %}
 
 {% block body %}
-    <header
-        class="site-page-hero relative overflow-hidden border-b border-gray-200 bg-gradient-to-br from-[#05299E] via-[#041d6b] to-[#0d1117] text-white">
-        <div class="pointer-events-none absolute inset-0 opacity-90 site-page-hero-grid"></div>
-        <div
-            class="pointer-events-none absolute -right-24 top-0 h-[min(80vw,520px)] w-[min(80vw,520px)] rounded-full bg-[#e85d4c]/25 blur-3xl"></div>
-        <div class="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
-            <nav class="ooh-reveal mb-8 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/55"
-                 aria-label="Навигация по разделу">
-                <a href="{{ path('app_homepage') }}" class="transition hover:text-white">Главная</a>
-                <span class="mx-2 text-white/35" aria-hidden="true">/</span>
-                <span class="text-white/80">{{ section_label }}</span>
-            </nav>
-            <p class="ooh-reveal home-display text-xs font-semibold uppercase tracking-[0.35em] text-[#e85d4c]"
-               style="--ooh-delay: 60ms">
-                {{ section_label }}
-            </p>
-            <h1 class="ooh-reveal home-display home-display-tight mt-4 max-w-4xl text-[clamp(2rem,5vw,3.25rem)] font-bold uppercase leading-[1.05] tracking-tight"
-                style="--ooh-delay: 120ms">
-                {{ page_title }}
-            </h1>
-            <p class="ooh-reveal mt-6 max-w-2xl text-base leading-relaxed text-white/70" style="--ooh-delay: 200ms">
-                Материалы раздела можно заменить на финальные тексты и медиа — структура страницы и URL останутся
-                прежними.
-            </p>
-            <p class="ooh-reveal mt-8 text-sm text-white/45" style="--ooh-delay: 260ms">
-                <span class="text-white/55">Адрес:</span>
-                <code class="ml-2 rounded bg-white/10 px-2 py-1 font-mono text-xs text-white/90">/site/{{ path }}</code>
-            </p>
-        </div>
-    </header>
+    {% if cat %}
+        {# ----------- ДЕТАЛЬНАЯ СТРАНИЦА ФОРМАТА ----------- #}
+        <section class="u-section">
+            <div class="u-wrap">
+                <nav class="text-[.72rem] font-semibold uppercase tracking-[0.16em] text-[var(--color-muted)]"
+                     aria-label="Хлебные крошки" data-reveal>
+                    <a href="{{ path('app_homepage') }}" class="transition hover:text-[var(--color-ink)]">Главная</a>
+                    <span class="mx-2 opacity-40">/</span>
+                    <a href="{{ path('app_site_page', { path: 'formats' }) }}"
+                       class="transition hover:text-[var(--color-ink)]">Форматы</a>
+                    <span class="mx-2 opacity-40">/</span><span>{{ cat.title }}</span>
+                </nav>
 
-    <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:flex lg:gap-16 lg:px-8 lg:py-20">
-        <article class="ooh-reveal max-w-none lg:flex-1">
-            <h2 class="home-display text-lg font-bold uppercase tracking-wide text-gray-900">Содержание раздела</h2>
-            <p class="mt-5 text-base leading-relaxed text-gray-600">
-                Здесь удобно разместить описание услуг, преимущества, процесс работы и призыв к действию. При
-                необходимости добавьте формы, встраиваемое видео или блоки с цифрами — вёрстка уже совместима с
-                анимациями появления при прокрутке (класс <code
-                    class="rounded bg-gray-100 px-1 text-sm">ooh-reveal</code>).
-            </p>
-            <div class="mt-10 grid gap-4 sm:grid-cols-2">
-                <div
-                    class="ooh-lift rounded-lg border border-gray-200 bg-gray-50/80 p-6 transition hover:border-[#05299E]/25 hover:shadow-md">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-[#05299E]">Для агентств</p>
-                    <p class="mt-2 text-sm text-gray-600">Медиапланы, бронирование и отчётность в одном контуре.</p>
+                {# hero #}
+                <div class="mt-7 grid items-center gap-8 lg:grid-cols-2" data-reveal>
+                    <div>
+                        <span class="u-pill"
+                              style="background:var(--color-tint-blue);color:var(--color-blue)">{{ cat.eyebrow }}</span>
+                        <h1 class="mt-4 text-[clamp(2rem,5vw,3.25rem)] font-extrabold leading-[1.05] tracking-[-.02em]">{{ cat.title }}</h1>
+                        <p class="u-sec-lead !mt-4 !max-w-none">{{ cat.tagline }}</p>
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <a href="{{ path('app_map_app') }}" class="u-btn u-btn--blue">Смотреть на карте <span
+                                    class="arr">→</span></a>
+                            <a href="{{ path('app_site_page', { path: 'contact' }) }}" class="u-btn u-btn--soft">Запросить
+                                расчёт</a>
+                        </div>
+                    </div>
+                    <figure
+                        class="m-0 aspect-[16/10] overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-card)]">
+                        <img src="{{ asset(cat.img) }}" alt="{{ cat.title }}" class="h-full w-full object-cover"
+                             width="880" height="550" loading="lazy" decoding="async">
+                    </figure>
                 </div>
+
+                {# описание + характеристики #}
+                <div class="mt-12 grid gap-8 lg:grid-cols-[1.4fr_1fr]">
+                    <article data-reveal>
+                        <h2 class="text-2xl font-extrabold tracking-tight">О формате</h2>
+                        <div class="mt-5 space-y-4 text-[var(--color-muted)]">
+                            {% for p in cat.intro %}<p>{{ p }}</p>{% endfor %}
+                        </div>
+
+                        {% if cat.placements is not empty %}
+                            <h3 class="mt-9 text-sm font-bold uppercase tracking-[0.14em] text-[var(--color-blue)]">Где
+                                размещается</h3>
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                {% for pl in cat.placements %}
+                                    <span class="u-pill"
+                                          style="background:var(--color-tint-mint);color:var(--color-free)">{{ pl }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </article>
+
+                    <aside class="u-card p-6 sm:p-7 lg:sticky lg:top-28 lg:h-fit" data-reveal>
+                        <h2 class="text-sm font-bold uppercase tracking-[0.14em] text-[var(--color-muted)]">
+                            Характеристики</h2>
+                        <dl class="mt-5 divide-y divide-[rgba(13,19,32,.08)] text-sm">
+                            {% for s in cat.specs %}
+                                <div class="flex items-start justify-between gap-4 py-3">
+                                    <dt class="text-[var(--color-muted)]">{{ s.k }}</dt>
+                                    <dd class="max-w-[60%] text-right font-medium">{{ s.v }}</dd>
+                                </div>
+                            {% endfor %}
+                        </dl>
+                        <p class="mt-4 text-[11px] leading-relaxed text-[var(--color-muted)]">Точные размеры и параметры
+                            зависят от конкретной конструкции — уточняйте в карточке на карте.</p>
+                    </aside>
+                </div>
+
+                {# преимущества #}
+                <div class="mt-12" data-reveal>
+                    <h2 class="text-2xl font-extrabold tracking-tight">Преимущества</h2>
+                    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {% for a in cat.advantages %}
+                            <div class="u-card p-6">
+                                <span
+                                    class="grid h-9 w-9 place-items-center rounded-full bg-[var(--color-tint-blue)] font-[var(--font-display)] text-sm font-bold text-[var(--color-blue)]">{{ loop.index }}</span>
+                                <h3 class="mt-4 text-lg font-extrabold">{{ a.t }}</h3>
+                                <p class="mt-2 text-[.9rem] text-[var(--color-muted)]">{{ a.d }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {# другие форматы #}
+                <div class="mt-14" data-reveal>
+                    <h2 class="text-2xl font-extrabold tracking-tight">Другие форматы</h2>
+                    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {% for p, c in categories|filter((c, p) => p != current_path) %}
+                            <a href="{{ path('app_site_page', { path: p }) }}"
+                               class="u-card group flex items-center gap-4 p-4 transition hover:-translate-y-1 hover:shadow-[var(--shadow-card)]">
+                            <span class="h-16 w-20 shrink-0 overflow-hidden rounded-xl">
+                                <img src="{{ asset(c.img) }}" alt="{{ c.title }}" class="h-full w-full object-cover"
+                                     width="160" height="120" loading="lazy" decoding="async">
+                            </span>
+                                <span class="min-w-0">
+                                <span
+                                    class="block text-[.62rem] font-bold uppercase tracking-[0.12em] text-[var(--color-coral)]">{{ c.eyebrow }}</span>
+                                <span class="mt-0.5 block font-extrabold">{{ c.title }}</span>
+                                <span
+                                    class="mt-1 inline-flex items-center gap-1 text-[.8rem] font-semibold text-[var(--color-blue)]">Подробнее <span
+                                        class="transition group-hover:translate-x-0.5">→</span></span>
+                            </span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {# cta #}
                 <div
-                    class="ooh-lift rounded-lg border border-gray-200 bg-gray-50/80 p-6 transition hover:border-[#05299E]/25 hover:shadow-md">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-[#e85d4c]">Для брендов</p>
-                    <p class="mt-2 text-sm text-gray-600">Подбор форматов и креатив под реальные конструкции.</p>
+                    class="u-grad-panel mt-14 flex flex-col gap-6 p-8 sm:p-10 md:flex-row md:items-center md:justify-between"
+                    data-reveal>
+                    <div>
+                        <h2 class="text-xl font-extrabold tracking-tight sm:text-2xl">Подобрать «{{ cat.title }}» под
+                            кампанию</h2>
+                        <p class="mt-2 max-w-xl text-white/85">Откройте карту: фильтры, занятость и бронирование слотов
+                            в корзину.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-3">
+                        <a href="{{ path('app_map_app') }}" class="u-btn"
+                           style="background:#fff;color:var(--color-ink)">Карта конструкций</a>
+                        <a href="{{ path('app_site_page', { path: 'contact' }) }}"
+                           class="u-btn u-btn--ghost">Контакты</a>
+                    </div>
                 </div>
             </div>
-            <p class="mt-10 text-sm text-gray-500">
-                Нужна карта инвентаря — переходите в
-                <a href="{{ path('app_map_app') }}"
-                   class="font-semibold text-[#05299E] underline-offset-2 hover:underline">подбор площадок</a>.
-            </p>
-        </article>
-        {% if related_pages is not empty %}
-            <aside
-                class="ooh-reveal mt-14 w-full shrink-0 border-t border-gray-100 pt-10 lg:mt-0 lg:w-72 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0"
-                style="--ooh-delay: 100ms">
-                <h3 class="home-display text-xs font-bold uppercase tracking-[0.2em] text-gray-400">В этом разделе</h3>
-                <ul class="mt-5 space-y-1">
-                    {% for item in related_pages %}
-                        <li>
-                            <a href="{{ path('app_site_page', { path: item.path }) }}"
-                               class="group flex items-center justify-between gap-2 rounded-md py-2.5 pl-1 pr-2 text-sm font-medium text-gray-800 transition hover:bg-[#05299E]/5 hover:text-[#05299E]">
-                                <span>{{ item.label }}</span>
-                                <span
-                                    class="text-gray-300 transition group-hover:translate-x-0.5 group-hover:text-[#05299E]"
-                                    aria-hidden="true">→</span>
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </aside>
-        {% endif %}
-    </div>
+        </section>
+    {% else %}
+        {# ----------- ОБОБЩЁННАЯ СТРАНИЦА РАЗДЕЛА ----------- #}
+        <section class="u-section">
+            <div class="u-wrap">
+                <div class="u-grad-panel relative overflow-hidden p-8 sm:p-12 lg:p-16" data-reveal>
+                    <nav class="text-[.72rem] font-semibold uppercase tracking-[0.16em] text-white/60"
+                         aria-label="Навигация по разделу">
+                        <a href="{{ path('app_homepage') }}" class="transition hover:text-white">Главная</a>
+                        <span class="mx-2 opacity-40">/</span><span class="text-white/85">{{ section_label }}</span>
+                    </nav>
+                    <p class="mt-7 text-[.72rem] font-bold uppercase tracking-[0.22em] text-white/70">{{ section_label }}</p>
+                    <h1 class="mt-3 max-w-4xl text-[clamp(2rem,5vw,3.25rem)] font-extrabold leading-[1.05] tracking-[-.02em]">{{ page_title }}</h1>
+                    <p class="mt-6 max-w-2xl text-white/80">Материалы раздела можно заменить на финальные тексты и медиа
+                        — структура страницы и URL останутся прежними.</p>
+                </div>
+
+                <div class="mt-10 lg:flex lg:gap-12">
+                    <article class="lg:flex-1" data-reveal>
+                        <h2 class="text-xl font-extrabold tracking-tight">Содержание раздела</h2>
+                        <p class="mt-4 text-[var(--color-muted)]">
+                            Здесь удобно разместить описание услуг, преимущества, процесс работы и призыв к действию.
+                        </p>
+                        <p class="mt-8 text-[.9rem] text-[var(--color-muted)]">
+                            Нужна карта инвентаря —
+                            <a href="{{ path('app_map_app') }}"
+                               class="font-semibold text-[var(--color-blue)] hover:underline">подбор площадок</a>.
+                        </p>
+                    </article>
+
+                    {% if related_pages is defined and related_pages is not empty %}
+                        <aside class="mt-12 w-full shrink-0 lg:mt-0 lg:w-72" data-reveal>
+                            <h3 class="text-[.72rem] font-bold uppercase tracking-[0.16em] text-[var(--color-muted)]">В
+                                этом разделе</h3>
+                            <ul class="mt-5 space-y-1">
+                                {% for item in related_pages %}
+                                    <li>
+                                        <a href="{{ path('app_site_page', { path: item.path }) }}"
+                                           class="group flex items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-sm font-medium transition hover:bg-[var(--color-tint-blue)] hover:text-[var(--color-blue)]">
+                                            <span>{{ item.label }}</span>
+                                            <span
+                                                class="text-[var(--color-muted)] transition group-hover:translate-x-0.5 group-hover:text-[var(--color-blue)]">→</span>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </aside>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
 {% endblock %}

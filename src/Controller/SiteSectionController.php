@@ -59,6 +59,8 @@ final class SiteSectionController extends AbstractController
         'formats' => ['title' => 'Форматы размещения', 'section' => 'Resources'],
         'markets' => ['title' => 'Рынки и география', 'section' => 'Markets'],
 
+        'media/supersites' => ['title' => 'Суперсайты', 'section' => 'Media'],
+        'media/digital' => ['title' => 'Digital-экраны', 'section' => 'Media'],
         'media/billboards' => ['title' => 'Билборды', 'section' => 'Media'],
         'media/transit' => ['title' => 'Транзитная реклама', 'section' => 'Media'],
         'media/street-furniture' => ['title' => 'Ситиборды и уличная мебель', 'section' => 'Media'],
@@ -93,8 +95,6 @@ final class SiteSectionController extends AbstractController
         'about/leadership' => ['title' => 'Команда и руководство', 'section' => 'About'],
         'about/partners' => ['title' => 'Партнёры', 'section' => 'About'],
         'about/esg' => ['title' => 'ESG и устойчивое развитие', 'section' => 'About'],
-        'about/investors' => ['title' => 'Инвесторам', 'section' => 'About'],
-        'about/real-estate' => ['title' => 'Недвижимость и площадки', 'section' => 'About'],
 
         'careers' => ['title' => 'Карьера', 'section' => 'Careers'],
         'contact' => ['title' => 'Контакты', 'section' => 'Contact'],
