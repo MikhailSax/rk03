@@ -18,7 +18,7 @@ class Advertisement
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $code = null;
 
-    #[ORM\Column(length: 50, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $placeNumber = null;
 
     #[ORM\Column(length: 500, nullable: true)]
@@ -61,7 +61,7 @@ class Advertisement
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $sideBImage = null;
 
-    #[ORM\Column(length: 36, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $sourceRef = null;
 
     #[ORM\Column(type: 'json', nullable: true)]

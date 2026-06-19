@@ -18,7 +18,7 @@ class AdvertisementSide
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Advertisement $advertisement = null;
 
-    #[ORM\Column(length: 10)]
+    #[ORM\Column(length: 40)]
     private ?string $code = null;
 
     #[ORM\Column(length: 1000, nullable: true)]
