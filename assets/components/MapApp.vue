@@ -3,15 +3,14 @@
 
         <!-- toolbar -->
         <div class="flex items-center justify-between gap-3 px-4 py-3 sm:px-6">
-            <div class="flex min-w-0 items-center gap-3">
-                <h1 class="home-display truncate text-lg font-bold">Карта и каталог</h1>
-                <span class="u-pill shrink-0" style="background:var(--color-tint-blue);color:var(--color-blue)">{{
+            <div class="flex items-center gap-3">
+                <h1 class="home-display text-lg font-bold">Карта и каталог</h1>
+                <span class="u-pill" style="background:var(--color-tint-blue);color:var(--color-blue)">{{
                         objects.length
                     }} конструкций</span>
             </div>
-            <a href="/cart" class="u-btn u-btn--blue shrink-0 !px-4 !py-2 text-sm">Корзина ({{ cartItems.length }})
-                <span
-                    class="arr">→</span></a>
+            <a href="/cart" class="u-btn u-btn--blue !px-4 !py-2 text-sm">Корзина ({{ cartItems.length }}) <span
+                class="arr">→</span></a>
         </div>
 
         <!-- mobile tabs -->
@@ -51,7 +50,7 @@
                 <div
                     class="flex max-h-[44vh] flex-col gap-4 overflow-auto border-b border-[rgba(13,19,32,.08)] p-5 lg:max-h-none">
                     <div>
-                        <label class="u-field-label">Поиск по коду конструкции</label>
+                        <label class="u-field-label">Поиск по номеру конструкции</label>
                         <div class="relative">
                             <svg
                                 class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-muted)]"
@@ -199,25 +198,17 @@
                         class="pointer-events-none absolute left-4 top-4 z-[5] rounded-full bg-white/92 px-3 py-1.5 text-[.64rem] font-bold tracking-[0.08em] text-[var(--color-blue)] shadow-[var(--shadow-soft)]">● Карта · live</span>
                 </div>
 
-                <!-- detail card: fixed full-screen on mobile, side panel on desktop -->
+                <!-- detail card -->
                 <transition name="detail">
                     <article
                         v-if="activeObject && activeSide"
-                        class="
-                            fixed inset-0 z-30 flex flex-col bg-white
-                            sm:absolute sm:inset-auto sm:bottom-3.5 sm:right-3.5 sm:top-3.5
-                            sm:w-[430px] sm:max-w-[calc(100%-28px)] sm:rounded-[var(--radius-card)]
-                            sm:shadow-[var(--shadow-card)]
-                        "
-                        style="overflow:hidden;"
+                        class="absolute inset-0 z-30 flex flex-col overflow-hidden bg-white shadow-[var(--shadow-card)] sm:inset-auto sm:right-3.5 sm:top-3.5 sm:bottom-3.5 sm:w-[430px] sm:max-w-[calc(100%-28px)] sm:rounded-[var(--radius-card)]"
                     >
                         <div class="h-[5px] shrink-0" style="background:var(--grad)"></div>
 
-                        <!-- photo area: меньше на мобильных -->
-                        <div class="relative shrink-0 bg-cover bg-center"
-                             style="height: clamp(140px, 28vw, 200px);"
+                        <div class="relative h-[200px] shrink-0 bg-cover bg-center"
                              :style="{ backgroundImage: `url(${getMainSideImage(activeSide)})` }">
-                            <div class="absolute left-3 top-3 z-[3] flex flex-wrap gap-1.5">
+                            <div class="absolute left-3 top-3 z-[3] flex gap-1.5">
                                 <button
                                     v-for="side in activeObject.side_details"
                                     :key="side.code"
@@ -241,8 +232,7 @@
                             </button>
                         </div>
 
-                        <!-- scrollable content: flex-1 + min-h-0 = скроллится между фото и кнопками -->
-                        <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 sm:px-5 sm:py-5">
+                        <div class="min-h-0 flex-1 overflow-y-auto px-5 py-5">
                             <h3 class="home-display text-[1.4rem] font-bold leading-tight">{{
                                     activeObject.address
                                 }}</h3>
@@ -251,30 +241,28 @@
 
                             <dl class="mt-4 border-t border-[rgba(13,19,32,.08)]">
                                 <div
-                                    class="flex items-start justify-between gap-3 border-b border-[rgba(13,19,32,.08)] py-2.5 text-[.88rem]">
-                                    <dt class="shrink-0 text-[var(--color-muted)]">Формат</dt>
-                                    <dd class="min-w-0 break-words text-right font-semibold">{{
-                                            activeObject.type || '—'
+                                    class="flex justify-between gap-4 border-b border-[rgba(13,19,32,.08)] py-2.5 text-[.92rem]">
+                                    <dt class="text-[var(--color-muted)]">Формат</dt>
+                                    <dd class="text-right font-semibold">{{ activeObject.type || '—' }}</dd>
+                                </div>
+                                <div
+                                    class="flex justify-between gap-4 border-b border-[rgba(13,19,32,.08)] py-2.5 text-[.92rem]">
+                                    <dt class="text-[var(--color-muted)]">Сторона</dt>
+                                    <dd class="text-right font-semibold">{{ activeSide.code }}</dd>
+                                </div>
+                                <div
+                                    class="flex justify-between gap-4 border-b border-[rgba(13,19,32,.08)] py-2.5 text-[.92rem]">
+                                    <dt class="text-[var(--color-muted)]">Описание</dt>
+                                    <dd class="text-right text-[var(--color-ink)]">{{
+                                            activeSide.description || '—'
                                         }}
-                                    </dd>
-                                </div>
-                                <div
-                                    class="flex items-start justify-between gap-3 border-b border-[rgba(13,19,32,.08)] py-2.5 text-[.88rem]">
-                                    <dt class="shrink-0 text-[var(--color-muted)]">Сторона</dt>
-                                    <dd class="min-w-0 break-words text-right font-semibold">{{ activeSide.code }}</dd>
-                                </div>
-                                <div
-                                    class="flex items-start justify-between gap-3 border-b border-[rgba(13,19,32,.08)] py-2.5 text-[.88rem]">
-                                    <dt class="shrink-0 text-[var(--color-muted)]">Описание</dt>
-                                    <dd class="min-w-0 break-words text-right text-[var(--color-ink)]">
-                                        {{ activeSide.description || '—' }}
                                     </dd>
                                 </div>
                             </dl>
 
-                            <div class="flex items-center justify-between gap-3 py-4">
-                                <span class="shrink-0 text-[.88rem] text-[var(--color-muted)]">Прайс без НДС</span>
-                                <b class="home-display text-[1.6rem] font-bold">{{ formatPrice(activeSide.price) }}</b>
+                            <div class="flex items-center justify-between py-4">
+                                <span class="text-[.92rem] text-[var(--color-muted)]">Прайс без НДС</span>
+                                <b class="home-display text-[1.8rem] font-bold">{{ formatPrice(activeSide.price) }}</b>
                             </div>
 
                             <p v-if="activeSideStatus" class="u-pill" :class="activeSideStatus.pillClass">
@@ -303,7 +291,6 @@
                             </section>
                         </div>
 
-                        <!-- bottom action bar -->
                         <div class="shrink-0 border-t border-[rgba(13,19,32,.08)] bg-[#fbfcfe] px-5 py-4">
                             <p v-if="orderStatusMessage"
                                class="mb-2.5 text-[.85rem] font-semibold text-[var(--color-free)]">{{
@@ -401,13 +388,12 @@ function constructionNumber(item) {
     return item?.place_number ?? item?.placeNumber ?? item?.code ?? ''
 }
 
-// Поиск по коду конструкции (code / № площади), адрес как запасной вариант.
+// Поиск по номеру конструкции (код / № площади), плюс адрес как запасной вариант.
 const visibleObjects = computed(() => {
     const q = searchQuery.value.trim().toLowerCase()
     if (!q) return objects.value
     return objects.value.filter((o) => {
-        // Приоритет: code и place_number; адрес и id — как запасные
-        const fields = [o.code, o.place_number, o.placeNumber, o.address]
+        const fields = [o.code, o.place_number, o.placeNumber, o.address, o.id]
         return fields.some((v) => v != null && String(v).toLowerCase().includes(q))
     })
 })
@@ -503,6 +489,7 @@ function normalizeSideDetails(item) {
     return sides.map(code => ({code: String(code).toUpperCase(), price: null, image_url: null, night_image_url: null}))
 }
 
+// pillClass — классы под новую систему (.u-pill--free/busy/hold)
 function getSideStatus(item, sideCode, fromDate, toDate) {
     const bookings = (item?.bookings || []).filter(b => b.side_code === sideCode)
     const from = fromDate || new Date()
@@ -852,6 +839,7 @@ watch(() => [filters.bookingFrom, filters.bookingTo], ([from, to]) => {
     syncMapPlacemarks()
 })
 
+// Поиск по номеру конструкции фильтрует и список, и пины на карте.
 watch(searchQuery, () => {
     syncMapPlacemarks()
 })
