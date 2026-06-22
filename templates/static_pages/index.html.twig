@@ -455,60 +455,70 @@
 
 {% block body %}
     {# HERO #}
-    <section class="relative overflow-hidden py-[clamp(3rem,7vw,5.5rem)]">
-        <span class="h-blob h-blob--a"></span>
-        <span class="h-blob h-blob--b"></span>
-        <div class="u-wrap grid items-center gap-[clamp(2rem,4vw,4rem)] lg:grid-cols-[1.05fr_.95fr]">
-            <div>
-                <span class="u-eyebrow">Наружная реклама · Улан-Удэ и регион</span>
-                <h1 class="h-h1 mt-5">
+    <section class="u-wrap" style="padding-top: 1.5rem; padding-bottom: 0;">
+        <div class="hero-wrap">
+
+            {# Левая панель — текст #}
+            <div class="hero-left">
+                <span class="u-eyebrow" style="margin-bottom:1.2rem;">Наружная реклама · Улан-Удэ и регион</span>
+
+                <h1 class="h-h1 hero-h1">
                     <span class="line"><span>Ваш бренд —</span></span>
-                    <span class="line"><span>на <span class="cyc"
-                                                      data-cycler="билбордах | digital-экранах | суперсайтах | сити-формате"></span></span></span>
-                    <span class="line"><span>всего города</span></span>
+                    <span class="line"><span>в каждой точке</span></span>
+                    <span class="line"><span>
+                        <span class="cyc" data-cycler="города | района | трассы | проспекта"></span>
+                    </span></span>
                 </h1>
-                <p class="mt-6 max-w-[42ch] text-[1.12rem] text-[var(--color-muted)]">
+
+                <p class="hero-lead">
                     Живая карта конструкций: подбирайте площадки, смотрите занятость по датам и бронируйте в один клик —
                     от билборда до digital-экрана.
                 </p>
-                <div class="mt-8 flex flex-wrap gap-3">
+
+                <div style="margin-top:1.75rem; display:flex; flex-wrap:wrap; gap:.75rem;">
                     <a href="{{ path('app_map_app') }}" class="u-btn u-btn--primary">Открыть карту <span
                             class="arr">→</span></a>
                     <a href="#formats" class="u-btn u-btn--soft">Смотреть форматы</a>
                 </div>
-                <div class="mt-10 flex flex-wrap gap-8">
-                    <div class="flex flex-col"><b class="font-[var(--font-display)] text-2xl font-bold" data-count="15">0</b><span
-                            class="text-[.82rem] text-[var(--color-muted)]">лет на рынке OOH</span></div>
-                    <div class="flex flex-col"><b class="font-[var(--font-display)] text-2xl font-bold"><span
-                                data-count="345">0</span>%</b><span class="text-[.82rem] text-[var(--color-muted)]">рост трафика после кампании</span>
+
+                <div class="hero-stats">
+                    <div>
+                        <b class="home-display hero-stat-num" data-count="15">0</b>
+                        <span class="hero-stat-label">лет на рынке OOH</span>
                     </div>
-                    <div class="flex flex-col"><b class="font-[var(--font-display)] text-2xl font-bold"
-                                                  data-count="5">0</b><span
-                            class="text-[.82rem] text-[var(--color-muted)]">дней до запуска</span></div>
+                    <div>
+                        <b class="home-display hero-stat-num"><span data-count="345">0</span>%</b>
+                        <span class="hero-stat-label">рост трафика после кампании</span>
+                    </div>
+                    <div>
+                        <b class="home-display hero-stat-num" data-count="5">0</b>
+                        <span class="hero-stat-label">дней до запуска</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="h-panel u-float" aria-hidden="true">
-                <div class="h-map">
-                    <span
-                        class="absolute left-3 top-3 z-[5] rounded-full bg-white/90 px-3 py-1.5 text-[.64rem] font-bold tracking-[0.08em] text-[var(--color-blue)] shadow-[var(--shadow-soft)]">● Карта · live</span>
-                    <span class="road r1"></span><span class="road r2"></span><span class="road r3"></span>
-                    <span class="h-pin free" style="left:30%;top:36%"><i></i></span>
-                    <span class="h-pin busy" style="left:64%;top:30%"><i></i></span>
-                    <span class="h-pin sel" style="left:46%;top:58%"><i></i></span>
-                    <span class="h-pin free" style="left:76%;top:64%"><i></i></span>
-                </div>
-                <div class="h-mini">
-                    <div class="h-32 rounded-[10px] bg-cover bg-center"
-                         style="height:84px;background-image:url('{{ asset('images/bilboard.jpg') }}')"></div>
-                    <div class="mt-2 text-[.92rem] font-bold">Билборд 6×3 · ул. Ленина</div>
-                    <div class="mt-0.5 text-[.76rem] text-[var(--color-muted)]">Сторона A · по ходу потока</div>
-                    <div class="mt-2.5 flex items-center justify-between">
-                        <span class="font-[var(--font-display)] text-[1.05rem] font-bold">42 000 ₽</span>
-                        <span class="u-pill u-pill--free">Свободна</span>
+            {# Правая панель — слайдер #}
+            <div class="hero-right" id="hero-rhs">
+                {% set hero_slides = [
+                    { img: 'images/bilboard.jpg',        tag: 'Классика OOH',           title: 'Билборд 6×3 · ул. Ленина',   sub: 'Сторона A · по ходу потока · 42 000 ₽' },
+                    { img: 'images/digital.png',          tag: 'Digital · 24/7',          title: 'Digital-экран · пр. Победы',  sub: 'Ротация каждые 8 секунд' },
+                    { img: 'images/city.jpg',             tag: 'Сити-формат · Пешеходы', title: 'Сити-бокс · ул. Смолина',    sub: 'Подсветка 24/7 · от 18 000 ₽' },
+                    { img: 'images/supersite-format.jpg', tag: 'Суперсайт · Охват',      title: 'Суперсайт · Трасса М55',     sub: 'Стороны A / B / C · по запросу' },
+                ] %}
+                {% for slide in hero_slides %}
+                    <div class="hs" style="background-image:url('{{ asset(slide.img) }}');">
+                        <div class="hs-overlay"></div>
+                        <div class="hs-cap">
+                            <p class="hs-cap-tag">{{ slide.tag }}</p>
+                            <p class="hs-cap-title">{{ slide.title }}</p>
+                            <p class="hs-cap-sub">{{ slide.sub }}</p>
+                        </div>
                     </div>
-                </div>
+                {% endfor %}
+                <div id="hero-dots"></div>
+                <div id="hero-pb"></div>
             </div>
+
         </div>
     </section>
 

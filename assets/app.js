@@ -2,17 +2,17 @@ import './bootstrap.js';
 import './styles/app.css';
 import './js/header';
 import './js/auth/register';
-import { initPageMotion } from './js/motion';
-import { initHomeMosaicLazy } from './js/home-mosaic';
+import {initPageMotion} from './js/motion';
+import {initHomeMosaicLazy} from './js/home-mosaic';
 
 import Swiper from 'swiper';
-import { Navigation, Pagination } from 'swiper/modules';
+import {Navigation, Pagination} from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 // Vue
-import { createApp } from 'vue';
+import {createApp} from 'vue';
 
 import App from './components/App.vue';
 import CartPage from './components/CartPage.vue';
@@ -137,3 +137,95 @@ document.addEventListener('turbo:before-render', () => {
         cartPageElement._vueApp = null;
     }
 });
+
+
+(function () {
+    var rhs = document.getElementById('hero-rhs');
+    if (!rhs) return;
+
+    var INTERVAL = 5000;
+    var slides = rhs.querySelectorAll('.hs');
+    var caps = rhs.querySelectorAll('.hs-cap');
+    var dotsEl = document.getElementById('hero-dots');
+    var pb = document.getElementById('hero-pb');
+    var cur = 0, timer, pbRaf, pbStart;
+
+    /* Создаём точки */
+    Array.prototype.forEach.call(slides, function (_, i) {
+        var d = document.createElement('button');
+        d.className = 'hero-dot';
+        d.setAttribute('aria-label', 'Слайд ' + (i + 1));
+        d.addEventListener('click', function () {
+            go(i);
+        });
+        dotsEl.appendChild(d);
+    });
+    var dots = dotsEl.querySelectorAll('.hero-dot');
+
+    function activate(i) {
+        slides[cur].style.opacity = '0';
+        caps[cur].style.opacity = '0';
+        caps[cur].style.transform = 'translateY(10px)';
+        dots[cur].classList.remove('on');
+
+        cur = (i + slides.length) % slides.length;
+
+        slides[cur].style.opacity = '1';
+        setTimeout(function () {
+            caps[cur].style.opacity = '1';
+            caps[cur].style.transform = 'translateY(0)';
+        }, 360);
+        dots[cur].classList.add('on');
+    }
+
+    function runPb() {
+        cancelAnimationFrame(pbRaf);
+        pbStart = null;
+        pb.style.transition = 'none';
+        pb.style.width = '0%';
+
+        function tick(ts) {
+            if (!pbStart) pbStart = ts;
+            var p = Math.min((ts - pbStart) / INTERVAL * 100, 100);
+            pb.style.width = p + '%';
+            if (p < 100) pbRaf = requestAnimationFrame(tick);
+        }
+
+        pbRaf = requestAnimationFrame(tick);
+    }
+
+    function go(i) {
+        clearTimeout(timer);
+        cancelAnimationFrame(pbRaf);
+        activate(i);
+        runPb();
+        timer = setTimeout(function () {
+            go(cur + 1);
+        }, INTERVAL);
+    }
+
+    /* Инициализация */
+    slides[0].style.opacity = '1';
+    caps[0].style.opacity = '1';
+    caps[0].style.transform = 'translateY(0)';
+    dots[0].classList.add('on');
+    runPb();
+    timer = setTimeout(function () {
+        go(1);
+    }, INTERVAL);
+
+    /* Счётчики */
+    document.querySelectorAll('[data-count]').forEach(function (el) {
+        var target = +el.dataset.count;
+        var start = null;
+
+        function step(ts) {
+            if (!start) start = ts;
+            var p = Math.min((ts - start) / 1200, 1);
+            el.textContent = Math.round(p * target);
+            if (p < 1) requestAnimationFrame(step);
+        }
+
+        requestAnimationFrame(step);
+    });
+})();
